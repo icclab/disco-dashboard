@@ -4,19 +4,11 @@
       <div class="container-fluid">
           <div class="row">
               <div class="col-lg-12">
-                  <h1 class="page-header">Dashboard</h1>
-              </div>
-              <!-- /.col-lg-12 -->
-          </div>
-          <!-- /.row -->
-          <div class="row">
-              <div class="col-lg-12">
                   <div class="panel panel-primary">
                       <div class="panel-heading">
                           <div class="row">
                               <div class="col-xs-9 text-left">
-                                  <div class="huge">3</div>
-                                  <div>Clusters</div>
+                                  <div><%= pluralize(@servers.count, "cluster") %></div>
                               </div>
                               <div class="col-xs-3 text-right">
                                   <i class="fa fa-tasks fa-5x"></i>
@@ -48,52 +40,35 @@
                                       </div>
                                   </a>
                               </div>
+                            <% if @servers.any? %>
+                            <% @servers.each do |server| %>
                               <div class="col-lg-4">
                                   <a href="#">
                                       <div class="panel panel-info">
                                           <div class="panel-heading">
-                                              Cluster 2
+                                              <%= server[:name] %>
                                           </div>
                                           <div class="panel-body text-left">
                                               <dl class="dl-horizontal">
+                                                <% s_image = get_image(server[:image][:id]) %>
+                                                <% s_flavor = get_flavor(server[:flavor][:id]) %>
                                                   <dt>OS</dt>
-                                                  <dd>CoreOS</dd>
-                                                  <dt>Cores</dt>
-                                                  <dd>4</dd>
+                                                  <dd><%= s_image.name %></dd>
+                                                  <dt>VCPUs</dt>
+                                                  <dd><%= s_flavor.vcpus %></dd>
                                                   <dt>RAM</dt>
-                                                  <dd>8GB</dd>
-                                                  <dt>Storage</dt>
-                                                  <dd>16GB</dd>
+                                                  <dd><%= s_flavor.ram %>MB</dd>
+                                                  <dt>Disk</dt>
+                                                  <dd><%= s_flavor.disk %>GB</dd>
                                                   <dt>Status</dt>
-                                                  <dd class="text-danger"><strong>Stopped</strong></dd>
+                                                  <dd class="text-succes"><strong><%= server[:status] %></strong></dd>
                                               </dl>
                                           </div>
                                       </div>
                                   </a>
                               </div>
-                              <div class="col-lg-4">
-                                  <a href="#">
-                                      <div class="panel panel-info">
-                                          <div class="panel-heading">
-                                              Cluster 1
-                                          </div>
-                                          <div class="panel-body text-left">
-                                              <dl class="dl-horizontal">
-                                                  <dt>OS</dt>
-                                                  <dd>CoreOS</dd>
-                                                  <dt>Cores</dt>
-                                                  <dd>4</dd>
-                                                  <dt>RAM</dt>
-                                                  <dd>8GB</dd>
-                                                  <dt>Storage</dt>
-                                                  <dd>16GB</dd>
-                                                  <dt>Status</dt>
-                                                  <dd class="text-success"><strong>Running</strong></dd>
-                                              </dl>
-                                          </div>
-                                      </div>
-                                  </a>
-                              </div>
+                            <% end %>
+                            <% end %>
                           </div>
                       </div>
                       <div class="panel-footer">
@@ -756,8 +731,11 @@
                   <select type="text" class="form-control">
                       <option>New</option>
                       <option>Cluster 3</option>
-                      <option>Cluster 2</option>
-                      <option>Cluster 1</option>
+                      <% if @servers.any? %>
+                        <% @servers.each do |server| %>
+                          <option><%= server[:name] %></option>
+                        <% end %>
+                      <% end %>
                   </select>
               </p>
             </div>
@@ -773,32 +751,29 @@
                       <input type="text" class="form-control" placeholder="Enter name">
                       <span class="input-group-addon">#</span>
                       <select type="text" class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                          <option>6</option>
-                          <option>7</option>
-                          <option>8</option>
-                          <option>9</option>
-                          <option>10</option>
+                        <% (1..10).each do |i| %>
+                          <option><%= i %></option>
+                        <% end %>
                       </select>
                   </div>
                   <div class="form-group input-group">
                       <span class="input-group-addon">Image</span>
                       <select class="form-control">
-                          <option>Choose OS</option>
-                          <option>Ubuntu</option>
-                          <option>CoreOS</option>
-                          <option>OSX</option>
+                          <option value="" disabled selected>Choose OS</option>
+                          <% if @images.any? %>
+                            <% @images.each do |image| %>
+                              <option><%= image[:name] %></option>
+                            <% end %>
+                          <% end %>
                       </select>
                       <span class="input-group-addon">Flavor</span>
                       <select type="text" class="form-control">
-                          <option>Choose Flavor</option>
-                          <option>Flavor 1</option>
-                          <option>Flavor 2</option>
-                          <option>Flavor 3</option>
+                          <option value="" disabled selected>Choose Flavor</option>
+                          <% if @flavors.any? %>
+                            <% @flavors.each do |flavor| %>
+                              <option><%= "#{flavor[:name]} (VCPUs: #{flavor[:vcpus]}, RAM: #{flavor[:ram]}MB, Disk: #{flavor[:disk]}GB)" %></option>
+                            <% end %>
+                          <% end %>
                       </select>
                   </div>
                   <label> Slave</label>
@@ -807,32 +782,29 @@
                       <input type="text" class="form-control" placeholder="Enter name">
                       <span class="input-group-addon">#</span>
                       <select type="text" class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                          <option>6</option>
-                          <option>7</option>
-                          <option>8</option>
-                          <option>9</option>
-                          <option>10</option>
+                        <% (1..10).each do |i| %>
+                          <option><%= i %></option>
+                        <% end %>
                       </select>
                   </div>
                   <div class="form-group input-group">
                       <span class="input-group-addon">Image</span>
                       <select class="form-control">
-                          <option>Choose OS</option>
-                          <option>Ubuntu</option>
-                          <option>CoreOS</option>
-                          <option>OSX</option>
+                          <option value="" disabled selected>Choose OS</option>
+                          <% if @images.any? %>
+                            <% @images.each do |image| %>
+                              <option><%= image[:name] %></option>
+                            <% end %>
+                          <% end %>
                       </select>
                       <span class="input-group-addon">Flavor</span>
                       <select type="text" class="form-control">
-                          <option>Choose Flavor</option>
-                          <option>Flavor 1</option>
-                          <option>Flavor 2</option>
-                          <option>Flavor 3</option>
+                          <option value="" disabled selected>Choose Flavor</option>
+                          <% if @flavors.any? %>
+                            <% @flavors.each do |flavor| %>
+                              <option><%= flavor[:name] %></option>
+                            <% end %>
+                          <% end %>
                       </select>
                   </div>
                   <h5>
