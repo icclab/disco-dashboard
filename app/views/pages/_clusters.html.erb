@@ -1,0 +1,75 @@
+<div class="row">
+  <div class="col-lg-12">
+      <div class="panel panel-primary">
+          <div class="panel-heading">
+              <div class="row">
+                  <div class="col-xs-9 text-left">
+                      <div class="huge">Clusters</div>
+                  </div>
+                  <div class="col-xs-3 text-right">
+                      <i class="fa fa-tasks fa-5x"></i>
+                  </div>
+              </div>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-lg-4">
+                  <a href="#" data-toggle="modal" data-target=".bs-cluster1-modal">
+                      <div class="panel panel-info">
+                          <div class="panel-heading">
+                              Cluster 3
+                          </div>
+                          <div class="panel-body text-left">
+                              <dl class="dl-horizontal">
+                                  <dt>OS</dt>
+                                  <dd>CoreOS</dd>
+                                  <dt>Cores</dt>
+                                  <dd>4</dd>
+                                  <dt>RAM</dt>
+                                  <dd>8GB</dd>
+                                  <dt>Storage</dt>
+                                  <dd>16GB</dd>
+                                  <dt>Status</dt>
+                                  <dd class="text-success"><strong>ACTIVE</strong></dd>
+                              </dl>
+                          </div>
+                      </div>
+                  </a>
+              </div>
+              <% if @servers.any? %>
+                <% @servers.each do |server| %>
+                  <div class="col-lg-4">
+                      <a href="#">
+                          <div class="panel panel-info">
+                              <div class="panel-heading">
+                                  <%= server[:name] %>
+                              </div>
+                              <div class="panel-body text-left">
+                                  <dl class="dl-horizontal">
+                                    <% s_image = get_image(server[:image][:id]) %>
+                                    <% s_flavor = get_flavor(server[:flavor][:id]) %>
+                                      <dt>OS</dt>
+                                      <dd><%= s_image.name %></dd>
+                                      <dt>VCPUs</dt>
+                                      <dd><%= s_flavor.vcpus %></dd>
+                                      <dt>RAM</dt>
+                                      <dd><%= s_flavor.ram %>MB</dd>
+                                      <dt>Disk</dt>
+                                      <dd><%= s_flavor.disk %>GB</dd>
+                                      <dt>Status</dt>
+                                      <dd class="text-success"><strong><%= server[:status] %></strong></dd>
+                                  </dl>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <div class="panel-footer">
+            <p><button type="button" class="btn btn-outline btn-info" data-toggle="modal" data-target=".bs-newcluster-modal">Add + </button></p>
+        </div>
+    </div>
+  </div>
+</div>
