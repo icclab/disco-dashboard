@@ -16,10 +16,9 @@ class PagesController < ApplicationController
   end
 
   def details
-    server = params[:server]
-    puts 'server'
-    puts server
-    @image = server[:image][:id]
+    server  = params[:server]
+    @id     = server[:hostId]
+    @image  = server[:image][:id]
     @flavor = server[:flavor][:id]
     respond_to do |format|
       format.js

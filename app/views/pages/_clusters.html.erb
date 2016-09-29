@@ -13,33 +13,10 @@
           </div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-lg-4">
-                  <a href="#" data-toggle="modal" data-target=".bs-cluster1-modal">
-                      <div class="panel panel-info">
-                          <div class="panel-heading">
-                              Cluster 3
-                          </div>
-                          <div class="panel-body text-left">
-                              <dl class="dl-horizontal">
-                                  <dt>OS</dt>
-                                  <dd>CoreOS</dd>
-                                  <dt>Cores</dt>
-                                  <dd>4</dd>
-                                  <dt>RAM</dt>
-                                  <dd>8GB</dd>
-                                  <dt>Storage</dt>
-                                  <dd>16GB</dd>
-                                  <dt>Status</dt>
-                                  <dd class="text-success"><strong>ACTIVE</strong></dd>
-                              </dl>
-                          </div>
-                      </div>
-                  </a>
-              </div>
               <% if @servers.any? %>
                 <% @servers.each do |server| %>
                   <div class="col-lg-4">
-                      <a href="#">
+                      <%= link_to details_path(server: server), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
                           <div class="panel panel-info">
                               <div class="panel-heading">
                                   <%= server[:name] %>
@@ -61,7 +38,7 @@
                                   </dl>
                               </div>
                           </div>
-                      </a>
+                      <% end %>
                   </div>
                 <% end %>
               <% end %>
