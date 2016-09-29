@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:ruby-openstack/ruby-openstack.git
+  remote: git://github.com/ruby-openstack/ruby-openstack.git
   revision: 1c597a1346a5b77f8052c16c670a6268b3c76f27
   branch: master
   specs:

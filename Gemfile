@@ -11,7 +11,7 @@ gem 'coffee-rails',    '4.2.1'
 gem 'jquery-rails',    '4.1.1'
 gem 'turbolinks',      '5.0.1'
 gem 'jbuilder',        '2.4.1'
-gem 'openstack', :git => 'git@github.com:ruby-openstack/ruby-openstack.git', :branch => 'master'
+gem 'openstack', :github => 'ruby-openstack/ruby-openstack', :branch => 'master'
 
 group :development, :test do
   gem 'sqlite3', '1.3.11'
