@@ -4,7 +4,7 @@
           <div class="panel-heading">
               <div class="row">
                   <div class="col-xs-9 text-left">
-                      <div class="huge">Openstack</div>
+                      <div class="huge">Disco</div>
                   </div>
                   <div class="col-xs-3 text-right">
                       <i class="fa fa-tasks fa-5x"></i>
@@ -13,28 +13,36 @@
           </div>
           <div class="panel-body">
             <div class="row">
-              <% if @servers.any? %>
-                <% @servers.each do |server| %>
+              <% if @disco.any? %>
+                <% @disco.each do |instance| %>
                   <div class="col-lg-4">
-                      <%= link_to details_path(server: server, src: "openstack"), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
+                      <%= link_to details_path(server: instance, src: "disco"), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
                           <div class="panel panel-info">
                               <div class="panel-heading">
-                                  <%= server[:name] %>
+                                  <%= instance["kind"]["title"] %>
                               </div>
                               <div class="panel-body text-left">
                                   <dl class="dl-horizontal">
-                                    <% s_image = get_image(server, true) %>
-                                    <% s_flavor = get_flavor(server, true) %>
-                                      <dt>OS</dt>
+                                    <% m_image, s_image = get_image(instance, false) %>
+                                    <% m_flavor, s_flavor = get_flavor(instance, false) %>
+                                      <dt>Master Image</dt>
+                                      <dd><%= m_image.name %></dd>
+                                      <dt>Master VCPUs</dt>
+                                      <dd><%= m_flavor.vcpus %></dd>
+                                      <dt>Master RAM</dt>
+                                      <dd><%= m_flavor.ram %>MB</dd>
+                                      <dt>Master Disk</dt>
+                                      <dd><%= m_flavor.disk %>GB</dd>
+                                      <dt>Slave Image</dt>
                                       <dd><%= s_image.name %></dd>
-                                      <dt>VCPUs</dt>
+                                      <dt>Slave VCPUs</dt>
                                       <dd><%= s_flavor.vcpus %></dd>
-                                      <dt>RAM</dt>
+                                      <dt>Slave RAM</dt>
                                       <dd><%= s_flavor.ram %>MB</dd>
-                                      <dt>Disk</dt>
+                                      <dt>Slave Disk</dt>
                                       <dd><%= s_flavor.disk %>GB</dd>
                                       <dt>Status</dt>
-                                      <dd class="text-<%= get_status(server[:status]) %>"><strong><%= server[:status] %></strong></dd>
+                                      <dd class="text-<%= get_status(instance["attributes"]["stack_status"]) %>"><strong><%= instance["attributes"]["stack_status"] %></strong></dd>
                                   </dl>
                               </div>
                           </div>

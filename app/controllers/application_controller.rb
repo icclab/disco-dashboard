@@ -2,10 +2,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   @@openstack = OpenStack::Connection.create ({
-        username:   'kenz@zhaw.ch',
-        api_key:    'algorithms1',
-        auth_url:   'https://keystone.cloud.switch.ch:5000/v2.0',
-        authtenant: 'kenz@zhaw.ch',
-        region:     'ZH'
+        username:   'disco',
+        api_key:    '89,@924;9299[>6',
+        auth_url:   'http://lisa.cloudcomplab.ch:5000/v2.0',
+        authtenant: 'disco'
     })
+
 end

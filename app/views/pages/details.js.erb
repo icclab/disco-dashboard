@@ -1,3 +1,8 @@
 //$('#image').html('<%= @image %> upd');
 //$('#flavor').html('<%= @flavor %> upd');
-$('#id').html('<%= @id %>')
+$('#id').html('<%= @id %>');
+$('#log').html('<%= @info %>');
+<% if @src == 'disco' %>
+  $('#master_n').html('<%= @master_n %>');
+  $('#slave_n').html('<%= @slave_n %>');
+<% end %>
