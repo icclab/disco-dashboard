@@ -9,7 +9,6 @@
                 Configuration:
                 <select type="text" class="form-control">
                     <option>New</option>
-                    <option>Cluster 3</option>
                     <% if @servers.any? %>
                       <% @servers.each do |server| %>
                         <option><%= server[:name] %></option>

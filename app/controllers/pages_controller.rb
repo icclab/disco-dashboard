@@ -20,6 +20,15 @@ class PagesController < ApplicationController
 
   def debug
     @server = @@openstack.list_servers_detail.first
+    @images  = @@openstack.list_images
+    @flavors = @@openstack.list_flavors
+  end
+
+  def create
+    puts JSON.pretty_generate(params[:cluster])
+    respond_to do |format|
+      format.js
+    end
   end
 
   def details
