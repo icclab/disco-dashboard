@@ -1,143 +1,79 @@
-<div class="modal fade bs-newcluster-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade bs-newcluster-modal" id="new-cluster" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-        <div class="modal-header primary">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">New Cluster</h4>
-            <p></p>
-            <p>
-                Configuration:
-                <select type="text" class="form-control">
-                    <option>New</option>
-                    <% if @servers.any? %>
-                      <% @servers.each do |server| %>
-                        <option><%= server[:name] %></option>
-                      <% end %>
-                    <% end %>
-                </select>
-            </p>
-          </div>
-          <div class="modal-body">
-            <form role="form">
-                <div class="form-group">
-                    <label>Cluster Name</label>
-                    <input class="form-control" placeholder="Enter name">
-                </div>
-                <label>Master</label>
-                <div class="form-group input-group">
-                    <span class="input-group-addon">Name</span>
-                    <input type="text" class="form-control" placeholder="Enter name">
-                    <span class="input-group-addon">#</span>
-                    <select type="text" class="form-control">
-                      <% (1..10).each do |i| %>
-                        <option><%= i %></option>
-                      <% end %>
-                    </select>
-                </div>
-                <div class="form-group input-group">
-                    <span class="input-group-addon">Image</span>
-                    <select class="form-control">
-                        <option value="" disabled selected>Choose OS</option>
-                        <% if @images.any? %>
-                          <% @images.each do |image| %>
-                            <option><%= image[:name] %></option>
-                          <% end %>
-                        <% end %>
-                    </select>
-                    <span class="input-group-addon">Flavor</span>
-                    <select type="text" class="form-control">
-                        <option value="" disabled selected>Choose Flavor</option>
-                        <% if @flavors.any? %>
-                          <% @flavors.each do |flavor| %>
-                            <option><%= "#{flavor[:name]} (VCPUs: #{flavor[:vcpus]}, RAM: #{flavor[:ram]}MB, Disk: #{flavor[:disk]}GB)" %></option>
-                          <% end %>
-                        <% end %>
-                    </select>
-                </div>
-                <label> Slave</label>
-                <div class="form-group input-group">
-                    <span class="input-group-addon">Name</span>
-                    <input type="text" class="form-control" placeholder="Enter name">
-                    <span class="input-group-addon">#</span>
-                    <select type="text" class="form-control">
-                      <% (1..10).each do |i| %>
-                        <option><%= i %></option>
-                      <% end %>
-                    </select>
-                </div>
-                <div class="form-group input-group">
-                    <span class="input-group-addon">Image</span>
-                    <select class="form-control">
-                        <option value="" disabled selected>Choose OS</option>
-                        <% if @images.any? %>
-                          <% @images.each do |image| %>
-                            <option><%= image[:name] %></option>
-                          <% end %>
-                        <% end %>
-                    </select>
-                    <span class="input-group-addon">Flavor</span>
-                    <select type="text" class="form-control">
-                        <option value="" disabled selected>Choose Flavor</option>
-                        <% if @flavors.any? %>
-                          <% @flavors.each do |flavor| %>
-                            <option><%= flavor[:name] %></option>
-                          <% end %>
-                        <% end %>
-                    </select>
-                </div>
-                <h5>
-                    Slave node on Master node?
-                    <input type="checkbox" value="">
-                </h5>
-                <label>Network</label>
-                <div class="form-group input-group">
-                    <span class="input-group-addon">Configuration</span>
-                    <select class="form-control">
-                        <option>Default</option>
-                        <option>User configuration 1</option>
-                        <option>User configuration 2</option>
-                    </select>
-                </div>
-                <label>Access</label>
-                <div class="form-group input-group">
-                    <span class="input-group-addon">Key</span>
-                    <select type="text" class="form-control">
-                        <option>Choose Access Key</option>
-                        <option>SSH-1</option>
-                        <option>SSH-2</option>
-                        <option>SSH-3</option>
-                    </select>
-                </div>
-                <label>BIG Data jobs</label>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="">
-                            Batching
-                        </label>
-                        <label>
-                            <input type="checkbox" value="">
-                            Streaming
-                        </label>
-                        <label>
-                            <input type="checkbox" value="">
-                            Looping
-                        </label>
+        <% cluster = Cluster.new %>
+        <%= form_for cluster, url: {action: 'create'}, remote: true, html: {role: "role", id: "cluster-form"} do |f| %>
+            <div class="modal-header primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">New Cluster</h4>
+            </div>
+
+            <div class="modal-body">
+                    <%= f.label(:cluster_name, "Cluster Name") %>
+                    <div class="form-group">
+                        <%= f.text_field(:name, placeholder: "Enter name", class: 'form-control') %>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label>BIG Data Frameworks</label>
-                    <div class="checkbox"><label><input type="checkbox">Spark (recommended)</label></div>
-                    <div class="checkbox"><label><input type="checkbox">Hadoop</label></div>
-                    <div class="checkbox"><label><input type="checkbox">Zeppelin</label></div>
-                    <div class="checkbox"><label><input type="checkbox">Jupyter</label></div>
-                </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-success">Create</button>
-          </div>
+                    <%= f.label(:master, "Master") %>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">Name</span>
+                        <%= f.text_field :master_name, placeholder: "Enter name", class: 'form-control' %>
+                        <span class="input-group-addon">#</span>
+                        <%= f.select(:master_num, options_for_select((1..10).map { |i| [i, i] }), {}, {class: 'form-control'}) %>
+                    </div>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">Image</span>
+                        <%= f.select(:master_image, options_for_select(@images.map { |image| [image[:name], image[:id]] }), {}, {class: 'form-control'}) %>
+                        <span class="input-group-addon">Flavor</span>
+                        <%= f.select(:master_flavor, options_for_select(@flavors.map { |flavor| [flavor[:name], flavor[:id]] }), {}, {class: 'form-control'}) %>
+                    </div>
+                    <%= f.label(:slave, "Slave") %>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">Name</span>
+                        <%= f.text_field :slave_name, placeholder: "Enter name", class: 'form-control' %>
+                        <span class="input-group-addon">#</span>
+                        <%= f.select(:slave_num, options_for_select((1..10).map { |i| [i, i] }), {}, {class: 'form-control'}) %>
+                    </div>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">Image</span>
+                        <%= f.select(:slave_image, options_for_select(@images.map { |image| [image[:name], image[:id]] }), {}, {class: 'form-control'}) %>
+                        <span class="input-group-addon">Flavor</span>
+                        <%= f.select(:slave_flavor, options_for_select(@flavors.map { |flavor| [flavor[:name], flavor[:id]] }), {}, {class: 'form-control'}) %>
+                    </div>
+                    <h5>
+                        Slave node on Master node?
+                        <%= f.check_box(:master_slave) %>
+                    </h5>
+                    <%= f.label(:network, "Network") %>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">Configuration</span>
+                        <select class="form-control">
+                            <option>Default</option>
+                            <option>User configuration 1</option>
+                            <option>User configuration 2</option>
+                        </select>
+                    </div>
+                    <%= f.label(:access, "Access") %>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">Key</span>
+                        <select type="text" class="form-control">
+                            <option>Choose Access Key</option>
+                            <option>SSH-1</option>
+                            <option>SSH-2</option>
+                            <option>SSH-3</option>
+                        </select>
+                    </div>
+                    <%= f.label(:frameworks, "BIG Data frameworks") %>
+                    <div class="form-group">
+                        <div class="checkbox"><label><input type="checkbox">Spark (recommended)</label></div>
+                        <div class="checkbox"><label><input type="checkbox">Hadoop</label></div>
+                        <div class="checkbox"><label><input type="checkbox">Zeppelin</label></div>
+                        <div class="checkbox"><label><input type="checkbox">Jupyter</label></div>
+                    </div>
+              </div>
+              <div class="modal-footer">
+                <%= f.submit "Create", class: "btn btn-success" %>
+              </div>
+            <% end %>
     </div>
   </div>
 </div>

@@ -17,7 +17,7 @@
                 <% @servers.each do |server| %>
                   <div class="col-lg-4">
                       <%= link_to details_path(server: server, src: "openstack"), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
-                          <div class="panel panel-info">
+                          <div class="panel panel-info" id="<%= server[:id] %>">
                               <div class="panel-heading">
                                   <%= server[:name] %>
                               </div>

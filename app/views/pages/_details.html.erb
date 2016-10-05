@@ -1,11 +1,11 @@
-<div class="modal fade bs-cluster1-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade bs-cluster1-modal" id="details-cluster" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content info">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Cluster 3</h4>
+            <h4 class="modal-title" id="modal-title"></h4>
           </div>
-          <div class="modal-body">
+          <div class="modal-body"  id="modal-body">
             <dl class="dl-horizontal">
                 <dt>ID:</dt>
                 <dd id="id"></dd>
@@ -28,8 +28,7 @@
             </pre>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <%= button_to "Delete", delete_path, method: :post, remote: true, html: { id: "cluster-delete"}, data: { confirm: "Are you sure?", toggle: "modal", target: ".bs-cluster1-modal" }, class: "btn btn-danger" %>
           </div>
     </div>
   </div>

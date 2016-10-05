@@ -2,7 +2,9 @@
 //$('#flavor').html('<%= @flavor %> upd');
 $('#id').html('<%= @id %>');
 $('#log').html('<%= @info %>');
+$('#modal-title').html('<%= @title %>');
 <% if @src == 'disco' %>
   $('#master_n').html('<%= @master_n %>');
   $('#slave_n').html('<%= @slave_n %>');
 <% end %>
+$("form").attr("action", '<%= @uuid %>');
