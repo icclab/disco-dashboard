@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails',           '5.0.0.1'
+gem 'bcrypt'
 gem 'bootstrap-sass',  '3.3.7'
 gem 'bootstrap-social-rails'
 gem 'font-awesome-rails'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161004094236) do
+ActiveRecord::Schema.define(version: 20161006133551) do
 
   create_table "clusters", force: :cascade do |t|
     t.string   "name"
@@ -25,6 +25,18 @@ ActiveRecord::Schema.define(version: 20161004094236) do
     t.boolean  "master_slave"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "username"
+    t.string   "password"
+    t.string   "auth_url"
+    t.string   "tenant"
+    t.string   "disco_ip"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "password_digest"
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
 end

@@ -17,7 +17,7 @@
                 <% @disco.each do |instance| %>
                   <div class="col-lg-4">
                       <%= link_to details_path(server: instance, src: "disco"), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
-                          <div class="panel panel-info" id="<%= instance[:id] %>">
+                          <div class="panel panel-info" id="<%= instance["id"] %>">
                               <div class="panel-heading">
                                   <%= instance["kind"]["title"] %>
                               </div>

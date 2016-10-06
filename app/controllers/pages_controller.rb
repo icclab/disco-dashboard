@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
 
+  require "json"
   helper_method :get_image, :get_flavor
 
   def dashboard
@@ -12,7 +13,6 @@ class PagesController < ApplicationController
         'disco',
         'http://160.85.4.252:8888/haas/'
     )
-    @disco.each { |e| @disco.delete(e) if !e["attributes"]["icclab.haas.master.image"] }
   end
 
   def login
@@ -41,17 +41,25 @@ class PagesController < ApplicationController
       http.request(request)
     end
 
-    request["Accept"]        = "application/occi+json"
+    list = []
+    clusters.each do |cluster|
+      uri     = URI.parse(cluster)
+      request = Net::HTTP::Get.new(uri)
+      request["X-User-Name"]   = username
+      request["X-Password"]    = password
+      request["X-Tenant-Name"] = tenant
+      request["Accept"]        = "application/occi+json"
+      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+        http.request(request)
+      end
 
-    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
-      http.request(request)
+      if response.code == "200"
+        list << JSON.parse(response.body)
+      end
+
     end
 
-    if response.code == "200"
-      return JSON.parse(response.body)
-    else
-      return nil
-    end
+    return list
   end
 
   # Method to create a cluster on DISCO
