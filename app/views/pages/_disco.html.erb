@@ -16,15 +16,15 @@
               <% if @disco.any? %>
                 <% @disco.each do |instance| %>
                   <div class="col-lg-4">
-                      <%= link_to details_path(server: instance, src: "disco"), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
+                      <%= link_to details_path(server: instance), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
                           <div class="panel panel-info" id="<%= instance["id"] %>">
                               <div class="panel-heading">
                                   <%= instance["kind"]["title"] %>
                               </div>
                               <div class="panel-body text-left">
                                   <dl class="dl-horizontal">
-                                    <% m_image, s_image = get_image(instance, false) %>
-                                    <% m_flavor, s_flavor = get_flavor(instance, false) %>
+                                    <% m_image, s_image = get_image(instance) %>
+                                    <% m_flavor, s_flavor = get_flavor(instance) %>
                                         <dt>Master Image</dt>
                                         <dd><%= m_image.name %></dd>
                                         <dt>Master VCPUs</dt>
