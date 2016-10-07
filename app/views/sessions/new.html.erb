@@ -8,7 +8,7 @@
                     <h3 class="panel-title">Please Sign In</h3>
                 </div>
                 <div class="panel-body">
-                    <%= form_for @user, html: { role: "form" } do |f| %>
+                    <%= form_for :session, url: login_path, html: { role: "form" } do |f| %>
                         <fieldset>
                             <div class="form-group">
                               <%= f.label :username %>
@@ -26,6 +26,10 @@
                               <%= f.label :tenant %>
                               <%= f.text_field :tenant, placeholder: "Tenant name", class: 'form-control' %>
                             </div>
+                              <%= f.label :remember_me, class: "checkbox inline" do %>
+                                <%= f.check_box :remember_me %>
+                                <span>Remember me on this computer</span>
+                              <% end %>
                           <%= f.submit "Login", class: "btn btn-lg btn-success btn-block" %>
                         </fieldset>
                     <% end %>

@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
+  before_action :logged_in_user
 
-  require "json"
   helper_method :get_image, :get_flavor
 
   def dashboard
@@ -13,9 +13,6 @@ class PagesController < ApplicationController
         'disco',
         'http://160.85.4.252:8888/haas/'
     )
-  end
-
-  def login
   end
 
   # Method for debugging
@@ -40,6 +37,9 @@ class PagesController < ApplicationController
     response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
       http.request(request)
     end
+
+    clusters = ''
+    response.header.each_header {|key,value| clusters = value.split(', ') if key=='x-occi-location' }
 
     list = []
     clusters.each do |cluster|
@@ -153,6 +153,13 @@ class PagesController < ApplicationController
         id_m = stack["attributes"]["icclab.haas.master.flavor"]
         id_s = stack["attributes"]["icclab.haas.slave.flavor"]
         return @@openstack.get_flavor(id_m), @@openstack.get_flavor(id_s) if id_s && id_m
+      end
+    end
+
+  private
+    def logged_in_user
+      unless logged_in?
+        redirect_to login_url
       end
     end
 end
