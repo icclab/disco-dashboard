@@ -29,6 +29,18 @@ class PagesController < ApplicationController
     clusters = ''
     response.header.each_header {|key,value| clusters = value.split(', ') if key=='x-occi-location' }
 
+    clusters.each do |cluster|
+      uri     = URI.parse(cluster)
+      request = Net::HTTP::Get.new(uri)
+      request["X-User-Name"]   = current_user[:username]
+      request["X-Password"]    = current_user[:disco_ip]
+      request["X-Tenant-Name"] = current_user[:tenant]
+      request["Accept"]        = "text/occi"
+      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+        http.request(request)
+      end
+    end
+
     list = []
     clusters.each do |cluster|
       uri     = URI.parse(cluster)
