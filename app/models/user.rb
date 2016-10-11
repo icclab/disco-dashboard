@@ -1,14 +1,14 @@
 class User < ApplicationRecord
   attr_accessor :remember_token
 
+  has_many :clusters, dependent: :destroy
+
   before_save { self.username.downcase! }
 
   validates :username, presence: true
   validates :password, presence: true
   validates :auth_url, presence: true
   validates :tenant,   presence: true
-  #validates :disco_ip, presence: true,
-   #                    format: { with: Resolv::IPv4::Regex }
   has_secure_password
 
   class << self

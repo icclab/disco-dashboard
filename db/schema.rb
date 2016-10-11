@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161010134436) do
+ActiveRecord::Schema.define(version: 20161011110254) do
 
   create_table "clusters", force: :cascade do |t|
     t.string   "uuid"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20161010134436) do
     t.boolean  "master_slave"
     t.index ["user_id", "uuid"], name: "index_clusters_on_user_id_and_uuid"
     t.index ["user_id"], name: "index_clusters_on_user_id"
+    t.index ["uuid"], name: "index_clusters_on_uuid", unique: true
   end
 
   create_table "users", force: :cascade do |t|

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DeploymentProgressJobTest < ActiveJob::TestCase
+class ClusterUpdateJobTest < ActiveJob::TestCase
   # test "the truth" do
   #   assert true
   # end

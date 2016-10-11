@@ -19,4 +19,10 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:name, :password, :auth_url, :tenant, :disco_ip)
     end
+
+    # Confirm the correct user.
+    def correct_user
+      @user = User.find(params[:id])
+      redirect_to(root_url) unless current_user?(@user)
+    end
 end
