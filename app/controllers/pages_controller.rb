@@ -6,9 +6,9 @@ class PagesController < ApplicationController
   helper_method :get_image, :get_flavor
 
   def dashboard
-    @images  = @@openstack.list_images
-    @flavors = @@openstack.list_flavors
-    @disco   = list_disco
+    @images   = @@openstack.list_images
+    @flavors  = @@openstack.list_flavors
+    @clusters = current_user.clusters.all
   end
 
   # DISCO
@@ -37,14 +37,14 @@ class PagesController < ApplicationController
 
   # Helper methods to get image and flavor names
     def get_image(stack)
-      id_m = stack["attributes"]["icclab.haas.master.image"]
-      id_s = stack["attributes"]["icclab.haas.slave.image"]
+      id_m = stack[:master_image]
+      id_s = stack[:slave_image]
       return @@openstack.get_image(id_m), @@openstack.get_image(id_s) if id_s && id_m
     end
 
     def get_flavor(stack)
-      id_m = stack["attributes"]["icclab.haas.master.flavor"]
-      id_s = stack["attributes"]["icclab.haas.slave.flavor"]
+      id_m = stack[:master_flavor]
+      id_s = stack[:slave_flavor]
       return @@openstack.get_flavor(id_m), @@openstack.get_flavor(id_s) if id_s && id_m
     end
 
@@ -77,14 +77,17 @@ class PagesController < ApplicationController
             new_cluster = {
               uuid:          uuid,
               state:         state,
-              name:          "cluster"+uuid,
+              name:          disco_cluster["kind"]["title"],
               master_name:   "master"+uuid,
               slave_name:    "slave"+uuid,
               master_image:  attributes["icclab.haas.master.image"],
               master_flavor: attributes["icclab.haas.master.flavor"],
               slave_image:   attributes["icclab.haas.slave.image"],
               slave_flavor:  attributes["icclab.haas.slave.flavor"],
-              master_slave:  attributes["icclab.haas.master.slaveonmaster"]=="on" ? true : false
+              master_slave:  attributes["icclab.haas.master.slaveonmaster"]=="on" ? true : false,
+              external_ip:   attributes["externalIP"],
+              master_num:    attributes["icclab.haas.master.number"],
+              slave_num:     attributes["icclab.haas.slave.number"]
             }
             instance = current_user.clusters.build(new_cluster)
             if instance.save

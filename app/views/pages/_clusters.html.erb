@@ -13,18 +13,18 @@
           </div>
           <div class="panel-body">
             <div class="row">
-              <% if @disco.any? %>
-                <% @disco.each do |instance| %>
+              <% if @clusters.any? %>
+                <% @clusters.each do |cluster| %>
                   <div class="col-lg-4">
-                      <%= link_to details_path(server: instance), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
-                          <div class="panel panel-info" id="<%= instance["id"] %>">
+                      <%= link_to details_path(uuid: cluster[:uuid]), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
+                          <div class="panel panel-info" id="<%= cluster[:uuid] %>">
                               <div class="panel-heading">
-                                  <%= instance["kind"]["title"] %>
+                                  <%= cluster[:name] %>
                               </div>
                               <div class="panel-body text-left">
                                   <dl class="dl-horizontal">
-                                    <% m_image, s_image = get_image(instance) %>
-                                    <% m_flavor, s_flavor = get_flavor(instance) %>
+                                    <% m_image, s_image = get_image(cluster) %>
+                                    <% m_flavor, s_flavor = get_flavor(cluster) %>
                                         <dt>Master Image</dt>
                                         <dd><%= m_image.name %></dd>
                                         <dt>Master VCPUs</dt>
@@ -42,7 +42,7 @@
                                         <dt>Slave Disk</dt>
                                         <dd><%= s_flavor.disk %>GB</dd>
                                         <dt>Status</dt>
-                                        <dd class="text-<%= get_status(instance["attributes"]["stack_status"]) %>"><strong><%= instance["attributes"]["stack_status"] ? instance["attributes"]["stack_status"] : "Deploying..." %></strong></dd>
+                                        <dd class="text-<%= get_status(cluster[:state]) %>"><strong><%= cluster[:state] ? cluster[:state] : "Deploying..." %></strong></dd>
                                   </dl>
                               </div>
                           </div>

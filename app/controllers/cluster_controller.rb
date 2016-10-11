@@ -56,15 +56,14 @@ class ClusterController < ApplicationController
 
   # Method to get all details of the chosen cluster
   def show
-    instance   = params[:server]
-    @title     = instance["kind"]["title"]
-    attributes = instance["attributes"]
-    @master_n  = attributes["icclab.haas.master.number"]
-    @slave_n   = attributes["icclab.haas.slave.number"]
-    @info      = attributes["externalIP"]+" <p></p> "+attributes["statusText"]
-    @id        = attributes["occi.core.id"]
-    @id.slice! '/haas/'
-    @uuid      = "delete?uuid="+@id
+    uuid   = params[:uuid]
+    cluster = current_user.clusters.find_by(uuid: uuid)
+    @title    = cluster[:name]
+    @master_n = cluster[:master_num]
+    @slave_n  = cluster[:slave_num]
+    @info     = IPAddr.new(cluster[:external_ip], Socket::AF_INET).to_s
+    @id       = uuid
+    @link     = "delete?uuid="+@id
 
     respond_to do |format|
       format.js

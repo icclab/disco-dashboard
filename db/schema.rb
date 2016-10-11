@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161011110254) do
+ActiveRecord::Schema.define(version: 20161011150141) do
 
   create_table "clusters", force: :cascade do |t|
     t.string   "uuid"
     t.string   "state"
     t.integer  "user_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.string   "name"
     t.string   "master_name"
     t.string   "slave_name"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20161011110254) do
     t.integer  "master_num"
     t.integer  "slave_num"
     t.boolean  "master_slave"
+    t.integer  "external_ip",   limit: 8
     t.index ["user_id", "uuid"], name: "index_clusters_on_user_id_and_uuid"
     t.index ["user_id"], name: "index_clusters_on_user_id"
     t.index ["uuid"], name: "index_clusters_on_uuid", unique: true
