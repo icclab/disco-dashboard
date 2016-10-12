@@ -42,7 +42,7 @@
                                         <dt>Slave Disk</dt>
                                         <dd><%= s_flavor.disk %>GB</dd>
                                         <dt>Status</dt>
-                                        <dd class="text-<%= get_status(cluster[:state]) %>"><strong><%= cluster[:state] ? cluster[:state] : "Deploying..." %></strong></dd>
+                                        <dd id = "cluster<%= cluster[:id] %>" class="text-<%= get_status(cluster[:state]) %>"><strong><%= cluster[:state] ? cluster[:state] : "Deploying..." %></strong></dd>
                                   </dl>
                               </div>
                           </div>

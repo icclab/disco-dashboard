@@ -11,30 +11,6 @@ class PagesController < ApplicationController
     @clusters = current_user.clusters.all
   end
 
-  # DISCO
-
-  # Authenticate and get instances from DISCO
-  def list_disco
-    response = send_request
-
-    clusters = ''
-    response.header.each_header {|key,value| clusters = value.split(', ') if key=='x-occi-location' }
-
-    clusters.each { |cluster| send_request(cluster) }
-
-    list = []
-    clusters.each do |cluster|
-      response = send_request(cluster, "json")
-      if response.code == "200"
-        list << JSON.parse(response.body)
-      end
-    end
-
-    return list
-  end
-
-
-
   # Helper methods to get image and flavor names
     def get_image(stack)
       id_m = stack[:master_image]
@@ -48,56 +24,35 @@ class PagesController < ApplicationController
       return @@openstack.get_flavor(id_m), @@openstack.get_flavor(id_s) if id_s && id_m
     end
 
+
   private
+
     # Method to update all clusters of current user
     def update_all
-      user_clusters = current_user.clusters.all
+      clusters = current_user.clusters.all
 
       response = send_request
 
-      clusters = ''
-      response.header.each_header {|key,value| clusters = value.split(', ') if key=='x-occi-location' }
-
-      clusters.each { |cluster| send_request(cluster) }
+      clusters.each { |cluster| cluster[:uuid] ? send_request(cluster[:uuid]) : cluster.delete }
 
       clusters.each do |cluster|
-        response = send_request(cluster, 'json')
+        response = send_request(cluster[:uuid], 'json')
 
         if response.code == "200"
           disco_cluster = JSON.parse(response.body)
-          uuid = disco_cluster["attributes"]["occi.core.id"]
-          uuid.slice! '/haas/'
-          state = disco_cluster["attributes"]["stack_status"]
 
-          user_cluster = user_clusters.find { |s| s[:uuid] == uuid }
-          if user_cluster
-            user_cluster.update_attribute(:state, state)
-          else
-            attributes = disco_cluster["attributes"]
-            new_cluster = {
-              uuid:          uuid,
-              state:         state,
-              name:          disco_cluster["kind"]["title"],
-              master_name:   "master"+uuid,
-              slave_name:    "slave"+uuid,
-              master_image:  attributes["icclab.haas.master.image"],
-              master_flavor: attributes["icclab.haas.master.flavor"],
-              slave_image:   attributes["icclab.haas.slave.image"],
-              slave_flavor:  attributes["icclab.haas.slave.flavor"],
-              master_slave:  attributes["icclab.haas.master.slaveonmaster"]=="on" ? true : false,
-              external_ip:   attributes["externalIP"],
-              master_num:    attributes["icclab.haas.master.number"],
-              slave_num:     attributes["icclab.haas.slave.number"]
-            }
-            instance = current_user.clusters.build(new_cluster)
-            if instance.save
-              puts 'New cluster added from disco'
-            else
-              raise
-            end
-          end
+          status = disco_cluster["attributes"]["stack_status"]
+          ip     = convert_ip(disco_cluster["attributes"]["externalIP"])
+
+          cluster.update_columns(state: status, external_ip: ip)
+        else
+          cluster.delete
         end
-
       end
+    end
+
+    # Method to convert string ip address to int
+    def convert_ip(addr)
+      addr!=nil && addr!="none" ? IPAddr.new(addr).to_i : nil
     end
 end

@@ -21,7 +21,9 @@ class ApplicationController < ActionController::Base
       })
     end
 
-    def send_request(url = 'http://160.85.4.252:8888/haas/', type = 'text')
+    def send_request(uuid = '', type = 'text')
+      url = 'http://160.85.4.252:8888/haas/'
+      url += uuid if uuid
       uri     = URI.parse(url)
       request = Net::HTTP::Get.new(uri)
       request["X-User-Name"]   = current_user[:username]
