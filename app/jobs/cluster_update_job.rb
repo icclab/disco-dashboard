@@ -19,7 +19,10 @@ class ClusterUpdateJob < ApplicationJob
       state = res["attributes"]["stack_status"]
       if(response.code == "200" && state != cluster[:state])
         cluster.update_attribute(:state, state)
-
+        ActionCable.server.broadcast "cluster_#{current_user[:id]}",
+                                     uuid: uuid,
+                                     state: state
+        head :ok
         puts "====================================================================="
         puts "                  State of cluster#{id} was updated"
         puts "====================================================================="

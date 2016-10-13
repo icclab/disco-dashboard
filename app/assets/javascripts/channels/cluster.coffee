@@ -9,8 +9,9 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
     # html = if data["progress"]==100 then @completed(data) else @updateInfo(data)
-    id = "#"+data["id"]
-    $("#{id}").html(html)
+    id = "#cluster-"+data["uuid"]
+    $("#{id}").html("#{data["state"]}")
+    $("#{id}").attr("class", "#{data["state"]}")
 
   updateInfo: (data) ->
     """

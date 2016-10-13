@@ -2,7 +2,7 @@
 class ClusterChannel < ApplicationCable::Channel
   def subscribed
     # stream_from "some_channel"
-    stream_from "cluster_#{uuid}"
+    stream_from "cluster_#{user_id}"
   end
 
   def unsubscribed
