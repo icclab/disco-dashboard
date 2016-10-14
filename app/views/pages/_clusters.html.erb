@@ -12,43 +12,9 @@
               </div>
           </div>
           <div class="panel-body">
-            <div class="row">
+            <div class="row" id="cluster-panel">
               <% if @clusters.any? %>
-                <% @clusters.each do |cluster| %>
-                  <div class="col-lg-4">
-                      <%= link_to details_path(uuid: cluster[:uuid]), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
-                          <div class="panel panel-info" id="<%= cluster[:uuid] %>">
-                              <div class="panel-heading">
-                                  <%= cluster[:name] %>
-                              </div>
-                              <div class="panel-body text-left">
-                                  <dl class="dl-horizontal">
-                                    <% m_image, s_image = get_image(cluster) %>
-                                    <% m_flavor, s_flavor = get_flavor(cluster) %>
-                                        <dt>Master Image</dt>
-                                        <dd><%= m_image.name %></dd>
-                                        <dt>Master VCPUs</dt>
-                                        <dd><%= m_flavor.vcpus %></dd>
-                                        <dt>Master RAM</dt>
-                                        <dd><%= m_flavor.ram %>MB</dd>
-                                        <dt>Master Disk</dt>
-                                        <dd><%= m_flavor.disk %>GB</dd>
-                                        <dt>Slave Image</dt>
-                                        <dd><%= s_image.name %></dd>
-                                        <dt>Slave VCPUs</dt>
-                                        <dd><%= s_flavor.vcpus %></dd>
-                                        <dt>Slave RAM</dt>
-                                        <dd><%= s_flavor.ram %>MB</dd>
-                                        <dt>Slave Disk</dt>
-                                        <dd><%= s_flavor.disk %>GB</dd>
-                                        <dt>Status</dt>
-                                        <dd id = "cluster-<%= cluster[:uuid] %>" class="text-<%= get_status(cluster[:state]) %>"><strong><%= cluster[:state] ? cluster[:state] : "Deploying..." %></strong></dd>
-                                  </dl>
-                              </div>
-                          </div>
-                      <% end %>
-                  </div>
-                <% end %>
+                <%= render @clusters %>
               <% end %>
             </div>
           </div>

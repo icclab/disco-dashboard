@@ -3,10 +3,14 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
 
   @@disco_ip = 'http://160.85.4.252:8888/haas/'
-  @@openstack = ''
 
   private
     def logged_in_user
+      user_id = cookies.signed[:user_id]
+      user = User.find_by(id: user_id)
+      if user && user.authenticated?(cookies[:remember_token])
+        log_in user
+      end
       unless logged_in?
         redirect_to login_url
       end

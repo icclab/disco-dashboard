@@ -5,24 +5,21 @@ class ClusterUpdateJob < ApplicationJob
     puts "====================================================================="
     puts "                      Cluster id is #{id}"
     puts "====================================================================="
-    cluster = Cluster.find_by(id: id)
-    state   = cluster[:state]
-    uuid    = cluster[:uuid]
+    cluster  = Cluster.find_by(id: id)
+    state    = cluster[:state]
+    uuid     = cluster[:uuid]
 
     begin
       sleep(2)
       send_request(current_user, uuid)
-
       response = send_request(current_user, uuid, 'json')
 
       res = JSON.parse(response.body)
       state = res["attributes"]["stack_status"]
       if(response.code == "200" && state != cluster[:state])
         cluster.update_attribute(:state, state)
-        ActionCable.server.broadcast "cluster_#{current_user[:id]}",
-                                     uuid: uuid,
-                                     state: state
-        head :ok
+        cluster.update(current_user[:id], uuid, state)
+
         puts "====================================================================="
         puts "                  State of cluster#{id} was updated"
         puts "====================================================================="
@@ -43,5 +40,15 @@ class ClusterUpdateJob < ApplicationJob
         http.request(request)
       end
       return response
+    end
+
+    def openstack(current_user)
+      stack = OpenStack::Connection.create ({
+        username:   current_user[:username],
+        api_key:    current_user[:disco_ip],
+        auth_url:   current_user[:auth_url],
+        authtenant: current_user[:tenant]
+      })
+      return stack
     end
 end

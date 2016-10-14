@@ -2,6 +2,9 @@
 class ClusterChannel < ApplicationCable::Channel
   def subscribed
     # stream_from "some_channel"
+    puts "====================================================================="
+    puts "                    Subscribed: user_id is #{user_id}"
+    puts "====================================================================="
     stream_from "cluster_#{user_id}"
   end
 

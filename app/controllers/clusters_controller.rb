@@ -1,8 +1,9 @@
-class ClusterController < ApplicationController
+class ClustersController < ApplicationController
   before_action :logged_in_user
-  # before_action :correct_user, only: :destroy
 
-# Method to create a cluster on DISCO
+  include PagesHelper
+
+  # Method to create a cluster on DISCO
   def create
     cluster = params[:cluster]
     new_cluster = current_user.clusters.build(cluster_params)
@@ -25,8 +26,15 @@ class ClusterController < ApplicationController
         uuid = nil
         response.header.each_header { |key, value| uuid = value.split(//).last(36).join if key =="location" }
         new_cluster.update_attribute(:uuid, uuid)
+        ActionCable.server.broadcast "cluster_#{current_user[:id]}",
+                                     type: 1,
+                                     cluster: render_cluster(new_cluster)
         #run background job
+        puts "====================================================================="
+        puts "         Running background job on cluster #{new_cluster[:id]}"
+        puts "====================================================================="
         ClusterUpdateJob.perform_later(current_user, new_cluster[:id])
+        sleep(3)
       else
         new_cluster.delete
         puts "New cluster deleted from database due to failure on creation"
@@ -34,8 +42,6 @@ class ClusterController < ApplicationController
     else
       puts "Failed to save"
     end
-
-    redirect_to :back
   end
 
   # Method to delete chosen cluste
@@ -54,13 +60,13 @@ class ClusterController < ApplicationController
       http.request(request)
     end
 
-    if response.code != 200
+    if response.code != "200"
       raise
     else
       flash[:success] = "Cluster delete in progress"
     end
 
-    redirect_to root_url
+    redirect_to :back
   end
 
   # Method to get all details of the chosen cluster
@@ -89,8 +95,15 @@ class ClusterController < ApplicationController
                                       :master_slave)
     end
 
-    def correct_user
-      cluster = current_user.clusters.find_by(id: params[:id])
-      redirect_to root_url if cluster.nil?
+    def render_cluster(cluster)
+      m_image = @@openstack.get_image(cluster[:master_image])
+      s_image = @@openstack.get_image(cluster[:slave_image])
+      m_flavor = @@openstack.get_flavor(cluster[:master_flavor])
+      s_flavor = @@openstack.get_flavor(cluster[:slave_flavor])
+      render(partial: 'cluster', locals: { cluster: cluster,
+                                           m_image: m_image,
+                                           s_image: s_image,
+                                           m_flavor: m_flavor,
+                                           s_flavor: s_flavor })
     end
 end

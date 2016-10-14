@@ -1,7 +1,4 @@
 module ApplicationHelper
-  require 'json'
-  require 'net/http'
-  require 'uri'
 
   # Returns the full title on a per-page basis.
   def full_title(page_title = '')

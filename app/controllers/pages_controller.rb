@@ -3,26 +3,13 @@ class PagesController < ApplicationController
   before_action :authenticate_to_openstack
   before_action :update_all
 
-  helper_method :get_image, :get_flavor
-
   def dashboard
     @images   = @@openstack.list_images
     @flavors  = @@openstack.list_flavors
+    @get_image = Proc.new { |image| @@openstack.get_image(image) }
+    @get_flavor = Proc.new { |flavor| @@openstack.get_flavor(flavor) }
     @clusters = current_user.clusters.all
   end
-
-  # Helper methods to get image and flavor names
-    def get_image(stack)
-      id_m = stack[:master_image]
-      id_s = stack[:slave_image]
-      return @@openstack.get_image(id_m), @@openstack.get_image(id_s) if id_s && id_m
-    end
-
-    def get_flavor(stack)
-      id_m = stack[:master_flavor]
-      id_s = stack[:slave_flavor]
-      return @@openstack.get_flavor(id_m), @@openstack.get_flavor(id_s) if id_s && id_m
-    end
 
 
   private

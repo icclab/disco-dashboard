@@ -5,7 +5,7 @@ module ApplicationCable
     identified_by :user_id
 
     def connect
-      self.cluster_user = find_verified_user
+      self.user_id = find_verified_user
     end
 
     private
