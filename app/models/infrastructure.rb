@@ -1,0 +1,2 @@
+class Infrastructure < ApplicationRecord
+end
