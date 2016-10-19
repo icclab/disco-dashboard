@@ -18,9 +18,4 @@ class SessionsController < ApplicationController
     log_out if logged_in?
     redirect_to login_path
   end
-
-  private
-    def session_params
-      params.require(:session).permit(:username, :password, :auth_url, :tenant, :remember_me)
-    end
 end
