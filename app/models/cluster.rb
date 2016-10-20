@@ -1,5 +1,5 @@
 class Cluster < ApplicationRecord
-  belongs_to :user
+  belongs_to :infrastructure
 
   def update(id, uuid, state)
     ActionCable.server.broadcast "cluster_#{id}",

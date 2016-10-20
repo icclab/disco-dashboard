@@ -4,11 +4,10 @@ class PagesController < ApplicationController
   before_action :update_all
 
   def dashboard
-    @images   = @@openstack.list_images
-    @flavors  = @@openstack.list_flavors
-    @get_image = Proc.new { |image| @@openstack.get_image(image) }
-    @get_flavor = Proc.new { |flavor| @@openstack.get_flavor(flavor) }
-    @clusters = current_user.clusters.all
+    @images          = current_user.images.all
+    @flavors         = current_user.flavors.all
+    @clusters        = current_user.clusters.all
+    @infrastructures = current_user.infrastructures.all
   end
 
 

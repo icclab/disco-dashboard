@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   attr_accessor :remember_token
 
-  has_many :clusters, dependent: :destroy
+  has_many :infrastructures, dependent: :destroy
+  has_many :clusters, through: :infrastructures, dependent: :destroy
 
   before_save { self.email.downcase! }
 
