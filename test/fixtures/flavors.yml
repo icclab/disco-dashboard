@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  string: 
+  string: 
+  integer: 
+  integer: 
+  integer: 
+  references: 
+
+two:
+  string: 
+  string: 
+  integer: 
+  integer: 
+  integer: 
+  references: 

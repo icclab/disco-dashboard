@@ -10,14 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019095253) do
+ActiveRecord::Schema.define(version: 20161020075514) do
 
   create_table "clusters", force: :cascade do |t|
     t.string   "uuid"
     t.string   "state"
-    t.integer  "user_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
     t.string   "name"
     t.string   "master_image"
     t.string   "slave_image"
@@ -25,11 +22,35 @@ ActiveRecord::Schema.define(version: 20161019095253) do
     t.string   "slave_flavor"
     t.integer  "master_num"
     t.integer  "slave_num"
+    t.integer  "external_ip",       limit: 8
     t.boolean  "slave_on_master"
-    t.integer  "external_ip",     limit: 8
-    t.index ["user_id", "uuid"], name: "index_clusters_on_user_id_and_uuid"
-    t.index ["user_id"], name: "index_clusters_on_user_id"
+    t.integer  "infrastructure_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.index ["infrastructure_id"], name: "index_clusters_on_infrastructure_id"
     t.index ["uuid"], name: "index_clusters_on_uuid", unique: true
+  end
+
+  create_table "flavors", force: :cascade do |t|
+    t.string   "fl_id"
+    t.string   "name"
+    t.integer  "vcpus"
+    t.integer  "disk"
+    t.integer  "ram"
+    t.integer  "infrastructure_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["infrastructure_id"], name: "index_flavors_on_infrastructure_id"
+  end
+
+  create_table "images", force: :cascade do |t|
+    t.string   "img_id"
+    t.string   "name"
+    t.integer  "size"
+    t.integer  "infrastructure_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["infrastructure_id"], name: "index_images_on_infrastructure_id"
   end
 
   create_table "infrastructures", force: :cascade do |t|
@@ -37,8 +58,10 @@ ActiveRecord::Schema.define(version: 20161019095253) do
     t.string   "username"
     t.string   "auth_url"
     t.string   "tenant"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_infrastructures_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

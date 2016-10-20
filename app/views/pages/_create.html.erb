@@ -15,12 +15,8 @@
                     </div>
                     <%= f.label(:master, "Master") %>
                     <div class="form-group input-group">
-                        <span class="input-group-addon">Name</span>
-                        <%= f.text_field :master_name, placeholder: "Enter name", class: 'form-control' %>
                         <span class="input-group-addon">#</span>
                         <%= f.select(:master_num, options_for_select((1..10).map { |i| [i, i] }), {}, {class: 'form-control'}) %>
-                    </div>
-                    <div class="form-group input-group">
                         <span class="input-group-addon">Image</span>
                         <%= f.select(:master_image, options_for_select(@images.map { |image| [image[:name], image[:id]] }), {}, {class: 'form-control'}) %>
                         <span class="input-group-addon">Flavor</span>
@@ -28,12 +24,8 @@
                     </div>
                     <%= f.label(:slave, "Slave") %>
                     <div class="form-group input-group">
-                        <span class="input-group-addon">Name</span>
-                        <%= f.text_field :slave_name, placeholder: "Enter name", class: 'form-control' %>
                         <span class="input-group-addon">#</span>
                         <%= f.select(:slave_num, options_for_select((1..10).map { |i| [i, i] }), {}, {class: 'form-control'}) %>
-                    </div>
-                    <div class="form-group input-group">
                         <span class="input-group-addon">Image</span>
                         <%= f.select(:slave_image, options_for_select(@images.map { |image| [image[:name], image[:id]] }), {}, {class: 'form-control'}) %>
                         <span class="input-group-addon">Flavor</span>
@@ -41,7 +33,7 @@
                     </div>
                     <h5>
                         Slave node on Master node?
-                        <%= f.check_box(:master_slave) %>
+                        <%= f.check_box(:slave_on_master) %>
                     </h5>
                     <%= f.label(:network, "Network") %>
                     <div class="form-group input-group">

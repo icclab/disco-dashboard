@@ -5,6 +5,7 @@ class CreateInfrastructures < ActiveRecord::Migration[5.0]
       t.string :username
       t.string :auth_url
       t.string :tenant
+      t.references :user, foreign_key: true
 
       t.timestamps
     end
