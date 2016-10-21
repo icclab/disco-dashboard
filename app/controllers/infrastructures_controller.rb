@@ -2,10 +2,10 @@ class InfrastructuresController < ApplicationController
   def create
     @infrastructure = current_user.infrastructures.build(infrastructure_params)
     if @infrastructure.save
-      connection = authenticate(@infrastructure, password)
+      connection = @infrastucture.authenticate(params[:password])
 
-      save_images  connection.get_images()
-      save_flavors connection.get_flavors()
+      save_images  @infrastructure.get_images  connection
+      save_flavors @infrastructure.get_flavors connection
       #todo
     else
       #todo
@@ -20,16 +20,6 @@ class InfrastructuresController < ApplicationController
   private
     def infrastructure_params
       params.require(:infrastructure).permit(:name, :username, :tenant, :auth_url)
-    end
-
-    def authenticate(infrastructure, password)
-      os = current_user.infrastructures.find_by(id: id)
-      return OpenStack::Connection.create ({
-        username:   infrastructure[:username],
-        api_key:    password,
-        auth_url:   infrastructure[:auth_url],
-        authtenant: infrastructure[:tenant]
-      })
     end
 
     def save_images(images)
