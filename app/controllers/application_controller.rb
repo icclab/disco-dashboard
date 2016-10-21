@@ -16,17 +16,8 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    def authenticate_to_openstack
-      @@openstack = OpenStack::Connection.create ({
-        username:   current_user[:username],
-        api_key:    current_user[:disco_ip],
-        auth_url:   current_user[:auth_url],
-        authtenant: current_user[:tenant]
-      })
-    end
-
     def send_request(uuid = '', type = 'text')
-      url = 'http://160.85.4.252:8888/haas/'
+      url = ENV["disco_ip"]
       url += uuid if uuid
       uri     = URI.parse(url)
       request = Net::HTTP::Get.new(uri)

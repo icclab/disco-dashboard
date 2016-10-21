@@ -71,8 +71,8 @@ class ClustersController < ApplicationController
 
   # Method to get all details of the chosen cluster
   def show
-    uuid   = params[:uuid]
-    cluster = current_user.clusters.find_by(uuid: uuid)
+    uuid      = params[:uuid]
+    cluster   = current_user.clusters.find_by(uuid: uuid)
     @title    = cluster[:name]
     @master_n = cluster[:master_num]
     @slave_n  = cluster[:slave_num]
@@ -87,11 +87,10 @@ class ClustersController < ApplicationController
 
   private
     def cluster_params
-      params.require(:cluster).permit(:name, :uuid, :state,
-                                      :master_name, :slave_name,
-                                      :master_image, :slave_image,
+      params.require(:cluster).permit(:name,  :uuid,  :state,
+                                      :master_image,  :slave_image,
                                       :master_flavor, :slave_flavor,
-                                      :master_name, :slave_num,
+                                      :master_name,   :slave_num,
                                       :master_slave)
     end
 
@@ -100,9 +99,10 @@ class ClustersController < ApplicationController
       s_image = @@openstack.get_image(cluster[:slave_image])
       m_flavor = @@openstack.get_flavor(cluster[:master_flavor])
       s_flavor = @@openstack.get_flavor(cluster[:slave_flavor])
-      render(partial: 'cluster', locals: { cluster: cluster,
-                                           m_image: m_image,
-                                           s_image: s_image,
+
+      render(partial: 'cluster', locals: { cluster:  cluster,
+                                           m_image:  m_image,
+                                           s_image:  s_image,
                                            m_flavor: m_flavor,
                                            s_flavor: s_flavor })
     end

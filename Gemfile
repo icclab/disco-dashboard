@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails',           '5.0.0.1'
+gem 'figaro'
 gem 'bcrypt'
 gem 'redis'
 gem 'sidekiq'
