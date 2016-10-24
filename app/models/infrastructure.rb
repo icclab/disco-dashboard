@@ -7,61 +7,62 @@ class Infrastructure < ApplicationRecord
   module Adapter
     module Openstack
       class << self
-        def authenticate(password)
+        def authenticate(credentials)
           OpenStack::Connection.create ({
-            username:   self.username,
-            api_key:    password,
-            auth_url:   self.auth_url,
-            authtenant: self.tenant
+            username:   credentials[:username],
+            api_key:    credentials[:password],
+            auth_url:   credentials[:auth_url],
+            authtenant: credentials[:tenant]
           })
         end
 
         def get_images(connection)
-          connection.get_images
+          connection.list_images
         end
 
-        def get_flavors
-          connection.get_flavors
+        def get_flavors(connection)
+          connection.list_flavors
         end
       end
     end
 
     module Cloudstack
       class << self
-        def authenticate
+        def authenticate(credentials)
 
         end
 
-        def get_images
+        def get_images(connection)
 
         end
 
-        def get_flavors
+        def get_flavors(connection)
 
         end
       end
     end
+  end
 
-    def authenticate
-      self.adapter.authenticate
-    end
+  def authenticate(credentials)
+    self.adapter.authenticate credentials
+  end
 
-    def get_images
-      self.adapter.get_images
-    end
+  def get_images(connection)
+    self.adapter.get_images connection
+  end
 
-    def get_flavors
-      self.adapter.get_flavors
-    end
+  def get_flavors(connection)
+    self.adapter.get_flavors connection
+  end
 
-    def adapter
-      return @adapter if @adapter
-      self.adapter = :openstack
-      @adapter
-    end
+  def adapter
+    return @adapter if @adapter
+    self.adapter = :openstack
+    @adapter
+  end
 
-    def adapter=(adapter)
-      @adapter = Infrastructure::Adapter.const_get(adapter.to_s.capitalize)
-    end
+  def adapter=(adapter)
+    puts adapter
+    @adapter = Infrastructure::Adapter.const_get(adapter.to_s.capitalize)
   end
 end

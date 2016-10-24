@@ -1,15 +1,18 @@
 class InfrastructuresController < ApplicationController
-  def create
+  def new
+    #infrastructure = params[:infrastructure].except(:password)
     @infrastructure = current_user.infrastructures.build(infrastructure_params)
-    if @infrastructure.save
-      connection = @infrastucture.authenticate(params[:password])
-
+    @infrastructure.adapter = params[:infrastructure][:type]
+    connection = @infrastructure.authenticate(params[:infrastructure])
+    if connection && @infrastructure.save
       save_images  @infrastructure.get_images  connection
       save_flavors @infrastructure.get_flavors connection
-      #todo
+      puts "saved successfully"
     else
-      #todo
+      puts "something is wrong"
+      @infrastructure.delete
     end
+    redirect_to root_url
   end
 
   def destroy
@@ -24,13 +27,14 @@ class InfrastructuresController < ApplicationController
 
     def save_images(images)
       images.each do |img|
-        image = current_user.images.build(
+        image = @infrastructure.images.build(
           img_id: img[:id],
           name:   img[:name],
-          size:   img[:size]
+          size:   img[:minDisk]
         )
-
+        puts img
         if image.save
+          puts "image saved"
           # gj
         else
           #not gj
@@ -40,15 +44,16 @@ class InfrastructuresController < ApplicationController
 
     def save_flavors(flavors)
       flavors.each do |flv|
-        flavor = current_user.flavors.build(
+        flavor = @infrastructure.flavors.build(
           fl_id: flv[:id],
           name:  flv[:name],
           vcpus: flv[:vcpus],
           ram:   flv[:ram],
           disk:  flv[:disk]
         )
-
+        puts flv
         if flavor.save
+          puts "flavor saved"
         else
         end
       end

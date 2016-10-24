@@ -11,6 +11,12 @@ class PagesController < ApplicationController
     @infrastructures.each { |inf| @adapters << { inf.name => inf.id } } if @infrastructures
   end
 
+  def render_form(infrastructure_id)
+    images  = current_user.images.find_by(infrastructure_id: infrastructure_id)
+    flavors = current_user.flavors.find_by(infrastructure_id: infrastructure_id)
+    render(partial: 'clusters/form', locals: { images:  images,
+                                               flavors: flavors })
+  end
 
   private
 
@@ -42,4 +48,5 @@ class PagesController < ApplicationController
     def convert_ip(addr)
       addr!=nil && addr!="none" ? IPAddr.new(addr).to_i : nil
     end
+
 end
