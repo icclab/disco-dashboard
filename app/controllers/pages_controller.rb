@@ -1,13 +1,14 @@
 class PagesController < ApplicationController
   before_action :logged_in_user
-  before_action :authenticate_to_openstack
   before_action :update_all
 
-  def dashboard
-    @images          = current_user.images.all
-    @flavors         = current_user.flavors.all
-    @clusters        = current_user.clusters.all
-    @infrastructures = current_user.infrastructures.all
+  def index
+    @images          = current_user.images.all          if current_user.images.any?
+    @flavors         = current_user.flavors.all         if current_user.flavors.any?
+    @clusters        = current_user.clusters.all        if current_user.clusters.any?
+    @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
+    @adapters        = [ { "Choose" => 0 } ]
+    @infrastructures.each { |inf| @adapters << { inf.name => inf.id } } if @infrastructures
   end
 
 

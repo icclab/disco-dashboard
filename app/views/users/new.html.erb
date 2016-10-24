@@ -1,4 +1,4 @@
-<% provide(:title, "Sing up") %>
+<% provide(:title, "Sign up") %>
 
 <div class="container">
     <div class="row">
@@ -8,7 +8,7 @@
                     <h3 class="panel-title">Please, sign up</h3>
                 </div>
                 <div class="panel-body">
-                    <%= form_for(@user), html: { role: "form" } do |f| %>
+                    <%= form_for @user, html: { role: "form" } do |f| %>
                       <fieldset>
                         <%= render 'shared/error_messages' %>
 

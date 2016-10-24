@@ -6,8 +6,8 @@ class ClustersController < ApplicationController
   # Method to create a cluster on DISCO
   def create
     cluster = params[:cluster]
-    new_cluster = current_user.clusters.build(cluster_params)
-    if new_cluster.save
+    cluster = current_user.clusters.build(cluster_params)
+    if cluster.save
       uri = URI.parse(@@disco_ip)
       request = Net::HTTP::Post.new(uri)
       request.content_type        = "text/occi"
@@ -28,15 +28,15 @@ class ClustersController < ApplicationController
         new_cluster.update_attribute(:uuid, uuid)
         ActionCable.server.broadcast "cluster_#{current_user[:id]}",
                                      type: 1,
-                                     cluster: render_cluster(new_cluster)
+                                     cluster: render_cluster(cluster)
         #run background job
         puts "====================================================================="
         puts "         Running background job on cluster #{new_cluster[:id]}"
         puts "====================================================================="
-        ClusterUpdateJob.perform_later(current_user, new_cluster[:id])
+        ClusterUpdateJob.perform_later(current_user, cluster[:id])
         sleep(3)
       else
-        new_cluster.delete
+        cluster.delete
         puts "New cluster deleted from database due to failure on creation"
       end
     else

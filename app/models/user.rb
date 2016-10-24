@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   has_many :infrastructures, dependent: :destroy
   has_many :clusters, through: :infrastructures, dependent: :destroy
+  has_many :images,   through: :infrastructures, dependent: :destroy
+  has_many :flavors,   through: :infrastructures, dependent: :destroy
 
   before_save { self.email.downcase! }
 

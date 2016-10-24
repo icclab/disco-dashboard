@@ -1,5 +1,5 @@
  <div class="col-lg-4">
-    <%= link_to details_path(uuid: cluster[:uuid]), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
+    <%= link_to details_path(uuid: cluster[:uuid]), remote: true, data: { toggle: "modal", target: ".cluster-modal"} do %>
         <div class="panel panel-info" id="<%= cluster[:uuid] %>">
             <div class="panel-heading">
                 <%= cluster[:name] %>
