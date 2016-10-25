@@ -7,15 +7,19 @@ class PagesController < ApplicationController
     @flavors         = current_user.flavors.all         if current_user.flavors.any?
     @clusters        = current_user.clusters.all        if current_user.clusters.any?
     @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
-    @adapters        = [ { "Choose" => 0 } ]
-    @infrastructures.each { |inf| @adapters << { inf.name => inf.id } } if @infrastructures
+    @adapters        = { "Choose" => 0 }
+    @infrastructures.each { |inf| @adapters[inf.name] = inf.id } if @infrastructures
   end
 
-  def render_form(infrastructure_id)
-    images  = current_user.images.find_by(infrastructure_id: infrastructure_id)
-    flavors = current_user.flavors.find_by(infrastructure_id: infrastructure_id)
-    render(partial: 'clusters/form', locals: { images:  images,
-                                               flavors: flavors })
+  def render_form
+    @infrastructure_id = params[:infrastructure_id]
+    @imgs  = current_user.images.where(infrastructure_id: @infrastructure_id)
+    @flvs =  current_user.flavors.where(infrastructure_id: @infrastructure_id)
+    respond_to do |format|
+      format.js
+    end
+    #render(partial: 'clusters/form', locals: { images:  images,
+    #                                           flavors: flavors })
   end
 
   private
