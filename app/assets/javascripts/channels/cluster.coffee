@@ -15,3 +15,5 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
 
     if date.state=="CREATE_COMPLETED"
       $(data.uuid).attr("class", "text-success")
+    if date.state=="CREATE_FAILED"
+      $(data.uuid).attr("class", "text-danger")

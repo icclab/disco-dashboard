@@ -6,10 +6,12 @@
             </div>
             <div class="panel-body text-left">
                 <dl class="dl-horizontal">
-                  <% m_image ||= @get_image.call(cluster[:master_image]) if @get_image %>
-                  <% s_image ||= @get_image.call(cluster[:slave_image]) if @get_image %>
-                  <% m_flavor ||= @get_flavor.call(cluster[:master_flavor]) if @get_flavor %>
-                  <% s_flavor ||= @get_flavor.call(cluster[:slave_flavor]) if @get_flavor %>
+                  <% images   = current_user.images  %>
+                  <% flavors  = current_user.flavors %>
+                  <% m_image  = images.find_by(img_id: cluster[:master_image])  %>
+                  <% s_image  = images.find_by(img_id: cluster[:slave_image])   %>
+                  <% m_flavor = flavors.find_by(fl_id: cluster[:master_flavor]) %>
+                  <% s_flavor = flavors.find_by(fl_id: cluster[:slave_flavor])  %>
                       <dt>Master Image</dt>
                       <dd><%= m_image.name %></dd>
                       <dt>Master VCPUs</dt>

@@ -1,6 +1,5 @@
 class InfrastructuresController < ApplicationController
   def new
-    #infrastructure = params[:infrastructure].except(:password)
     @infrastructure = current_user.infrastructures.build(infrastructure_params)
     @infrastructure.adapter = params[:infrastructure][:type]
     connection = @infrastructure.authenticate(params[:infrastructure])
@@ -30,14 +29,11 @@ class InfrastructuresController < ApplicationController
         image = @infrastructure.images.build(
           img_id: img[:id],
           name:   img[:name],
-          size:   img[:minDisk]
-        )
-        puts img
+          size:   img[:minDisk] )
+
         if image.save
           puts "image saved"
-          # gj
         else
-          #not gj
         end
       end
     end
@@ -49,9 +45,8 @@ class InfrastructuresController < ApplicationController
           name:  flv[:name],
           vcpus: flv[:vcpus],
           ram:   flv[:ram],
-          disk:  flv[:disk]
-        )
-        puts flv
+          disk:  flv[:disk] )
+
         if flavor.save
           puts "flavor saved"
         else

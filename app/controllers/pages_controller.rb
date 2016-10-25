@@ -1,6 +1,5 @@
 class PagesController < ApplicationController
   before_action :logged_in_user
-  before_action :update_all
 
   def index
     @images          = current_user.images.all          if current_user.images.any?

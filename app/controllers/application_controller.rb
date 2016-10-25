@@ -2,8 +2,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
 
-  @@disco_ip = 'http://160.85.4.252:8888/haas/'
-
   private
     def logged_in_user
       user_id = cookies.signed[:user_id]

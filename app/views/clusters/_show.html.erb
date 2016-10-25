@@ -1,4 +1,4 @@
-<div class="modal fade bs-cluster1-modal" id="details-cluster" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade cluster-modal" id="details-cluster" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content info">
         <div class="modal-header">
@@ -28,7 +28,13 @@
             </pre>
           </div>
           <div class="modal-footer">
-            <%= button_to "Delete", delete_path, method: :post, remote: true, html: { id: "cluster-delete"}, data: { confirm: "Are you sure?", toggle: "modal", target: ".bs-cluster1-modal" }, class: "btn btn-danger" %>
+            <%= form_for :delete, url: delete_path, html: {role: "role", id: "delete-form"} do |f| %>
+              <%= f.hidden_field :uuid %>
+              <div class="form-group">
+                <%= f.password_field(:password, placeholder: "Enter infrastructure password to delete", class: 'form-control') %>
+              </div>
+              <%= f.submit "Delete", class: "btn btn-danger" %>
+            <% end %>
           </div>
     </div>
   </div>
