@@ -4,7 +4,6 @@ class ClusterUpdateJob < ApplicationJob
   def perform(infrastructure, user_id, cluster_id, password)
     puts "====================================================================="
     puts "                      Cluster id is #{cluster_id}"
-    puts user_id, cluster_id, password
     puts "====================================================================="
     cluster  = Cluster.find(cluster_id)
     state    = cluster[:state]
@@ -17,11 +16,16 @@ class ClusterUpdateJob < ApplicationJob
 
       res = JSON.parse(response.body)
       state = res["attributes"]["stack_status"]
+
       if(response.code == "200" && state != cluster[:state])
         cluster.update_attribute(:state, state)
         cluster.update(user_id, uuid, state)
+        if state.downcase.include?('complete')
+          ip = convert_ip(res["attributes"]["externalIP"])
+          cluster.update_attribute(:external_ip, ip)
+        end
       end
-    end until state.downcase.include?('completed') || state.downcase.include?('failed')
+    end until state.downcase.include?('complete') || state.downcase.include?('failed')
   end
 
   private
@@ -37,5 +41,10 @@ class ClusterUpdateJob < ApplicationJob
         http.request(request)
       end
       return response
+    end
+
+    # Method to convert string ip address to int
+    def convert_ip(addr)
+      addr!=nil && addr!="none" ? IPAddr.new(addr).to_i : nil
     end
 end

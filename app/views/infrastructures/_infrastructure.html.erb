@@ -1,6 +1,6 @@
  <div class="col-lg-4">
     <%= link_to details_path(id: infrastructure[:id]), remote: true, data: { toggle: "modal", target: ".infrastructure-modal"} do %>
-        <div class="panel panel-info" id="<%= infrastructure[:id] %>">
+        <div class="panel panel-warning" id="<%= infrastructure[:id] %>">
             <div class="panel-heading">
                 <%= infrastructure[:name] %>
             </div>
