@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
   before_action :logged_in_user
+  before_action :update_all
 
   def index
     @images          = current_user.images.all          if current_user.images.any?
@@ -16,12 +17,9 @@ class PagesController < ApplicationController
       @imgs  = current_user.images.where(infrastructure_id: @infrastructure_id)
       @flvs =  current_user.flavors.where(infrastructure_id: @infrastructure_id)
     end
-    puts @infrastructure
     respond_to do |format|
       format.js
     end
-    #render(partial: 'clusters/form', locals: { images:  images,
-    #                                           flavors: flavors })
   end
 
   private
@@ -29,23 +27,27 @@ class PagesController < ApplicationController
     # Method to update all clusters of current user
     def update_all
       clusters = current_user.clusters.all
-
-      response = send_request
-
-      clusters.each { |cluster| cluster[:uuid] ? send_request(cluster[:uuid]) : cluster.delete }
-
       clusters.each do |cluster|
-        response = send_request(cluster[:uuid], 'json')
+        ip = IPAddr.new(cluster[:external_ip], Socket::AF_INET).to_s
+        url = "http://"+ip+":8084/progress.log"
+        uri     = URI.parse(url)
+        request = Net::HTTP::Get.new(uri)
+        response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+          http.request(request)
+        end
 
+        state = old_state = cluster[:state]
         if response.code == "200"
-          disco_cluster = JSON.parse(response.body)
-
-          status = disco_cluster["attributes"]["stack_status"]
-          ip     = convert_ip(disco_cluster["attributes"]["externalIP"])
-
-          cluster.update_columns(state: status, external_ip: ip)
+          if response.body.to_i == 1
+            state = 'READY'
+          end
         else
-          cluster.delete
+          state = 'CONNECTION_FAILED'
+        end
+
+        if(state!=old_state)
+          cluster.update_attribute(:state, state)
+          cluster.update(user_id, cluster[:uuid], state)
         end
       end
     end

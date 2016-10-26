@@ -12,7 +12,7 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
       $("#new-cluster").modal('hide')
     else
       $(data.uuid).html("<strong>#{data.state}</strong>")
-      if date.state.to_s=="CREATE_COMPLETE"
+      if date.state.downcase.include? 'ready'
         $(data.uuid).attr("class", "text-success")
-      if date.state.to_s=="CREATE_FAILED"
+      if date.state.downcase.include? 'failed'
         $(data.uuid).attr("class", "text-danger")

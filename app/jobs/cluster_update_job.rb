@@ -26,6 +26,10 @@ class ClusterUpdateJob < ApplicationJob
         end
       end
     end until state.downcase.include?('complete') || state.downcase.include?('failed')
+
+    if state.downcase.include? 'complete'
+      cluster.update(user_id, uuid, 'FRAMEWORKS_BEING_INSTALLED')
+    end
   end
 
   private

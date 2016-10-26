@@ -17,6 +17,11 @@ module SessionsHelper
     @current_user ||= User.find_by(id: cookies.signed[:user_id])
   end
 
+  # Returns current user id
+  def current_user_id
+    current_user[:id]
+  end
+
   # Returns true if the user is logged in, false otherwise.
   def logged_in?
     !current_user.nil?
