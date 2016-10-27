@@ -3,18 +3,31 @@ class ClustersController < ApplicationController
 
   # Method to create a cluster on DISCO
   def create
-    infrastructure = current_user.infrastructures.find(params[:cluster][:infrastructure_id])
+    infrastructure = Infrastructure.find(params[:cluster][:infrastructure_id])
     cluster = infrastructure.clusters.build(cluster_params)
     if cluster.save
-      uri = URI.parse(ENV["disco_ip"])
+      uri     = URI.parse(ENV["disco_ip"])
       request = Net::HTTP::Post.new(uri)
-      request.content_type        = "text/occi"
-      request["Category"]         = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
-      request["X-Tenant-Name"]    = infrastructure[:tenant]
-      request["X-Region-Name"]    = 'RegionOne'
-      request["X-User-Name"]      = infrastructure[:username]
-      request["X-Password"]       = params[:cluster][:password]
-      request["X-Occi-Attribute"] = 'icclab.haas.master.image="'+cluster.master_image+'",icclab.haas.slave.image="'+cluster.slave_image+'",icclab.haas.master.sshkeyname="discokey",icclab.haas.master.flavor="'+cluster.master_flavor+'",icclab.haas.slave.flavor="'+cluster.slave_flavor+'",icclab.haas.master.number="'+cluster.master_num.to_s+'",icclab.haas.slave.number="'+cluster.slave_num.to_s+'",icclab.haas.master.slaveonmaster="'+(cluster.slave_on_master ? "true" : "false")+'",icclab.haas.master.withfloatingip="true",icclab.disco.frameworks.spark.included="True",icclab.disco.frameworks.hadoop.included="True",icclab.disco.frameworks.zeppelin.included="True",icclab.disco.frameworks.jupyter.included="True"'
+      request.content_type         = "text/occi"
+      request["Category"]          = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
+      request["X-Tenant-Name"]     = infrastructure[:tenant]
+      request["X-Region-Name"]     = 'RegionOne'
+      request["X-User-Name"]       = infrastructure[:username]
+      request["X-Password"]        = params[:cluster][:password]
+      request["X-Occi-Attribute"]  = 'icclab.haas.master.image="'+cluster.master_image+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.slave.image="'+cluster.slave_image+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.master.sshkeyname="discokey",'
+      request["X-Occi-Attribute"] += 'icclab.haas.master.flavor="'+cluster.master_flavor+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.slave.flavor="'+cluster.slave_flavor+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.master.number="'+cluster.master_num.to_s+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.slave.number="'+cluster.slave_num.to_s+'",'
+      value = Proc.new { |a| a ? "true" : "false" }
+      request["X-Occi-Attribute"] += 'icclab.haas.master.slaveonmaster="'+value(cluster.slave_on_master)+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.master.withfloatingip="true",'
+      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.spark.included="'+value(cluster.spark)+'",'
+      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.hadoop.included="'+value(cluster.hadoop)+'",'
+      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.zeppelin.included="'+value(cluster.zeppelin)+'",'
+      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.jupyter.included="'+value(cluster.jupyter)+'"'
 
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
         http.request(request)
@@ -62,11 +75,11 @@ class ClustersController < ApplicationController
 
     if response.code != "200"
       puts "================================="
-      puts "Something went wrong"
+      puts "      Something went wrong"
       puts "================================="
     else
       puts "================================="
-      puts "Cluster delete in progress"
+      puts "    Cluster delete in progress"
       puts "================================="
       cluster.delete
     end
@@ -77,14 +90,16 @@ class ClustersController < ApplicationController
   # Method to get all details of the chosen cluster
   def show
     uuid      = params[:uuid]
-    cluster   = current_user.clusters.find_by(uuid: uuid)
+    cluster   = Cluster.find_by(uuid: uuid)
     @title    = cluster[:name]
     @master_n = cluster[:master_num]
     @slave_n  = cluster[:slave_num]
-    @info     = IPAddr.new(cluster[:external_ip], Socket::AF_INET).to_s
+    @ip       = IPAddr.new(cluster[:external_ip], Socket::AF_INET).to_s
     @id       = uuid
     @infrastructure_id = cluster.infrastructure_id
+    @info = cluster.state
   end
+
 
   private
     def cluster_params

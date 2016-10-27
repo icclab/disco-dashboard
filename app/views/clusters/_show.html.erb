@@ -7,7 +7,7 @@
           </div>
           <div class="modal-body"  id="modal-body">
             <dl class="dl-horizontal">
-                <dt>ID:</dt>
+                <dt>UUID:</dt>
                 <dd id="id"></dd>
                 <dt># Master(s):</dt>
                 <dd id="master_n">TODO</dd>
@@ -16,15 +16,17 @@
                 <dt>Frameworks:</dt>
                 <dd>
                     <ul class="list-unstyled">
-                        <li><a href="#">Spark</a></li>
-                        <li><a href="#">Zeppelin</a></li>
+                        <li><a href="#" id='hdfs' target="blank">HDFS</a></li>
+                        <li><a href="#" id='hadoop' target="blank">Hadoop Web UI</a></li>
+                        <li><a href="#" id='spark' target="blank">Spark</a></li>
+                        <li><a href="#" id='zeppelin' target="blank">Zeppelin</a></li>
+                        <li><a href="#" id='jupyter' target="blank">Jupyter</a></li>
                     </ul>
                 </dd>
             </dl>
             <label>Logs</label>
             <pre id="log">
-                Connecting to the openstack
-                Deploying the cluster...
+
             </pre>
           </div>
           <div class="modal-footer">

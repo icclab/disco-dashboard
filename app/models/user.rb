@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :clusters, through: :infrastructures
   has_many :images,   through: :infrastructures
   has_many :flavors,  through: :infrastructures
+  has_many :keypairs, through: :infrastructures
 
   before_save { self.email.downcase! }
 

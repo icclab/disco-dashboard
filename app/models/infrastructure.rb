@@ -1,8 +1,9 @@
 class Infrastructure < ApplicationRecord
   belongs_to :user
   has_many :clusters, dependent: :destroy
-  has_many :images, dependent: :destroy
-  has_many :flavors, dependent: :destroy
+  has_many :images,   dependent: :destroy
+  has_many :flavors,  dependent: :destroy
+  has_many :keypairs, dependent: :destroy
 
   module Adapter
     module Openstack
@@ -23,6 +24,10 @@ class Infrastructure < ApplicationRecord
         def get_flavors(connection)
           connection.list_flavors
         end
+
+        def get_keypairs(connection)
+          connection.keypairs
+        end
       end
     end
 
@@ -39,6 +44,10 @@ class Infrastructure < ApplicationRecord
         def get_flavors(connection)
 
         end
+
+        def get_keypairs(connection)
+
+        end
       end
     end
   end
@@ -53,6 +62,10 @@ class Infrastructure < ApplicationRecord
 
   def get_flavors(connection)
     self.adapter.get_flavors connection
+  end
+
+  def get_keypairs(connection)
+    self.adapter.get_keypairs connection
   end
 
   def adapter

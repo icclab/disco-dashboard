@@ -4,8 +4,9 @@ class InfrastructuresController < ApplicationController
     @infrastructure.adapter = params[:infrastructure][:type]
     connection = @infrastructure.authenticate(params[:infrastructure])
     if connection && @infrastructure.save
-      save_images  @infrastructure.get_images  connection
-      save_flavors @infrastructure.get_flavors connection
+      save_images   @infrastructure.get_images   connection
+      save_flavors  @infrastructure.get_flavors  connection
+      save_keypairs @infrastructure.get_keypairs connection
       puts "saved successfully"
     else
       puts "something is wrong"
@@ -51,6 +52,16 @@ class InfrastructuresController < ApplicationController
           puts "flavor saved"
         else
         end
+      end
+    end
+
+    def save_keypairs(keypairs)
+      keypairs.each do |key|
+        keypair = @infrastructure.keypairs.build(
+          name: key[:name]
+        ) if key[:fingerprint] != ENV["fingerprint"]
+
+        keypair.save if keypair
       end
     end
 end
