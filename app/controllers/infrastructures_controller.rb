@@ -56,10 +56,10 @@ class InfrastructuresController < ApplicationController
     end
 
     def save_keypairs(keypairs)
-      keypairs.each do |key|
+      keypairs.each do |key, value|
         keypair = @infrastructure.keypairs.build(
-          name: key[:name]
-        ) if key[:fingerprint] != ENV["fingerprint"]
+          name: value[:name]
+        ) if !value[:fingerprint].eql? ENV["fingerprint"]
 
         keypair.save if keypair
       end

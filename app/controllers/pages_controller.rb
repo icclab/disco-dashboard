@@ -14,8 +14,9 @@ class PagesController < ApplicationController
   def render_form
     @infrastructure_id = params[:infrastructure_id]
     if @infrastructure_id!="0"
-      @imgs  = current_user.images.where(infrastructure_id: @infrastructure_id)
-      @flvs =  current_user.flavors.where(infrastructure_id: @infrastructure_id)
+      @imgs  = Image.where(infrastructure_id: @infrastructure_id)
+      @flvs  = Flavor.where(infrastructure_id: @infrastructure_id)
+      @keys  = Keypair.where(infrastructure_id: @infrastructure_id)
     end
     respond_to do |format|
       format.js

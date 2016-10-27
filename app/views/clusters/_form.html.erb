@@ -43,19 +43,14 @@
         <%= f.label(:access, "Access") %>
         <div class="form-group input-group">
             <span class="input-group-addon">Key</span>
-            <select type="text" class="form-control">
-                <option>Choose Access Key</option>
-                <option>SSH-1</option>
-                <option>SSH-2</option>
-                <option>SSH-3</option>
-            </select>
+            <%= f.select(:keypair, options_for_select(@keys.map { |key| [key[:name], key[:name]] }), {}, {class: 'form-control'}) %>
         </div>
         <%= f.label(:frameworks, "BIG Data frameworks") %>
         <div class="form-group">
-            <div class="checkbox"><label><input type="checkbox">Spark (recommended)</label></div>
-            <div class="checkbox"><label><input type="checkbox">Hadoop</label></div>
-            <div class="checkbox"><label><input type="checkbox">Zeppelin</label></div>
-            <div class="checkbox"><label><input type="checkbox">Jupyter</label></div>
+            <div class="checkbox"><label><%= f.check_box(:spark)    %>  Spark    </label></div>
+            <div class="checkbox"><label><%= f.check_box(:hadoop)   %>  Hadoop   </label></div>
+            <div class="checkbox"><label><%= f.check_box(:zeppelin) %>  Zeppelin </label></div>
+            <div class="checkbox"><label><%= f.check_box(:jupyter)  %>  Jupyter  </label></div>
         </div>
 
         <div class="modal-footer">

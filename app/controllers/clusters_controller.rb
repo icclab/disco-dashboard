@@ -22,12 +22,12 @@ class ClustersController < ApplicationController
       request["X-Occi-Attribute"] += 'icclab.haas.master.number="'+cluster.master_num.to_s+'",'
       request["X-Occi-Attribute"] += 'icclab.haas.slave.number="'+cluster.slave_num.to_s+'",'
       value = Proc.new { |a| a ? "true" : "false" }
-      request["X-Occi-Attribute"] += 'icclab.haas.master.slaveonmaster="'+value(cluster.slave_on_master)+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.master.slaveonmaster="'+value.call(cluster.slave_on_master)+'",'
       request["X-Occi-Attribute"] += 'icclab.haas.master.withfloatingip="true",'
-      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.spark.included="'+value(cluster.spark)+'",'
-      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.hadoop.included="'+value(cluster.hadoop)+'",'
-      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.zeppelin.included="'+value(cluster.zeppelin)+'",'
-      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.jupyter.included="'+value(cluster.jupyter)+'"'
+      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.spark.included="'+value.call(params[:cluster][:spark])+'",'
+      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.hadoop.included="'+value.call(params[:cluster][:hadoop])+'",'
+      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.zeppelin.included="'+value.call(params[:cluster][:zeppelin])+'",'
+      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.jupyter.included="'+value.call(params[:cluster][:jupyter])+'"'
 
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
         http.request(request)
