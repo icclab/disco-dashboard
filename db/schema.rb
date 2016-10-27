@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161027093026) do
+ActiveRecord::Schema.define(version: 20161027142207) do
+
+  create_table "cluster_frameworks", force: :cascade do |t|
+    t.integer  "cluster_id"
+    t.integer  "framework_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["cluster_id"], name: "index_cluster_frameworks_on_cluster_id"
+    t.index ["framework_id"], name: "index_cluster_frameworks_on_framework_id"
+  end
 
   create_table "clusters", force: :cascade do |t|
     t.string   "uuid"
@@ -41,6 +50,14 @@ ActiveRecord::Schema.define(version: 20161027093026) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.index ["infrastructure_id"], name: "index_flavors_on_infrastructure_id"
+  end
+
+  create_table "frameworks", force: :cascade do |t|
+    t.string   "name"
+    t.string   "description"
+    t.string   "port"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "images", force: :cascade do |t|
