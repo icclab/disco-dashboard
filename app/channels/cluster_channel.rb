@@ -31,6 +31,7 @@ class ClusterChannel < ApplicationCable::Channel
         url = "http://"+ip+":8084/progress.log"
         uri     = URI.parse(url)
         request = Net::HTTP::Get.new(uri)
+        response = nil
         begin
           response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
             http.request(request)
@@ -38,19 +39,21 @@ class ClusterChannel < ApplicationCable::Channel
 
         rescue Net::OpenTimeout
 
-          state = old_state = cluster[:state]
-          if response && response.code == "200"
-            if response.body.to_i == 1
-              state = 'READY'
-            end
-          else
-            state = 'CONNECTION_FAILED'
-          end
+        rescue Errno::ECONNREFUSED
 
-          if(state != old_state)
-            cluster.update_attribute(:state, state)
-            cluster.update(user_id, cluster[:uuid], state)
+        end
+
+        if response && response.code == "200"
+          if response.body.to_i == 1
+            state = 'READY'
           end
+        else
+          state = 'CONNECTION_FAILED'
+        end
+
+        if(state != old_state)
+          cluster.update_attribute(:state, state)
+          cluster.update(user_id, cluster[:uuid], state)
         end
       end
     end
