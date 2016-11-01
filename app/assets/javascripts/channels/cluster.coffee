@@ -13,7 +13,7 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
     else
       $(data.uuid).html("<strong>#{data.state}</strong>")
 
-    if date.state.downcase.include? 'ready'
+    if data.state.downcase.include? 'ready'
       $(data.uuid).attr("class", "text-success")
-    if date.state.downcase.include? 'fail'
+    if data.state.downcase.include? 'fail'
       $(data.uuid).attr("class", "text-danger")
