@@ -1,5 +1,8 @@
 class Cluster < ApplicationRecord
   belongs_to :infrastructure
+  has_many   :cluster_frameworks, dependent: :destroy
+
+  validates :name, presence: true
 
   def update(id, uuid, state)
     puts "====================================================================="

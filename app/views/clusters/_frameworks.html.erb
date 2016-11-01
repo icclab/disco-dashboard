@@ -1,0 +1,5 @@
+<% @frameworks.each do |f| %>
+  <% framework = Framework.find(f.framework_id) %>
+  <% link = 'http://'+@ip+framework.port %>
+  <li><%= link_to framework.name.capitalize, link, class: check_link(link), target: "blank" %></li>
+<% end %>

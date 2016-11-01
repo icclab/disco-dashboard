@@ -1,57 +1,37 @@
 class ClustersController < ApplicationController
+  # Only logged in user can access to these methods
   before_action :logged_in_user
 
   # Method to create a cluster on DISCO
   def create
+    frameworks = Framework.all
     infrastructure = Infrastructure.find(params[:cluster][:infrastructure_id])
     cluster = infrastructure.clusters.build(cluster_params)
-    if cluster.save
-      uri     = URI.parse(ENV["disco_ip"])
-      request = Net::HTTP::Post.new(uri)
-      request.content_type         = "text/occi"
-      request["Category"]          = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
-      request["X-Tenant-Name"]     = infrastructure[:tenant]
-      request["X-Region-Name"]     = 'RegionOne'
-      request["X-User-Name"]       = infrastructure[:username]
-      request["X-Password"]        = params[:cluster][:password]
-      request["X-Occi-Attribute"]  = 'icclab.haas.master.image="'+cluster.master_image+'",'
-      request["X-Occi-Attribute"] += 'icclab.haas.slave.image="'+cluster.slave_image+'",'
-      request["X-Occi-Attribute"] += 'icclab.haas.master.sshkeyname="discokey",'
-      request["X-Occi-Attribute"] += 'icclab.haas.master.flavor="'+cluster.master_flavor+'",'
-      request["X-Occi-Attribute"] += 'icclab.haas.slave.flavor="'+cluster.slave_flavor+'",'
-      request["X-Occi-Attribute"] += 'icclab.haas.master.number="'+cluster.master_num.to_s+'",'
-      request["X-Occi-Attribute"] += 'icclab.haas.slave.number="'+cluster.slave_num.to_s+'",'
-      value = Proc.new { |a| a ? "true" : "false" }
-      request["X-Occi-Attribute"] += 'icclab.haas.master.slaveonmaster="'+value.call(cluster.slave_on_master)+'",'
-      request["X-Occi-Attribute"] += 'icclab.haas.master.withfloatingip="true",'
-      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.spark.included="'+value.call(params[:cluster][:spark])+'",'
-      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.hadoop.included="'+value.call(params[:cluster][:hadoop])+'",'
-      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.zeppelin.included="'+value.call(params[:cluster][:zeppelin])+'",'
-      request["X-Occi-Attribute"] += 'icclab.disco.frameworks.jupyter.included="'+value.call(params[:cluster][:jupyter])+'"'
 
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
-        http.request(request)
-      end
+    if cluster.save
+      # If new cluster is properly configured then we send request to the DISCO
+      # to create a new cluster
+      response = create_req(params[:cluster], infrastructure, frameworks)
 
       if response.code == "201"
+        params[:cluster]["HDFS"] = params[:cluster]["Hadoop"] if params[:cluster]["Hadoop"]
+        frameworks.each { |framework|
+          cluster.cluster_frameworks.build(framework_id: framework[:id]) if params[:cluster][framework[:name]].to_i==1
+        }
+
         uuid = nil
         response.header.each_header { |key, value| uuid = value.split(//).last(36).join if key =="location" }
         cluster.update_attribute(:uuid, uuid)
         ActionCable.server.broadcast "cluster_#{current_user[:id]}",
                                      type: 1,
                                      cluster: render_cluster(cluster)
-        #run background job
-        puts "====================================================================="
-        puts "         Running background job on cluster #{cluster.id}"
-        puts "====================================================================="
         ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
-        sleep(3)
+        sleep(2)
       else
         cluster.delete
-        puts "New cluster deleted from database due to failure on creation"
       end
     else
-      puts "Failed to save"
+      # Handle if something went wrong
     end
   end
 
@@ -60,27 +40,12 @@ class ClustersController < ApplicationController
     uuid = params[:delete][:uuid]
     cluster = Cluster.find_by(uuid: uuid)
     infrastructure = Infrastructure.find(cluster.infrastructure_id)
-    uri  = URI.parse(ENV["disco_ip"]+uuid)
-    request = Net::HTTP::Delete.new(uri)
-    request.content_type     = "text/occi"
-    request["Category"]      = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
-    request["X-Tenant-Name"] = infrastructure[:tenant]
-    request["X-Region-Name"] = 'RegionOne'
-    request["X-User-Name"]   = infrastructure[:username]
-    request["X-Password"]    = params[:delete][:password]
 
-    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
-      http.request(request)
-    end
+    response = delete_req(infrastructure, params[:delete][:password], uuid)
 
     if response.code != "200"
-      puts "================================="
-      puts "      Something went wrong"
-      puts "================================="
+      # handle this
     else
-      puts "================================="
-      puts "    Cluster delete in progress"
-      puts "================================="
       cluster.delete
     end
 
@@ -91,13 +56,17 @@ class ClustersController < ApplicationController
   def show
     uuid      = params[:uuid]
     cluster   = Cluster.find_by(uuid: uuid)
+
     @title    = cluster[:name]
     @master_n = cluster[:master_num]
     @slave_n  = cluster[:slave_num]
     @ip       = IPAddr.new(cluster[:external_ip], Socket::AF_INET).to_s
+    @info     = cluster.state
     @id       = uuid
+
     @infrastructure_id = cluster.infrastructure_id
-    @info = cluster.state
+
+    @frameworks = cluster.cluster_frameworks.all
   end
 
 
@@ -112,5 +81,62 @@ class ClustersController < ApplicationController
 
     def render_cluster(cluster)
       render(partial: 'cluster', locals: { cluster:  cluster })
+    end
+
+    def value(val)
+      val.to_i==1 ? "true" : "false"
+    end
+
+    def create_req(cluster, infrastructure, frameworks)
+      uri     = URI.parse(ENV["disco_ip"])
+      request = Net::HTTP::Post.new(uri)
+
+      request.content_type         = "text/occi"
+      request["Category"]          = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
+      request["X-Tenant-Name"]     = infrastructure[:tenant]
+      request["X-Region-Name"]     = 'RegionOne'
+      request["X-User-Name"]       = infrastructure[:username]
+      request["X-Password"]        = cluster[:password]
+      request["X-Occi-Attribute"]  = 'icclab.haas.master.image="'+cluster[:master_image]+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.slave.image="'+cluster[:slave_image]+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.master.sshkeyname="'+cluster[:keypair]+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.master.flavor="'+cluster[:master_flavor]+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.slave.flavor="'+cluster[:slave_flavor]+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.master.number="'+cluster[:master_num].to_s+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.slave.number="'+cluster[:slave_num].to_s+'",'
+      request["X-Occi-Attribute"] += 'icclab.haas.master.slaveonmaster="'+value(cluster[:slave_on_master])+'",'
+      frameworks.each do |framework|
+        if !framework.name.eql? "HDFS"
+          request["X-Occi-Attribute"] += 'icclab.disco.frameworks.'+framework[:name].downcase
+          request["X-Occi-Attribute"] += '.included="'+value(cluster[framework[:name]])+'",'
+        end
+      end
+      request["X-Occi-Attribute"] += 'icclab.haas.master.withfloatingip="true"'
+
+      puts request["X-Occi-Attribute"]
+
+      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+        http.request(request)
+      end
+
+      response
+    end
+
+    def delete_req(infrastructure, password, uuid)
+      uri  = URI.parse(ENV["disco_ip"]+uuid)
+
+      request = Net::HTTP::Delete.new(uri)
+      request.content_type     = "text/occi"
+      request["Category"]      = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
+      request["X-Tenant-Name"] = infrastructure[:tenant]
+      request["X-Region-Name"] = 'RegionOne'
+      request["X-User-Name"]   = infrastructure[:username]
+      request["X-Password"]    = password
+
+      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+        http.request(request)
+      end
+
+      response
     end
 end

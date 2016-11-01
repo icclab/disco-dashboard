@@ -47,10 +47,11 @@
         </div>
         <%= f.label(:frameworks, "BIG Data frameworks") %>
         <div class="form-group">
-            <div class="checkbox"><label><%= f.check_box(:spark)    %>  Spark    </label></div>
-            <div class="checkbox"><label><%= f.check_box(:hadoop)   %>  Hadoop   </label></div>
-            <div class="checkbox"><label><%= f.check_box(:zeppelin) %>  Zeppelin </label></div>
-            <div class="checkbox"><label><%= f.check_box(:jupyter)  %>  Jupyter  </label></div>
+            <% @frameworks.each do |framework| %>
+                <% if !framework[:name].eql? 'HDFS' %>
+                    <div class="checkbox"><label><%= f.check_box(framework[:name])    %><%= framework[:name] %></label></div>
+                <% end %>
+            <% end %>
         </div>
 
         <div class="modal-footer">

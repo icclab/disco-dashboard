@@ -5,3 +5,30 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Framework.create([
+  {
+    name:        'Spark',
+    description: '...',
+    port:        ':8080'
+  },
+  {
+    name:        'Hadoop',
+    description: '...',
+    port:        ':8088'
+  },
+  {
+    name:        'HDFS',
+    description: '...',
+    port:        ':50070'
+  },
+  {
+    name:        'Zeppelin',
+    description: '...',
+    port:        ':8070'
+  },
+  {
+    name:        'Jupyter',
+    description: '...',
+    port:        ':8888'
+  }
+])

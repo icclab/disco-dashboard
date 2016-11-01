@@ -2,9 +2,6 @@ class ClusterUpdateJob < ApplicationJob
   queue_as :default
 
   def perform(infrastructure, user_id, cluster_id, password)
-    puts "====================================================================="
-    puts "                      Cluster id is #{cluster_id}"
-    puts "====================================================================="
     cluster  = Cluster.find(cluster_id)
     state    = cluster[:state]
     uuid     = cluster[:uuid]
@@ -25,10 +22,11 @@ class ClusterUpdateJob < ApplicationJob
           cluster.update_attribute(:external_ip, ip)
         end
       end
-    end until state.downcase.include?('complete') || state.downcase.include?('failed')
+    end until state.downcase.include?('complete') || state.downcase.include?('fail')
 
     if state.downcase.include? 'complete'
-      cluster.update(user_id, uuid, 'FRAMEWORKS_BEING_INSTALLED')
+      cluster.update(user_id, uuid, 'INSTALLING_FRAMEWORKS')
+      cluster.update_attribute(:state, 'INSTALLING_FRAMEWORKS')
     end
   end
 
