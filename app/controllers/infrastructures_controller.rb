@@ -2,15 +2,13 @@ class InfrastructuresController < ApplicationController
   def new
     @infrastructure = current_user.infrastructures.build(infrastructure_params)
     @infrastructure.adapter = params[:infrastructure][:type]
-    connection = @infrastructure.authenticate(params[:infrastructure])
-    if connection && @infrastructure.save
+    if @infrastructure.save && connection = @infrastructure.authenticate(params[:infrastructure])
       save_images   @infrastructure.get_images   connection
       save_flavors  @infrastructure.get_flavors  connection
       save_keypairs @infrastructure.get_keypairs connection
-      puts "saved successfully"
+      flash[:success] = "New infrastructure was added successfully"
     else
-      puts "something is wrong"
-      @infrastructure.delete
+      flash[:danger] = "Please, fill all fields with correct information"
     end
     redirect_to root_url
   end
@@ -32,10 +30,7 @@ class InfrastructuresController < ApplicationController
           name:   img[:name],
           size:   img[:minDisk] )
 
-        if image.save
-          puts "image saved"
-        else
-        end
+        image.save
       end
     end
 
@@ -48,10 +43,7 @@ class InfrastructuresController < ApplicationController
           ram:   flv[:ram],
           disk:  flv[:disk] )
 
-        if flavor.save
-          puts "flavor saved"
-        else
-        end
+        flavor.save
       end
     end
 

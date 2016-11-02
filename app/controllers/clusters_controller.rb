@@ -28,10 +28,12 @@ class ClustersController < ApplicationController
         ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
         sleep(2)
       else
-        cluster.delete
+        flash[:danger] = "DISCO connection error"
+        redirect_to root_url
       end
     else
-      # Handle if something went wrong
+      flash[:warning] = "Cluster details were not filled correctly"
+      redirect_to root_url
     end
   end
 
@@ -44,9 +46,10 @@ class ClustersController < ApplicationController
     response = delete_req(infrastructure, params[:delete][:password], uuid)
 
     if response.code != "200"
-      # handle this
+      flash[:danger] = "DISCO connection error"
     else
       cluster.delete
+      flash[:success] = "The cluster is being deleted"
     end
 
     redirect_to :back
