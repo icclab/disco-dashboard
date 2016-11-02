@@ -5,6 +5,11 @@ class Infrastructure < ApplicationRecord
   has_many :flavors,  dependent: :destroy
   has_many :keypairs, dependent: :destroy
 
+  validates :name,     presence: true, length: { maximum: 255 }
+  validates :username, presence: true
+  validates :auth_url, presence: true
+  validates :tenant,   presence: true
+
   module Adapter
     module Openstack
       class << self
