@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 
   post   '/new',     to: 'infrastructures#new'
 
+  get    '*unmatched_route', to: 'application#not_found'
+
   resources :users
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
