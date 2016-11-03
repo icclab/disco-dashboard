@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_action :redirect_to_root
+
   def new
   end
 
@@ -17,4 +19,9 @@ class SessionsController < ApplicationController
     log_out if logged_in?
     redirect_to login_path
   end
+
+  private
+    def redirect_to_root
+      redirect_to root_url if logged_in?
+    end
 end
