@@ -32,3 +32,14 @@ Framework.create([
     port:        ':8888'
   }
 ])
+
+Usertype.create([
+  {
+    name:        'Professor',
+    desc:        '...'
+  },
+  {
+    name:        'Student',
+    desc:        '...'
+  }
+])
