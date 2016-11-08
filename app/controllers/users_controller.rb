@@ -14,11 +14,13 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    @user  = User.new
+    @types = Usertype.all
   end
 
   def create
     @user = User.new(user_params)
+    @types = Usertype.all
     if @user.save
       log_in @user
       redirect_to root_url
@@ -47,7 +49,7 @@ class UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation)
+      params.require(:user).permit(:usertype, :email, :password, :password_confirmation)
     end
 
     # Confirm the correct user.

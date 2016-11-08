@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161108132854) do
+ActiveRecord::Schema.define(version: 20161108133339) do
 
   create_table "cluster_frameworks", force: :cascade do |t|
     t.integer  "cluster_id"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 20161108132854) do
     t.string   "password_digest"
     t.string   "remember_digest"
     t.boolean  "admin",           default: false
+    t.integer  "usertype"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
