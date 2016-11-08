@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :redirect_to_root
+  before_action :redirect_to_root, except: :destroy
 
   def new
   end

@@ -1,8 +1,2 @@
-$('#id').html('<%= @id %>');
-$('#log').html('<%= @info %>');
-$('#modal-title').html('<%= @title %>');
-$('#master_n').html('<%= @master_n %>');
-$('#slave_n').html('<%= @slave_n %>');
-$('#delete_uuid').attr("value", '<%= @id %>');
-$("#framework-list").empty();
-$("#framework-list").append("<%= escape_javascript(render(:partial => 'clusters/frameworks')) %>");
+$("#details").empty();
+$("#details").append("<%= escape_javascript(render(:partial => 'clusters/details')) %>");

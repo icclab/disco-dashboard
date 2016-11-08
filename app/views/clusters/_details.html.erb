@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title" id="modal-title"></h4>
+</div>
+<div class="modal-body"  id="modal-body">
+  <dl class="dl-horizontal">
+      <dt>UUID:</dt>
+      <dd><%= @id %></dd>
+      <dt># Master(s):</dt>
+      <dd><%= @master_n %></dd>
+      <dt># Slave(s):</dt>
+      <dd><%= @slave_n %></dd>
+      <dt>Frameworks:</dt>
+      <dd>
+          <ul class="list-unstyled" id="framework-list">
+            <% render 'clusters/frameworks' %>
+          </ul>
+      </dd>
+  </dl>
+  <label>Logs</label>
+  <pre>
+    <%= @info %>
+  </pre>
+</div>
+<div class="modal-footer" id="delete-cluster">
+  <% if current_user.clusters.find_by(uuid: @id) %>
+    <%= form_for :delete, url: delete_path, html: {role: "role", id: "delete-form"} do |f| %>
+      <%= f.hidden_field :uuid %>
+      <div class="form-group">
+        <%= f.password_field(:password, placeholder: "Enter infrastructure password to delete", class: 'form-control') %>
+      </div>
+      <%= f.submit "Delete", class: "btn btn-danger" %>
+    <% end %>
+  <% end %>
+</div>

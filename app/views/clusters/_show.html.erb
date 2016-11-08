@@ -1,39 +1,7 @@
 <div class="modal fade cluster-modal" id="details-cluster" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content info">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="modal-title"></h4>
-          </div>
-          <div class="modal-body"  id="modal-body">
-            <dl class="dl-horizontal">
-                <dt>UUID:</dt>
-                <dd id="id"></dd>
-                <dt># Master(s):</dt>
-                <dd id="master_n">TODO</dd>
-                <dt># Slave(s):</dt>
-                <dd id="slave_n">TODO</dd>
-                <dt>Frameworks:</dt>
-                <dd>
-                    <ul class="list-unstyled" id="framework-list">
+    <div class="modal-content info" id="details">
 
-                    </ul>
-                </dd>
-            </dl>
-            <label>Logs</label>
-            <pre id="log">
-
-            </pre>
-          </div>
-          <div class="modal-footer">
-            <%= form_for :delete, url: delete_path, html: {role: "role", id: "delete-form"} do |f| %>
-              <%= f.hidden_field :uuid %>
-              <div class="form-group">
-                <%= f.password_field(:password, placeholder: "Enter infrastructure password to delete", class: 'form-control') %>
-              </div>
-              <%= f.submit "Delete", class: "btn btn-danger" %>
-            <% end %>
-          </div>
     </div>
   </div>
 </div>
