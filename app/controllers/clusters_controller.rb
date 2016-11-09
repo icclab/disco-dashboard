@@ -14,7 +14,9 @@ class ClustersController < ApplicationController
       response = create_req(params[:cluster], infrastructure, frameworks)
 
       if response.code == "201"
-        params[:cluster]["HDFS"] = params[:cluster]["Hadoop"] if params[:cluster]["Hadoop"]
+        current_user.assignments.create(cluster: cluster)
+
+        params[:cluster]["HDFS"] = params[:cluster]["Hadoop"]
         frameworks.each { |framework|
           cluster.cluster_frameworks.build(framework_id: framework[:id]) if params[:cluster][framework[:name]].to_i==1
         }
@@ -26,8 +28,9 @@ class ClustersController < ApplicationController
                                      type: 1,
                                      cluster: render_cluster(cluster)
         ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
-        sleep(2)
+        sleep(1)
       else
+        cluster.delete
         flash[:danger] = "DISCO connection error"
         redirect_to root_url
       end
@@ -58,18 +61,11 @@ class ClustersController < ApplicationController
   # Method to get all details of the chosen cluster
   def show
     uuid      = params[:uuid]
-    cluster   = Cluster.find_by(uuid: uuid)
+    @cluster  = Cluster.find_by(uuid: uuid)
 
-    @title    = cluster[:name]
-    @master_n = cluster[:master_num]
-    @slave_n  = cluster[:slave_num]
-    @ip       = IPAddr.new(cluster[:external_ip], Socket::AF_INET).to_s
-    @info     = cluster.state
-    @id       = uuid
+    @ip       = IPAddr.new(@cluster[:external_ip], Socket::AF_INET).to_s
 
-    @infrastructure_id = cluster.infrastructure_id
-
-    @frameworks = cluster.cluster_frameworks.all
+    @frameworks = @cluster.cluster_frameworks.all
   end
 
 

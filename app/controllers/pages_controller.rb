@@ -3,14 +3,12 @@ class PagesController < ApplicationController
   before_action :logged_in_user
 
   # Retrieves current user's
-  #   - images
-  #   - flavors
   #   - clusters
   #   - infrastructures
   #  to show on the main page
   def index
-    @images          = current_user.images.all          if current_user.images.any?
-    @flavors         = current_user.flavors.all         if current_user.flavors.any?
+    @images          = Image.all
+    @flavors         = Flavor.all
     @clusters        = current_user.clusters.all        if current_user.clusters.any?
     @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
     @adapters        = { "Choose" => 0 }

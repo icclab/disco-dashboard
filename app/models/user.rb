@@ -2,7 +2,6 @@ class User < ApplicationRecord
   attr_accessor :remember_token
 
   has_many :infrastructures, dependent: :destroy
-  has_many :clusters, through: :infrastructures
   has_many :images,   through: :infrastructures
   has_many :flavors,  through: :infrastructures
   has_many :keypairs, through: :infrastructures
