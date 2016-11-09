@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 
   post   '/new',     to: 'infrastructures#new'
 
+  delete '/delete_assignment', to: 'assignments#destroy'
+
   get    '*unmatched_route', to: 'application#not_found'
 
   resources :users

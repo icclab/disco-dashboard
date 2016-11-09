@@ -15,7 +15,4 @@ module ClusterHelper
     "text-success"
   end
 
-  def cluster_owner?(id)
-    current_user.infrastructures.any? && current_user.infrastructures.exists?(infrastructure_id: id)
-  end
 end

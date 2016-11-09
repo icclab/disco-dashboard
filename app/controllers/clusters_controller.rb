@@ -62,10 +62,10 @@ class ClustersController < ApplicationController
   def show
     uuid      = params[:uuid]
     @cluster  = Cluster.find_by(uuid: uuid)
-
+    @users    = @cluster.users.all
     @ip       = IPAddr.new(@cluster[:external_ip], Socket::AF_INET).to_s
-
     @frameworks = @cluster.cluster_frameworks.all
+    @owner = current_user.infrastructures.any? && current_user.infrastructures.exists?(id: @cluster.infrastructure_id)
   end
 
 

@@ -1,0 +1,10 @@
+<% @users.each do |user| %>
+  <% if user.id != current_user.id  %>
+    <li>
+      <%= user.email %>
+      <%= link_to delete_assignment_path(cluster_id: @cluster.id, user_id: user.id), data: { confirm: "Are you sure?" } do %>
+        <i class="glyphicon-remove-circle"></i>
+      <% end %>
+    </li>
+  <% end %>
+<% end %>

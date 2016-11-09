@@ -16,6 +16,14 @@
             <% render 'clusters/frameworks' %>
           </ul>
       </dd>
+    <% if @owner %>
+      <dt>Assigned to:<dt>
+      <dd>
+          <ul class="list-unstyled" id="assignment-list">
+            <% render 'clusters/assignments' %>
+          </ul>
+      </dd>
+    <% end %>
   </dl>
   <label>Logs</label>
   <pre>
@@ -23,7 +31,7 @@
   </pre>
 </div>
 <div class="modal-footer" id="delete-cluster">
-  <% if cluster_owner?(@cluster.infrastructure_id) %>
+  <% if @owner %>
     <%= form_for :delete, url: delete_path, html: {role: "role", id: "delete-form"} do |f| %>
       <%= f.hidden_field :uuid %>
       <div class="form-group">
