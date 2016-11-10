@@ -11,8 +11,10 @@ class ClusterUpdateJob < ApplicationJob
       send_request(infrastructure, password, uuid)
       response = send_request(infrastructure, password, uuid, 'json')
 
-      res = JSON.parse(response.body)
-      state = res["attributes"]["stack_status"]
+      if(response.body)
+        res = JSON.parse(response.body)
+        state = res["attributes"]["stack_status"] if res["attributes"]["stack_status"]
+      end
 
       if(response.code == "200" && state != cluster[:state])
         cluster.update_attribute(:state, state)

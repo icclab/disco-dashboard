@@ -79,6 +79,8 @@ class ClustersController < ApplicationController
     end
 
     def render_cluster(cluster)
+      @images          = Image.all
+      @flavors         = Flavor.all
       render(partial: 'cluster', locals: { cluster:  cluster })
     end
 
@@ -93,7 +95,7 @@ class ClustersController < ApplicationController
       request.content_type         = "text/occi"
       request["Category"]          = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
       request["X-Tenant-Name"]     = infrastructure[:tenant]
-      request["X-Region-Name"]     = 'RegionOne'
+      request["X-Region-Name"]     = ENV["region"]
       request["X-User-Name"]       = infrastructure[:username]
       request["X-Password"]        = cluster[:password]
       request["X-Occi-Attribute"]  = 'icclab.haas.master.image="'+cluster[:master_image]+'",'
@@ -128,7 +130,7 @@ class ClustersController < ApplicationController
       request.content_type     = "text/occi"
       request["Category"]      = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
       request["X-Tenant-Name"] = infrastructure[:tenant]
-      request["X-Region-Name"] = 'RegionOne'
+      request["X-Region-Name"] = ENV["region"]
       request["X-User-Name"]   = infrastructure[:username]
       request["X-Password"]    = password
 
