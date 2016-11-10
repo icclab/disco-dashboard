@@ -14,4 +14,5 @@ module ClusterHelper
     end
     "text-success"
   end
+
 end
