@@ -51,8 +51,6 @@ class ClusterUpdateJob < ApplicationJob
       response = Net::HTTP.start(uri.hostname, uri.port) do |http|
         http.request(request)
       end
-      puts "=======request======"
-      puts response.code
 
       response
     end

@@ -12,7 +12,6 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
       $("#new-cluster").modal('hide')
     else
       $(data.uuid).html("<strong>#{data.state}</strong>")
-
     if data.state.downcase.include? 'ready'
       $(data.uuid).attr("class", "text-success")
     if data.state.downcase.include? 'fail'
