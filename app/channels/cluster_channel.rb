@@ -46,6 +46,8 @@ class ClusterChannel < ApplicationCable::Channel
         if response && response.code == "200"
           if response.body.to_i == 1
             state = 'READY'
+          else
+            state = 'INSTALLING_FRAMEWORKS'
           end
         else
           state = 'CONNECTION_FAILED'
