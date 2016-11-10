@@ -25,7 +25,7 @@
 <div class="modal-footer" id="delete-cluster">
   <% if current_user.clusters.find_by(uuid: @id) %>
     <%= form_for :delete, url: delete_path, html: {role: "role", id: "delete-form"} do |f| %>
-      <%= f.hidden_field :uuid %>
+      <%= f.hidden_field :uuid, :value => @cluster[:uuid] %>
       <div class="form-group">
         <%= f.password_field(:password, placeholder: "Enter infrastructure password to delete", class: 'form-control') %>
       </div>

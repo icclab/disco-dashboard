@@ -22,6 +22,7 @@ class ClustersController < ApplicationController
         uuid = nil
         response.header.each_header { |key, value| uuid = value.split(//).last(36).join if key =="location" }
         cluster.update_attribute(:uuid, uuid)
+        cluster.update_attribute(:state, "Deplyoing...")
         ActionCable.server.broadcast "cluster_#{current_user[:id]}",
                                      type: 1,
                                      cluster: render_cluster(cluster)
@@ -29,6 +30,7 @@ class ClustersController < ApplicationController
         sleep(2)
       else
         flash[:danger] = "DISCO connection error"
+        cluster.delete
         redirect_to root_url
       end
     else
@@ -97,7 +99,7 @@ class ClustersController < ApplicationController
       request.content_type         = "text/occi"
       request["Category"]          = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
       request["X-Tenant-Name"]     = infrastructure[:tenant]
-      request["X-Region-Name"]     = 'RegionOne'
+      request["X-Region-Name"]     = ENV["region"]
       request["X-User-Name"]       = infrastructure[:username]
       request["X-Password"]        = cluster[:password]
       request["X-Occi-Attribute"]  = 'icclab.haas.master.image="'+cluster[:master_image]+'",'
@@ -118,7 +120,7 @@ class ClustersController < ApplicationController
 
       puts request["X-Occi-Attribute"]
 
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
         http.request(request)
       end
 
@@ -132,11 +134,11 @@ class ClustersController < ApplicationController
       request.content_type     = "text/occi"
       request["Category"]      = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
       request["X-Tenant-Name"] = infrastructure[:tenant]
-      request["X-Region-Name"] = 'RegionOne'
+      request["X-Region-Name"] = ENV["region"]
       request["X-User-Name"]   = infrastructure[:username]
       request["X-Password"]    = password
 
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
         http.request(request)
       end
 

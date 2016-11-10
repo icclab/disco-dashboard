@@ -6,17 +6,25 @@ class ClusterUpdateJob < ApplicationJob
     state    = cluster[:state]
     uuid     = cluster[:uuid]
 
+    puts state
+    puts uuid
+
     begin
-      sleep(2)
+      sleep(3)
+
       send_request(infrastructure, password, uuid)
       response = send_request(infrastructure, password, uuid, 'json')
 
-      res = JSON.parse(response.body)
-      state = res["attributes"]["stack_status"]
+      if(response.code == "200")
+        if(response.body)
+          res = JSON.parse(response.body)
+          state = res["attributes"]["stack_status"] if res["attributes"]["stack_status"]
+        end
 
-      if(response.code == "200" && state != cluster[:state])
-        cluster.update_attribute(:state, state)
-        cluster.update(user_id, uuid, state)
+        if(state != cluster[:state])
+          cluster.update_attribute(:state, state)
+          cluster.update(user_id, uuid, state)
+        end
         if state.downcase.include?('complete')
           ip = convert_ip(res["attributes"]["externalIP"])
           cluster.update_attribute(:external_ip, ip)
@@ -38,11 +46,15 @@ class ClusterUpdateJob < ApplicationJob
       request["X-User-Name"]   = infrastructure[:username]
       request["X-Password"]    = password
       request["X-Tenant-Name"] = infrastructure[:tenant]
+      request["X-Region-Name"] = ENV["region"]
       request["Accept"]        = type == "json" ? "application/occi+json" : "text/occi"
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
         http.request(request)
       end
-      return response
+      puts "=======request======"
+      puts response.code
+
+      response
     end
 
     # Method to convert string ip address to int
