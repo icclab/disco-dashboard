@@ -1,0 +1,6 @@
+<li>
+  <%= user.email %>
+  <%= link_to delete_assignment_path(cluster_id: cluster_id, user_id: user.id), data: { confirm: "Are you sure?" } do %>
+    <i class="fa fa-times" aria-hidden="true"></i>
+  <% end %>
+</li>

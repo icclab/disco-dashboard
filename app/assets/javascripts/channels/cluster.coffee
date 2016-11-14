@@ -10,9 +10,11 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
     if data.type == 1
       $("#cluster-panel").append data.cluster
       $("#new-cluster").modal('hide')
-    else
+    if data.type == 2
       $(data.uuid).html("<strong>#{data.state}</strong>")
-    if data.state.downcase.include? 'ready'
-      $(data.uuid).attr("class", "text-success")
-    if data.state.downcase.include? 'fail'
-      $(data.uuid).attr("class", "text-danger")
+      if data.state.downcase.include? 'ready'
+        $(data.uuid).attr("class", "text-success")
+      if data.state.downcase.include? 'fail'
+        $(data.uuid).attr("class", "text-danger")
+    if data.type == 3
+      $("#assignment-list").append data.user

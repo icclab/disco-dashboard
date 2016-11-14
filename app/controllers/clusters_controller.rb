@@ -67,9 +67,6 @@ class ClustersController < ApplicationController
     @users    = @cluster.users.all
     @ip       = IPAddr.new(@cluster[:external_ip], Socket::AF_INET).to_s
     @frameworks = @cluster.cluster_frameworks.all
-    puts "============================"
-    puts @frameworks
-    puts "============================"
     @owner = current_user.infrastructures.any? && current_user.infrastructures.exists?(id: @cluster.infrastructure_id)
   end
 

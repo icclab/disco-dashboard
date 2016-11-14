@@ -36,6 +36,18 @@
             <% end %>
           </ul>
       </dd>
+      <dt>Assign new user:</dt>
+      <dd>
+        <%= form_for :assignment, url: create_assignment_path, html: { role: "form" } do |f| %>
+            <fieldset>
+              <%= f.hidden_field :cluster_id, :value => @cluster[:id] %>
+              <div class="form-group">
+                <%= f.text_field :email, placeholder: "Email", class: 'form-control' %>
+              </div>
+              <%= f.submit "Assign", class: "btn btn-success" %>
+            </fieldset>
+        <% end %>
+      </dd>
     <% end %>
   </dl>
   <label>Logs</label>
