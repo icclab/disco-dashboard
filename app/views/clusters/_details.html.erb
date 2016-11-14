@@ -13,14 +13,27 @@
       <dt>Frameworks:</dt>
       <dd>
           <ul class="list-unstyled" id="framework-list">
-            <% render 'clusters/frameworks' %>
+            <% @frameworks.each do |f| %>
+              <% framework = Framework.find(f.framework_id) %>
+              <% link = 'http://'+@ip+framework.port %>
+              <li><%= link_to framework.name.capitalize, link, class: check_link(link), target: "blank" %></li>
+            <% end %>
           </ul>
       </dd>
     <% if @owner %>
       <dt>Assigned to:<dt>
       <dd>
           <ul class="list-unstyled" id="assignment-list">
-            <% render 'clusters/assignments' %>
+            <% @users.each do |user| %>
+              <% if user.id != current_user.id  %>
+                <li>
+                  <%= user.email %>
+                  <%= link_to delete_assignment_path(cluster_id: @cluster.id, user_id: user.id), data: { confirm: "Are you sure?" } do %>
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  <% end %>
+                </li>
+              <% end %>
+            <% end %>
           </ul>
       </dd>
     <% end %>
