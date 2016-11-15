@@ -33,7 +33,6 @@ class ClustersController < ApplicationController
       else
         cluster.delete
         flash[:danger] = "DISCO connection error"
-        cluster.delete
         redirect_to root_url
       end
     else

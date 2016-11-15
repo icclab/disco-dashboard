@@ -25,20 +25,20 @@
       <dd>
           <ul class="list-unstyled" id="assignment-list">
             <% @users.each do |user| %>
-              <% if user.id != current_user.id  %>
-                <li>
+                <li id = "<%= @cluster.id %>-assigned-to-<%= user.id %>">
                   <%= user.email %>
-                  <%= link_to delete_assignment_path(cluster_id: @cluster.id, user_id: user.id), data: { confirm: "Are you sure?" } do %>
-                    <i class="fa fa-times" aria-hidden="true"></i>
+                  <% if user.id != current_user.id %>
+                    <%= link_to delete_assignment_path(cluster_id: @cluster.id, user_id: user.id), method: :delete, remote: true, data: { confirm: "Are you sure?" } do %>
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    <% end %>
                   <% end %>
                 </li>
-              <% end %>
             <% end %>
           </ul>
       </dd>
       <dt>Assign new user:</dt>
       <dd>
-        <%= form_for :assignment, url: create_assignment_path, html: { role: "form" } do |f| %>
+        <%= form_for :assignment, url: create_assignment_path, remote: true, html: { role: "form" } do |f| %>
             <fieldset>
               <%= f.hidden_field :cluster_id, :value => @cluster[:id] %>
               <div class="form-group">

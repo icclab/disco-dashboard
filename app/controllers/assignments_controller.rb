@@ -11,8 +11,14 @@ class AssignmentsController < ApplicationController
 
   def destroy
     cluster = Cluster.find(params[:cluster_id])
-    assignment = cluster.assignments.find_by(user_id: params[:user_id])
-    assignment.delete
+    user_id = params[:user_id]
+    assignment = cluster.assignments.find_by(user_id: user_id)
+    if assignment.delete
+      ActionCable.server.broadcast "cluster_#{current_user[:id]}",
+                                     type: 4,
+                                     userId: user_id,
+                                     clusterId: cluster.id
+    end
   end
 
   private

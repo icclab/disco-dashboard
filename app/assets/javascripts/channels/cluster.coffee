@@ -8,13 +8,24 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
     if data.type == 1
-      $("#cluster-panel").append data.cluster
-      $("#new-cluster").modal('hide')
+      add_new_cluster data.cluster
     if data.type == 2
-      $(data.uuid).html("<strong>#{data.state}</strong>")
-      if data.state.downcase.include? 'ready'
-        $(data.uuid).attr("class", "text-success")
-      if data.state.downcase.include? 'fail'
-        $(data.uuid).attr("class", "text-danger")
+      update_attribute(data.uuid, data.state)
     if data.type == 3
-      $("#assignment-list").append data.user
+      add_new_assignment data.user
+
+  add_new_cluster: (cluster) ->
+    $("#cluster-panel").append cluster
+    $("#new-cluster").modal('hide')
+
+  update_cluster_state: (uuid, state) ->
+    $(uuid).html("<strong>#{state}</strong>")
+    if state.downcase.include? 'ready'
+      $(uuid).attr("class", "text-success")
+    if state.downcase.include? 'fail'
+      $(uuid).attr("class", "text-danger")
+
+  add_new_assignment: (user) ->
+    $("#assignment_email").val("")
+    $("#assignment-list").append user
+
