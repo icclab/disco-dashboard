@@ -10,7 +10,7 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
     if data.type == 1
       add_new_cluster data.cluster
     if data.type == 2
-      update_attribute(data.uuid, data.state)
+      update_cluster_state(data.uuid, data.state)
     if data.type == 3
       add_new_assignment data.user
     if data.type == 4
@@ -22,9 +22,10 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
 
   update_cluster_state = (uuid, state) ->
     $(uuid).html("<strong>#{state}</strong>")
-    if state.downcase.include? 'ready'
+    $(uuid).attr("class", "text-info")
+    if state.indexOf('READY') != -1
       $(uuid).attr("class", "text-success")
-    if state.downcase.include? 'fail'
+    if state.indexOf('FAIL') != -1
       $(uuid).attr("class", "text-danger")
 
   add_new_assignment = (user) ->

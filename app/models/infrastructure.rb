@@ -18,7 +18,8 @@ class Infrastructure < ApplicationRecord
             username:   credentials[:username],
             api_key:    credentials[:password],
             auth_url:   credentials[:auth_url],
-            authtenant: credentials[:tenant]
+            authtenant: credentials[:tenant],
+            region:     ENV['region']
           })
         end
 
