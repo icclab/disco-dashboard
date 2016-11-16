@@ -55,12 +55,16 @@ class UsersController < ApplicationController
     # Confirm the correct user.
     def correct_user
       @user = User.find(params[:id])
-      flash[:warning] = "Access Denied"
-      redirect_to(root_url) unless current_user?(@user)
+      if !current_user?(@user)
+        flash[:warning] = "Access Denied"
+        redirect_to(root_url)
+      end
     end
 
     def admin_user
-      flash[:warning] = "Access only for admin_user"
-      redirect_to(root_url) unless current_user.admin?
+      if !current_user.admin?
+        flash[:warning] = "Access only for admin_user"
+        redirect_to(root_url)
+      end
     end
 end

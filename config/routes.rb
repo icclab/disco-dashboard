@@ -17,9 +17,9 @@ Rails.application.routes.draw do
   delete '/delete_assignment', to: 'assignments#destroy'
   post   '/create_assignment', to: 'assignments#create'
 
-  get    '*unmatched_route', to: 'application#not_found'
-
   resources :users
+
+  get    '*unmatched_route', to: 'application#not_found'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
