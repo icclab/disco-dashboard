@@ -13,15 +13,40 @@
       <dt>Frameworks:</dt>
       <dd>
           <ul class="list-unstyled" id="framework-list">
-            <% render 'clusters/frameworks' %>
+            <% @frameworks.each do |f| %>
+              <% framework = Framework.find(f.framework_id) %>
+              <% link = 'http://'+@ip+framework.port %>
+              <li><%= link_to framework.name.capitalize, link, class: check_link(link), target: "blank" %></li>
+            <% end %>
           </ul>
       </dd>
     <% if @owner %>
       <dt>Assigned to:<dt>
       <dd>
           <ul class="list-unstyled" id="assignment-list">
-            <% render 'clusters/assignments' %>
+            <% @users.each do |user| %>
+                <li id = "<%= @cluster.id %>-assigned-to-<%= user.id %>">
+                  <%= user.email %>
+                  <% if user.id != current_user.id %>
+                    <%= link_to delete_assignment_path(cluster_id: @cluster.id, user_id: user.id), method: :delete, remote: true, data: { confirm: "Are you sure?" } do %>
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    <% end %>
+                  <% end %>
+                </li>
+            <% end %>
           </ul>
+      </dd>
+      <dt>Assign new user:</dt>
+      <dd>
+        <%= form_for :assignment, url: create_assignment_path, remote: true, html: { role: "form" } do |f| %>
+            <fieldset>
+              <%= f.hidden_field :cluster_id, :value => @cluster[:id] %>
+              <div class="form-group">
+                <%= f.text_field :email, placeholder: "Email", class: 'form-control' %>
+              </div>
+              <%= f.submit "Assign", class: "btn btn-success" %>
+            </fieldset>
+        <% end %>
       </dd>
     <% end %>
   </dl>

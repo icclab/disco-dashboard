@@ -43,3 +43,8 @@ Usertype.create([
     desc:        '...'
   }
 ])
+
+User.create!(email: "example@zhaw.ch",
+             password:              "password",
+             password_confirmation: "password",
+             usertype: 2)

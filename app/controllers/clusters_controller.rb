@@ -33,7 +33,6 @@ class ClustersController < ApplicationController
       else
         cluster.delete
         flash[:danger] = "DISCO connection error"
-        cluster.delete
         redirect_to root_url
       end
     else
@@ -100,20 +99,31 @@ class ClustersController < ApplicationController
       request["X-Region-Name"]     = ENV["region"]
       request["X-User-Name"]       = infrastructure[:username]
       request["X-Password"]        = cluster[:password]
-      request["X-Occi-Attribute"]  = 'icclab.haas.master.image="'+cluster[:master_image]+'",'
-      request["X-Occi-Attribute"] += 'icclab.haas.slave.image="'+cluster[:slave_image]+'",'
+
+      master_image = Image.find(cluster[:master_image])
+      request["X-Occi-Attribute"]  = 'icclab.haas.master.image="'+master_image.img_id+'",'
+      slave_image = Image.find(cluster[:slave_image])
+      request["X-Occi-Attribute"] += 'icclab.haas.slave.image="'+slave_image.img_id+'",'
+
       request["X-Occi-Attribute"] += 'icclab.haas.master.sshkeyname="'+cluster[:keypair]+'",'
-      request["X-Occi-Attribute"] += 'icclab.haas.master.flavor="'+cluster[:master_flavor]+'",'
-      request["X-Occi-Attribute"] += 'icclab.haas.slave.flavor="'+cluster[:slave_flavor]+'",'
+
+      master_flavor = Flavor.find(cluster[:master_flavor])
+      request["X-Occi-Attribute"] += 'icclab.haas.master.flavor="'+master_flavor.fl_id+'",'
+      slave_flavor = Flavor.find(cluster[:slave_flavor])
+      request["X-Occi-Attribute"] += 'icclab.haas.slave.flavor="'+slave_flavor.fl_id+'",'
+
       request["X-Occi-Attribute"] += 'icclab.haas.master.number="'+cluster[:master_num].to_s+'",'
       request["X-Occi-Attribute"] += 'icclab.haas.slave.number="'+cluster[:slave_num].to_s+'",'
+
       request["X-Occi-Attribute"] += 'icclab.haas.master.slaveonmaster="'+value(cluster[:slave_on_master])+'",'
+
       frameworks.each do |framework|
         if !framework.name.eql? "HDFS"
           request["X-Occi-Attribute"] += 'icclab.disco.frameworks.'+framework[:name].downcase
           request["X-Occi-Attribute"] += '.included="'+value(cluster[framework[:name]])+'",'
         end
       end
+
       request["X-Occi-Attribute"] += 'icclab.haas.master.withfloatingip="true"'
 
       puts request["X-Occi-Attribute"]

@@ -6,7 +6,7 @@ class User < ApplicationRecord
   has_many :flavors,  through: :infrastructures
   has_many :keypairs, through: :infrastructures
   has_many :assignments, dependent: :destroy
-  has_many :clusters, through: :assignments
+  has_many :clusters, through: :assignments, dependent: :destroy
 
   before_save { self.email.downcase! }
 
