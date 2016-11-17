@@ -14,13 +14,13 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user  = User.new
-    @types = Usertype.all
+    @user = User.new
+    @usertypes = Usertype.all
   end
 
   def create
     @user = User.new(user_params)
-    @types = Usertype.all
+    @usertypes = Usertype.all
     if @user.save
       log_in @user
       redirect_to root_url
@@ -57,14 +57,14 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       if !current_user?(@user)
         flash[:warning] = "Access Denied"
-        redirect_to(root_url)
+        redirect_to root_url
       end
     end
 
     def admin_user
       if !current_user.admin?
         flash[:warning] = "Access only for admin_user"
-        redirect_to(root_url)
+        redirect_to root_url
       end
     end
 end

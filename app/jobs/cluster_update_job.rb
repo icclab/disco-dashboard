@@ -6,8 +6,8 @@ class ClusterUpdateJob < ApplicationJob
     state    = cluster[:state]
     uuid     = cluster[:uuid]
 
-    puts state
-    puts uuid
+    Rails.logger.debug "Cluster initial state: #{state.inspect}"
+    Rails.logger.debug "Cluster uuid: #{uuid.inspect}"
 
     begin
       sleep(3)

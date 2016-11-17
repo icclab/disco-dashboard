@@ -25,7 +25,7 @@ class ClustersController < ApplicationController
         response.header.each_header { |key, value| uuid = value.split(//).last(36).join if key =="location" }
         cluster.update_attribute(:uuid, uuid)
         cluster.update_attribute(:state, "Deplyoing...")
-        ActionCable.server.broadcast "cluster_#{current_user[:id]}",
+        ActionCable.server.broadcast "user_#{current_user[:id]}",
                                      type: 1,
                                      cluster: render_cluster(cluster)
         ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
@@ -56,7 +56,7 @@ class ClustersController < ApplicationController
       flash[:success] = "The cluster is being deleted"
     end
 
-    redirect_to :back
+    redirect_to root_url
   end
 
   # Method to get all details of the chosen cluster
@@ -126,7 +126,7 @@ class ClustersController < ApplicationController
 
       request["X-Occi-Attribute"] += 'icclab.haas.master.withfloatingip="true"'
 
-      puts request["X-Occi-Attribute"]
+      Rails.logger.debug {"Cluster attributes: #{request["X-Occi-Attribute"].inspect}"}
 
       response = Net::HTTP.start(uri.hostname, uri.port) do |http|
         http.request(request)

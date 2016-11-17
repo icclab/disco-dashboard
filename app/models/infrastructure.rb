@@ -81,7 +81,6 @@ class Infrastructure < ApplicationRecord
   end
 
   def adapter=(adapter)
-    puts adapter
     @adapter = Infrastructure::Adapter.const_get(adapter.to_s.capitalize)
   end
 end

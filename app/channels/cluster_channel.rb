@@ -8,7 +8,7 @@ class ClusterChannel < ApplicationCable::Channel
   # Starts streaming from selected stream and updates all user's clusters.
   def subscribed
     # stream_from "some_channel"
-    stream_from "cluster_#{user_id}"
+    stream_from "user_#{user_id}"
     update_clusters
   end
 
