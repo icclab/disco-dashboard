@@ -1,1 +1,14 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+one:
+  name: 'test'
+  uuid: '1'
+  state: 'ready'
+  master_image: '1'
+  slave_image: '1'
+  master_flavor: '1'
+  slave_flavor: '1'
+  master_num: 1
+  slave_num: 1
+  external_ip: 0
+  slave_on_master: true
+  infrastructure_id: 1

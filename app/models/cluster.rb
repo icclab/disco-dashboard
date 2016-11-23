@@ -9,8 +9,8 @@ class Cluster < ApplicationRecord
   validates :slave_image,     presence: true
   validates :master_flavor,   presence: true
   validates :slave_flavor,    presence: true
-  validates :master_num,      presence: true
-  validates :slave_num,       presence: true
+  validates :master_num,      presence: true, numericality: { greater_than: 0 }
+  validates :slave_num,       presence: true, numericality: { greater_than: 0 }
   validates :slave_on_master, presence: true
 
   def update(id, uuid, state)
