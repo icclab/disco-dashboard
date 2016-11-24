@@ -38,7 +38,7 @@ class ClusterChannel < ApplicationCable::Channel
           end
 
         rescue Net::OpenTimeout
-
+          state = 'CONNECTION_FAILED'
         rescue Errno::ECONNREFUSED
 
         end
@@ -49,8 +49,6 @@ class ClusterChannel < ApplicationCable::Channel
           else
             state = 'INSTALLING_FRAMEWORKS'
           end
-        else
-          state = 'CONNECTION_FAILED'
         end
 
         if(state != old_state)
