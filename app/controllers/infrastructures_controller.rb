@@ -1,5 +1,17 @@
 class InfrastructuresController < ApplicationController
+  def index
+    @infrastructures = current_user.infrastructure.all
+  end
+
+  def show
+    @infrastructure = Infrastructure.find(params[:infrastructure][:id])
+  end
+
   def new
+    @infrastructure = Infrastructure.new
+  end
+
+  def create
     @infrastructure = current_user.infrastructures.build(infrastructure_params)
     @infrastructure.adapter = params[:infrastructure][:type]
     if @infrastructure.save && connection = @infrastructure.authenticate(params[:infrastructure])

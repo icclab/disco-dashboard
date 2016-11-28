@@ -2,6 +2,18 @@ class ClustersController < ApplicationController
   # Only logged in user can access to these methods
   before_action :logged_in_user
 
+  def index
+    @clusters = current_user.clusters.all
+  end
+
+  def show
+    @cluster = Cluster.find(params[:cluster][:id])
+  end
+
+  def new
+    @cluster = Cluster.new
+  end
+
   # Method to create a cluster on DISCO
   def create
     frameworks = Framework.all
@@ -58,17 +70,6 @@ class ClustersController < ApplicationController
 
     redirect_to root_url
   end
-
-  # Method to get all details of the chosen cluster
-  def show
-    uuid      = params[:uuid]
-    @cluster  = Cluster.find_by(uuid: uuid)
-    @users    = @cluster.users.all
-    @ip       = IPAddr.new(@cluster[:external_ip], Socket::AF_INET).to_s
-    @frameworks = @cluster.cluster_frameworks.all
-    @owner = current_user.infrastructures.any? && current_user.infrastructures.exists?(id: @cluster.infrastructure_id)
-  end
-
 
   private
     def cluster_params
