@@ -10,11 +10,12 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
 
-  get    '/details', to: 'clusters#show'
-  post   '/delete',  to: 'clusters#destroy'
-  post   '/create',  to: 'clusters#create'
+  get    '/clusters',     to: 'clusters#index'
+  get    '/clusters/:id', to: 'clusters#show'
+  get    '/clusters/new', to: 'clusters#new'
+  post   '/clusters/',    to: 'clusters#create'
+  delete '/clusters/:id', to: 'clusters#destroy'
 
-  get    '/clusters', to: 'clusters#index'
 
   post   '/new',     to: 'infrastructures#new'
 
