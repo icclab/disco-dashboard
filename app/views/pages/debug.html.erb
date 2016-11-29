@@ -1,51 +1,241 @@
-
 <div class="row">
-  <div class="col-lg-4">
-    <%= link_to details_path(server: @server), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                Cluster 3
-            </div>
-            <div class="panel-body text-left">
-                <dl class="dl-horizontal">
-                    <dt>OS</dt>
-                    <dd>CoreOS</dd>
-                    <dt>Cores</dt>
-                    <dd>4</dd>
-                    <dt>RAM</dt>
-                    <dd>8GB</dd>
-                    <dt>Storage</dt>
-                    <dd>16GB</dd>
-                    <dt>Status</dt>
-                    <dd class="text-success"><strong>ACTIVE</strong></dd>
-                </dl>
-            </div>
-        </div>
-    <% end %>
-  </div>
-  <div class="col-lg-4">
-    <%= link_to details_path(server: @server), remote: true, data: { toggle: "modal", target: ".bs-cluster1-modal"} do %>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                Cluster 3
-            </div>
-            <div class="panel-body text-left" style="min-height: 240px; max-height: 240px;">
-                <p></p>
-                <div class="progress progress-striped active">
-                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                      <span class="sr-only">40% Complete (success)</span>
-                  </div>
-                </div>
-                <div class="text-center">
-                <p>
-                    Cluster is deploying
-                </p>
-                </div>
-            </div>
-        </div>
-    <% end %>
+  <div class="col-lg-12">
+      <h1 class="page-header"></h1>
   </div>
 </div>
-<button type="button" class="btn btn-outline btn-info" data-toggle="modal" data-target=".bs-newcluster-modal">Add + </button>
-<%= render 'pages/details' %>
-<%= render 'pages/create' %>
+<div class="row">
+  <div class="col-lg-12">
+      <h1 class="page-header">Clusters</h1>
+  </div>
+</div>
+<a href="#">
+<div class="row well">
+        <h2>Test</h2>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4 specs">
+               <h3>Slave <small>x2</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4">
+               <h3>Assigned to: </h3>
+               <ul>
+                   <li>Group 1</li>
+                   <li>Group 2</li>
+                   <li>Group 3</li>
+                   <li>Group 4</li>
+               </ul>
+
+           </div>
+</div>
+</a>
+<a href="#">
+<div class="row well">
+        <h2>Test</h2>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4">
+               <h3>Assigned to: </h3>
+               <ul>
+                   <li>Group 1</li>
+                   <li>Group 2</li>
+                   <li>Group 3</li>
+                   <li>Group 4</li>
+               </ul>
+
+           </div>
+</div>
+</a>
+<a href="#">
+<div class="row well">
+        <h2>Test</h2>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4">
+               <h3>Assigned to: </h3>
+               <ul>
+                   <li>Group 1</li>
+                   <li>Group 2</li>
+                   <li>Group 3</li>
+                   <li>Group 4</li>
+               </ul>
+
+           </div>
+</div>
+</a>
+<a href="#">
+<div class="row well">
+        <h2>Test</h2>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4">
+               <h3>Assigned to: </h3>
+               <ul>
+                   <li>Group 1</li>
+                   <li>Group 2</li>
+                   <li>Group 3</li>
+                   <li>Group 4</li>
+               </ul>
+
+           </div>
+</div>
+</a>
+<a href="#">
+<div class="row well">
+        <h2>Test</h2>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4">
+               <h3>Assigned to: </h3>
+               <ul>
+                   <li>Group 1</li>
+                   <li>Group 2</li>
+                   <li>Group 3</li>
+                   <li>Group 4</li>
+               </ul>
+
+           </div>
+</div>
+</a>
+<a href="#">
+<div class="row well">
+        <h2>Test</h2>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4">
+               <h3>Assigned to: </h3>
+               <ul>
+                   <li>Group 1</li>
+                   <li>Group 2</li>
+                   <li>Group 3</li>
+                   <li>Group 4</li>
+               </ul>
+
+           </div>
+</div>
+</a>
+<a href="#">
+<div class="row well">
+        <h2>Test</h2>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4">
+               <h3>Assigned to: </h3>
+               <ul>
+                   <li>Group 1</li>
+                   <li>Group 2</li>
+                   <li>Group 3</li>
+                   <li>Group 4</li>
+               </ul>
+            </div>
+</div>
+</a>
+<a href="#">
+<div class="row well">
+        <h2>Test</h2>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x1</small></h3>
+               <p><strong>Ubuntu</strong></p>
+               <p><strong>2</strong> VCPUs</p>
+               <p><strong>2GB</strong> RAM</p>
+               <p><strong>100GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4">
+               <h3>Assigned to: </h3>
+               <ul>
+                   <li>Group 1</li>
+                   <li>Group 2</li>
+                   <li>Group 3</li>
+                   <li>Group 4</li>
+               </ul>
+
+           </div>
+</div>
+</a>

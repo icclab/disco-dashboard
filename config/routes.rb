@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   root 'pages#index'
+
+  get    '/debug', to: 'pages#debug'
   get    'render_form/', to: 'pages#render_form'
 
   get    '/signup',  to: 'users#new'
@@ -11,6 +13,8 @@ Rails.application.routes.draw do
   get    '/details', to: 'clusters#show'
   post   '/delete',  to: 'clusters#destroy'
   post   '/create',  to: 'clusters#create'
+
+  get    '/clusters', to: 'clusters#index'
 
   post   '/new',     to: 'infrastructures#new'
 

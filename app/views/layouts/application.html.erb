@@ -14,19 +14,15 @@
   <body>
     <div id="wrapper">
       <%= render 'layouts/header' %>
-      <div class="row">
-        <% flash.each do |message_type, message| %>
-            <div class="center alert alert-<%= message_type %>"><%= message %></div>
-        <% end %>
-      </div>
       <div id="page-wrapper">
+        <div class="container-fluid">
           <div class="row">
-              <div class="col-lg-12">
-                  <h1 class="page-header"></h1>
-              </div>
-              <!-- /.col-lg-12 -->
+            <% flash.each do |message_type, message| %>
+              <div class="center alert alert-<%= message_type %>"><%= message %></div>
+             <% end %>
           </div>
-        <%= yield %>
+          <%= yield %>
+        </div>
       </div>
     </div>
     <!-- /#wrapper -->

@@ -12,6 +12,15 @@ class PagesController < ApplicationController
     @infrastructures.each { |inf| @adapters[inf.name] = inf.id } if @infrastructures
   end
 
+  def debug
+    @images          = Image.all
+    @flavors         = Flavor.all
+    @clusters        = current_user.clusters.all        if current_user.clusters.any?
+    @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
+    @adapters        = { "Choose" => 0 }
+    @infrastructures.each { |inf| @adapters[inf.name] = inf.id } if @infrastructures
+  end
+
   # Retrieves data and renders a form for a cluster creation
   # Called by AJAX Get request from dashboard
   def render_form
