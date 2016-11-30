@@ -4,12 +4,7 @@ class PagesController < ApplicationController
 
   # Retrieves all resources that needs to be shown on dashboard
   def index
-    @images          = Image.all
-    @flavors         = Flavor.all
-    @clusters        = current_user.clusters.all        if current_user.clusters.any?
-    @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
-    @adapters        = { "Choose" => 0 }
-    @infrastructures.each { |inf| @adapters[inf.name] = inf.id } if @infrastructures
+
   end
 
   def debug
@@ -21,4 +16,7 @@ class PagesController < ApplicationController
     @infrastructures.each { |inf| @adapters[inf.name] = inf.id } if @infrastructures
   end
 
+  def faq
+
+  end
 end

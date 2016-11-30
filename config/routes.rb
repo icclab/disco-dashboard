@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   root 'pages#index'
-
+  get    '/faq',   to: 'pages#faq'
   get    '/debug', to: 'pages#debug'
 
   get    '/signup',  to: 'users#new'
@@ -9,19 +9,19 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
 
-  get    '/clusters',     to: 'clusters#index'
-  get    '/clusters/new', to: 'clusters#new'
+  get    '/clusters',              to: 'clusters#index'
+  get    '/clusters/new',          to: 'clusters#new'
   get    '/clusters/render_form/', to: 'clusters#render_form'
-  get    '/clusters/:id', to: 'clusters#show'
-  post   '/clusters/',    to: 'clusters#create'
-  delete '/clusters/:id', to: 'clusters#destroy'
-
-  resources :infrastructures
+  get    '/clusters/:id',          to: 'clusters#show'
+  post   '/clusters/',             to: 'clusters#create'
+  delete '/clusters/:id',          to: 'clusters#destroy'
 
   delete '/delete_assignment', to: 'assignments#destroy'
   post   '/create_assignment', to: 'assignments#create'
 
   resources :users
+  resources :infrastructures
+  resources :groups
 
   get    '*unmatched_route', to: 'application#not_found'
 

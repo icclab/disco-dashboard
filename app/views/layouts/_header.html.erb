@@ -7,7 +7,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand huge" href="/">DISCO</a>
+      <%= link_to "DISCO", root_path, class: "navbar-brand huge" %>
   </div>
   <!-- /.navbar-header -->
   <% if current_user %>
@@ -43,12 +43,12 @@
                             <% end %>
                         </li>
                         <li>
-                            <%= link_to clusters_path do %>
+                            <%= link_to groups_path do %>
                               <i class="fa fa-group fa-fw"></i> Groups
                             <% end %>
                         </li>
                         <li>
-                            <%= link_to clusters_path do %>
+                            <%= link_to faq_path do %>
                               <i class="fa fa-question-circle fa-fw"></i> FAQ
                             <% end %>
                         </li>
