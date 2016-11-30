@@ -436,3 +436,9 @@ table.dataTable thead .sorting:after {
 .sidebar {
   position: fixed;
 }
+
+.scrollable-list {
+    height: auto;
+    max-height: 150px;
+    overflow-x: hidden;
+}

@@ -1,5 +1,5 @@
 <% if @infrastructure_id.to_i > 0 %>
-    <%= form_for :cluster, url: create_path, remote: true, html: {role: "role", id: "cluster-form"} do |f| %>
+    <%= form_for :cluster, method: "post", url: clusters_path, html: {role: "role", id: "cluster-form"} do |f| %>
         <%= f.hidden_field :infrastructure_id, :value => @infrastructure_id %>
         <%= f.label(:password, "Password") %>
         <div class="form-group">
