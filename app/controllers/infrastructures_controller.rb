@@ -1,6 +1,6 @@
 class InfrastructuresController < ApplicationController
   def index
-    @infrastructures = current_user.infrastructure.all
+    @infrastructures = current_user.infrastructures.all
   end
 
   def show
@@ -8,7 +8,7 @@ class InfrastructuresController < ApplicationController
   end
 
   def new
-    @infrastructure = Infrastructure.new
+    #@infrastructure = Infrastructure.new
   end
 
   def create
