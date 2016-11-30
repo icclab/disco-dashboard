@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161108160454) do
+ActiveRecord::Schema.define(version: 20161130151620) do
 
   create_table "assignments", force: :cascade do |t|
-    t.integer  "user_id"
+    t.integer  "group_id"
     t.integer  "cluster_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cluster_id"], name: "index_assignments_on_cluster_id"
-    t.index ["user_id"], name: "index_assignments_on_user_id"
+    t.index ["group_id"], name: "index_assignments_on_group_id"
   end
 
   create_table "cluster_frameworks", force: :cascade do |t|
@@ -67,6 +67,13 @@ ActiveRecord::Schema.define(version: 20161108160454) do
     t.string   "port"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string   "name"
+    t.text     "desc"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "images", force: :cascade do |t|

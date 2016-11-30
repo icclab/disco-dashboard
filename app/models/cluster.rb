@@ -2,7 +2,7 @@ class Cluster < ApplicationRecord
   belongs_to :infrastructure
   has_many   :cluster_frameworks, dependent: :destroy
   has_many   :assignments,        dependent: :destroy
-  has_many   :users, through: :assignments, dependent: :destroy
+  has_many   :groups, through: :assignments, dependent: :destroy
 
   validates :name,            presence: true, length: { maximum: 255 }
   validates :master_image,    presence: true
