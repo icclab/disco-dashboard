@@ -1,4 +1,4 @@
 class Assignment < ApplicationRecord
   belongs_to :group
-  belongs_to :cluster
+  belongs_to :user
 end

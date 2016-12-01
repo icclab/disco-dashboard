@@ -1,4 +1,5 @@
 class Group < ApplicationRecord
-  belongs_to :user
-  has_many   :assignments
+  has_many :assignments
+  has_many :users, through: :assignments
+  has_many :clusters
 end

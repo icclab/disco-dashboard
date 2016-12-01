@@ -2,7 +2,7 @@ class GroupsController < ApplicationController
   before_action :logged_in_user
 
   def index
-    @current_user.groups.all
+    @groups = current_user.groups.all
   end
 
   def show
