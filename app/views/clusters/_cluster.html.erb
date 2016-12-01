@@ -1,35 +1,37 @@
- <div class="col-lg-4">
-    <%= link_to details_path(uuid: cluster[:uuid]), remote: true, data: { toggle: "modal", target: ".cluster-modal"} do %>
-        <div class="panel panel-info" id="<%= cluster[:uuid] %>">
-            <div class="panel-heading">
-                <%= cluster[:name] %>
-            </div>
-            <div class="panel-body text-left">
-                <dl class="dl-horizontal">
-                  <% m_image  = @images.find(cluster[:master_image])   %>
-                  <% s_image  = @images.find(cluster[:slave_image])    %>
-                  <% m_flavor = @flavors.find(cluster[:master_flavor]) %>
-                  <% s_flavor = @flavors.find(cluster[:slave_flavor])  %>
-                      <dt>Master Image</dt>
-                      <dd><%= m_image.name %></dd>
-                      <dt>Master VCPUs</dt>
-                      <dd><%= m_flavor.vcpus %></dd>
-                      <dt>Master RAM</dt>
-                      <dd><%= m_flavor.ram %>MB</dd>
-                      <dt>Master Disk</dt>
-                      <dd><%= m_flavor.disk %>GB</dd>
-                      <dt>Slave Image</dt>
-                      <dd><%= s_image.name %></dd>
-                      <dt>Slave VCPUs</dt>
-                      <dd><%= s_flavor.vcpus %></dd>
-                      <dt>Slave RAM</dt>
-                      <dd><%= s_flavor.ram %>MB</dd>
-                      <dt>Slave Disk</dt>
-                      <dd><%= s_flavor.disk %>GB</dd>
-                      <dt>Status</dt>
-                      <dd id = "cluster-<%= cluster[:uuid] %>" class="text-<%= get_status(cluster[:state]) %>"><strong><%= cluster[:state] %></strong></dd>
-                </dl>
-            </div>
-        </div>
-    <% end %>
-</div>
+<div class="row well">
+          <h2><%= cluster.name %></h2>
+           <div class="col-lg-4 specs">
+               <h3>Master <small>x<%= cluster.master_num %></small></h3>
+               <% master_image = Image.find(cluster.master_image) %>
+               <p><strong><%= master_image.name %></strong></p>
+
+               <% master_flavor = Flavor.find(cluster.master_flavor) %>
+               <p><strong><%= master_flavor.vcpus %></strong> VCPUs</p>
+               <p><strong><%= master_flavor.ram   %>GB</strong> RAM</p>
+               <p><strong><%= master_flavor.disk  %>GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4 specs">
+               <h3>Slave <small>x<%= cluster.slave_num %></small></h3>
+               <% slave_image = Image.find(cluster.slave_image) %>
+               <p><strong><%= slave_image.name %></strong></p>
+
+               <% slave_flavor = Flavor.find(cluster.slave_flavor) %>
+               <p><strong><%= slave_flavor.vcpus %></strong> VCPUs</p>
+               <p><strong><%= slave_flavor.ram   %>GB</strong> RAM</p>
+               <p><strong><%= slave_flavor.disk  %>GB</strong> HDD</p>
+           </div>
+           <div class="col-lg-4">
+               <h3>Assigned to: </h3>
+               <ul class="scrollable-list list-unstyled">
+                  <% if cluster.groups.any? %>
+                    <% cluster.groups.each do |group| %>
+                      <li>
+                        <p><%= group.name %></p>
+                      </li>
+                    <% end %>
+                  <% else %>
+                    <li><p>No one</p></li>
+                  <% end %>
+               </ul>
+           </div>
+    </div>

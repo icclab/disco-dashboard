@@ -1,6 +1,6 @@
 class InfrastructuresController < ApplicationController
   def index
-    @infrastructures = current_user.infrastructures.all
+    @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
   end
 
   def show

@@ -9,47 +9,6 @@
   </div>
 </div>
 <% if @clusters && @clusters.any? %>
-    <div class="row well">
-          <h2>Test</h2>
-           <div class="col-lg-4 specs">
-               <h3>Master <small>x1</small></h3>
-               <p><strong>Ubuntu</strong></p>
-               <p><strong>2</strong> VCPUs</p>
-               <p><strong>2GB</strong> RAM</p>
-               <p><strong>100GB</strong> HDD</p>
-           </div>
-           <div class="col-lg-4 specs">
-               <h3>Slave <small>x2</small></h3>
-               <p><strong>Ubuntu</strong></p>
-               <p><strong>2</strong> VCPUs</p>
-               <p><strong>2GB</strong> RAM</p>
-               <p><strong>100GB</strong> HDD</p>
-           </div>
-           <div class="col-lg-4">
-               <h3>Assigned to: </h3>
-               <ul class="scrollable-list">
-                   <li><p>Group 1</p></li>
-                   <li><p>Group 2</p></li>
-                   <li><p>Group 3</p></li>
-                   <li><p>Group 4</p></li>
-                   <li><p>Group 1</p></li>
-                   <li><p>Group 2</p></li>
-                   <li><p>Group 3</p></li>
-                   <li><p>Group 4</p></li>
-                   <li><p>Group 1</p></li>
-                   <li><p>Group 2</p></li>
-                   <li><p>Group 3</p></li>
-                   <li><p>Group 4</p></li>
-                   <li><p>Group 1</p></li>
-                   <li><p>Group 2</p></li>
-                   <li><p>Group 3</p></li>
-                   <li><p>Group 4</p></li>
-                   <li><p>Group 1</p></li>
-                   <li><p>Group 2</p></li>
-                   <li><p>Group 3</p></li>
-                   <li><p>Group 4</p></li>
-               </ul>
-           </div>
-    </div>
+    <%= render @clusters %>
 <% end %>
 
