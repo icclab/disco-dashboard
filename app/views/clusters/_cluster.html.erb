@@ -23,14 +23,12 @@
            <div class="col-lg-4">
                <h3>Assigned to: </h3>
                <ul class="scrollable-list list-unstyled">
-                  <% if cluster.groups.any? %>
-                    <% cluster.groups.each do |group| %>
+                  <% if cluster.group %>
                       <li>
-                        <p><%= group.name %></p>
+                        <p><%= cluster.group.name %></p>
                       </li>
-                    <% end %>
                   <% else %>
-                    <li><p>No one</p></li>
+                    <li><p>Not assigned</p></li>
                   <% end %>
                </ul>
            </div>
