@@ -1,6 +1,6 @@
 class Cluster < ApplicationRecord
   belongs_to :infrastructure
-  belongs_to :group
+  belongs_to :group, optional: true
   has_many   :cluster_frameworks, dependent: :destroy
   has_many   :assignments,        dependent: :destroy
 
@@ -11,12 +11,12 @@ class Cluster < ApplicationRecord
   validates :slave_flavor,    presence: true
   validates :master_num,      presence: true, numericality: { greater_than: 0 }
   validates :slave_num,       presence: true, numericality: { greater_than: 0 }
-  validates :slave_on_master, presence: true
+  validates_inclusion_of :slave_on_master, :in => [true, false]
 
   def update(id, uuid, state)
-    ActionCable.server.broadcast "user_#{id}",
-                                         type: 2,
-                                         uuid: '#cluster-'+uuid,
-                                         state: state
+    #ActionCable.server.broadcast "user_#{id}",
+    #                                     type: 2,
+    #                                     uuid: '#cluster-'+uuid,
+    #                                     state: state
   end
 end

@@ -3,6 +3,7 @@ module ClusterHelper
   # Returns "text-success" if link is working,
   #         "text-danger"  if link is broken.
   def check_link(url)
+    Rails.logger.debug url
     uri = URI.parse(url)
     response = nil
     begin

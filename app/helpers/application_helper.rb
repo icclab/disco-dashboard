@@ -17,13 +17,13 @@ module ApplicationHelper
 
   # To get right status according to a state
   def get_status(state)
-    state ||= 'warning'
+    state ||= 'info'
     if state.downcase.include? "failed"
       'danger'
     elsif state.downcase.include?("create_complete")||state.downcase.include?("ready")
       'success'
     else
-      'warning'
+      'info'
     end
   end
 

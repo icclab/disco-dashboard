@@ -442,3 +442,18 @@ table.dataTable thead .sorting:after {
     max-height: 150px;
     overflow-x: hidden;
 }
+
+.panel-custom {
+  border-color: #4ea0f9;
+}
+.panel-custom > .panel-heading {
+  border-color: #4ea0f9;
+  color: white;
+  background-color: #4ea0f3;
+}
+.panel-custom > a {
+  color: #5cb85c;
+}
+.panel-custom > a:hover {
+  color: #3d8b3d;
+}

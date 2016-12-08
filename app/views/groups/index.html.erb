@@ -1,11 +1,12 @@
 <div class="row">
   <div class="col-lg-12">
-      <h1 class="page-header"></h1>
-  </div>
-</div>
-<div class="row">
-  <div class="col-lg-6">
-      <h1 class="page-header">Groups <small><%= link_to "add new", new_group_path %></small></h1>
+      <h1 class="page-header text-primary">Groups
+            <%= link_to new_group_path do %>
+              <button type="button" class="btn btn-outline btn-primary pull-right">
+                  <i class="fa fa-plus fa-fw"></i> Add
+              </button>
+            <% end %>
+      </h1>
   </div>
 </div>
 <% if @groups.any? %>
