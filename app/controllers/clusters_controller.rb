@@ -3,7 +3,11 @@ class ClustersController < ApplicationController
   before_action :logged_in_user
 
   def index
-    @clusters = current_user.clusters.all
+    if current_user.usertype != 2
+      @clusters = current_user.clusters.all
+    else
+      @groups = current_user.groups.all
+    end
     @frameworks = Framework.all
   end
 
@@ -17,22 +21,6 @@ class ClustersController < ApplicationController
     @cluster = Cluster.find(params[:cluster][:id])
   end
 
-  # Retrieves data and renders a form for a cluster creation
-  # Called by AJAX Get request from dashboard
-  def render_form
-    @infrastructure_id = params[:infrastructure_id]
-    if @infrastructure_id != "0"
-      @frameworks = Framework.all
-      @images     = Image.where(infrastructure_id: @infrastructure_id)
-      @flavors    = Flavor.where(infrastructure_id: @infrastructure_id)
-      @keypairs   = Keypair.where(infrastructure_id: @infrastructure_id)
-    end
-
-    respond_to do |format|
-      format.js
-    end
-  end
-
   # Method to create a cluster on DISCO
   def create
     @infrastructures = current_user.infrastructures.all
@@ -42,8 +30,10 @@ class ClustersController < ApplicationController
     infrastructure = Infrastructure.find(params[:cluster][:infrastructure_id])
     cluster = infrastructure.clusters.build(cluster_params)
     cluster[:group_id] = 0
+
     Rails.logger.debug "#{cluster.inspect}"
     Rails.logger.debug "#{cluster.valid?.inspect}"
+
     if cluster.save
       # If new cluster is properly configured then we send request to the DISCO
       # to create a new cluster
@@ -57,6 +47,7 @@ class ClustersController < ApplicationController
         uuid = nil
         response.header.each_header { |key, value| uuid = value.split(//).last(36).join if key =="location" }
         response.header.each_header { |key, value| Rails.logger.debug "#{key} => #{value}" }
+
         cluster.update_attribute(:uuid, uuid)
         cluster.update_attribute(:external_ip, 0)
         cluster.update_attribute(:state, "Deplyoing...")
@@ -102,6 +93,22 @@ class ClustersController < ApplicationController
     end
 
     redirect_to root_url
+  end
+
+  # Retrieves data and renders a form for a cluster creation
+  # Called by AJAX Get request from dashboard
+  def render_form
+    @infrastructure_id = params[:infrastructure_id]
+    if @infrastructure_id != "0"
+      @frameworks = Framework.all
+      @images     = Image.where(infrastructure_id: @infrastructure_id)
+      @flavors    = Flavor.where(infrastructure_id: @infrastructure_id)
+      @keypairs   = Keypair.where(infrastructure_id: @infrastructure_id)
+    end
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   private

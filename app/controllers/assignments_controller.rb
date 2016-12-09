@@ -1,8 +1,9 @@
 class AssignmentsController < ApplicationController
+
   def create
     user = User.find_by(email: params[:assignment][:email])
-    cluster = Cluster.find(params[:assignment][:cluster_id])
-    if !cluster.assignments.find_by(user_id: user.id) && cluster.assignments.create(user: user)
+    group = Group.find(params[:assignment][:group_id])
+    if !group.assignments.find_by(user_id: user.id) && group.assignments.create(user: user)
       ActionCable.server.broadcast "user_#{current_user[:id]}",
                                      type: 3,
                                      user: render_assignment(user, cluster.id)
@@ -10,9 +11,9 @@ class AssignmentsController < ApplicationController
   end
 
   def destroy
-    cluster = Cluster.find(params[:cluster_id])
+    group = Group.find(params[:group_id])
     user_id = params[:user_id]
-    assignment = cluster.assignments.find_by(user_id: user_id)
+    assignment = group.assignments.find_by(user_id: user_id)
     if assignment.delete
       ActionCable.server.broadcast "user_#{current_user[:id]}",
                                      type: 4,

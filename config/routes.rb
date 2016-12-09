@@ -16,6 +16,9 @@ Rails.application.routes.draw do
   post   '/clusters/',             to: 'clusters#create'
   delete '/clusters/:id',          to: 'clusters#destroy'
 
+  get    '/render_groups',      to: 'groups#render_groups'
+  post   '/associate_cluster',  to: 'groups#associate_cluster'
+
   delete '/delete_assignment', to: 'assignments#destroy'
   post   '/create_assignment', to: 'assignments#create'
 

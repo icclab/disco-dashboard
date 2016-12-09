@@ -6,11 +6,11 @@ class GroupsController < ApplicationController
   end
 
   def show
-
+    @group = Group.find(params[:group_id])
   end
 
   def new
-
+    @group = Group.new
   end
 
   def create
@@ -19,6 +19,25 @@ class GroupsController < ApplicationController
 
   def destroy
 
+  end
+
+  def render_groups
+    @groups = current_user.groups.all
+    @cluster = Cluster.find(params[:cluster_id])
+  end
+
+  def associate_cluster
+    group = Group.find(params[:group_id])
+    cluster = Cluster.find(params[:cluster_id])
+    group.clusters << cluster
+
+    redirect_to clusters_path
+  end
+
+  def deassociate_cluster
+    group = Group.find(params[:group_id])
+    cluster = Cluster.find(params[:cluster_id])
+    group.clusters.delete(cluster)
   end
 
   private

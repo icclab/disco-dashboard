@@ -15,4 +15,11 @@
   <% if @clusters && @clusters.any? %>
       <%= render @clusters %>
   <% end %>
+  <% if @groups && @groups.any? %>
+      <% @groups.each do |group| %>
+        <%= render group.clusters.all %>
+      <% end %>
+  <% end %>
 </div>
+
+<%= render 'layouts/modal' %>
