@@ -5,11 +5,15 @@
           <h2><%= cluster.name %></h2>
           <p>
             <% if cluster.group %>
-              Assigned to: <%= cluster.group.name %>
+              Assigned to: <strong><%= cluster.group.name %></strong>
             <% else %>
               Not assigned
-              <%= link_to render_groups_path(cluster_id: cluster.id), remote: true, data: { toggle: "modal", target: ".modal"} do %>
-                <button type="button" class="btn btn-info btn-sm"><strong>assign</strong></button>
+              <%= form_for :assignment, url: associate_cluster_path, remote: true do |f| %>
+                <%= f.hidden_field :cluster_id, :value => cluster.id %>
+
+                <%= f.select(:group_id, options_for_select(@groups.map { |group| [group.name, group.id] }), {}, {class: 'form-control'}) %>
+
+                <%= f.submit "Assign", class: "btn btn-success btn-sm" %>
               <% end %>
             <% end %>
           </p>

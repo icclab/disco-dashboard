@@ -21,14 +21,9 @@ class GroupsController < ApplicationController
 
   end
 
-  def render_groups
-    @groups = current_user.groups.all
-    @cluster = Cluster.find(params[:cluster_id])
-  end
-
   def associate_cluster
-    group = Group.find(params[:group_id])
-    cluster = Cluster.find(params[:cluster_id])
+    group = Group.find(params[:assignment][:group_id])
+    cluster = Cluster.find(params[:assignment][:cluster_id])
     group.clusters << cluster
 
     redirect_to clusters_path

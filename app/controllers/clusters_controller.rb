@@ -3,11 +3,8 @@ class ClustersController < ApplicationController
   before_action :logged_in_user
 
   def index
-    if current_user.usertype != 2
-      @clusters = current_user.clusters.all
-    else
-      @groups = current_user.groups.all
-    end
+    @clusters = current_user.clusters.all
+    @groups = current_user.groups.all
     @frameworks = Framework.all
   end
 

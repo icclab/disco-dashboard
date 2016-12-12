@@ -12,13 +12,16 @@
   </div>
 </div>
 <div class="panel-group" id="accordion">
-  <% if @clusters && @clusters.any? %>
-      <%= render @clusters %>
-  <% end %>
-  <% if @groups && @groups.any? %>
-      <% @groups.each do |group| %>
-        <%= render group.clusters.all %>
-      <% end %>
+  <% if current_user.usertype == 1 %>
+    <% if @clusters && @clusters.any? %>
+        <%= render @clusters %>
+    <% end %>
+  <% else %>
+    <% if @groups && @groups.any? %>
+        <% @groups.each do |group| %>
+          <%= render group.clusters.all %>
+        <% end %>
+    <% end %>
   <% end %>
 </div>
 
