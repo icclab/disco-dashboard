@@ -1,4 +1,8 @@
 class AssignmentsController < ApplicationController
+  def new
+    @assignment = Assignment.new
+    @users = User.all.except(current_user)
+  end
 
   def create
     user = User.find_by(email: params[:assignment][:email])
@@ -6,7 +10,7 @@ class AssignmentsController < ApplicationController
     if !group.assignments.find_by(user_id: user.id) && group.assignments.create(user: user)
       ActionCable.server.broadcast "user_#{current_user[:id]}",
                                      type: 3,
-                                     user: render_assignment(user, cluster.id)
+                                     user: render_assignment(user, group.id)
     end
   end
 
@@ -18,7 +22,7 @@ class AssignmentsController < ApplicationController
       ActionCable.server.broadcast "user_#{current_user[:id]}",
                                      type: 4,
                                      userId: user_id,
-                                     clusterId: cluster.id
+                                     groupId: group.id
     end
   end
 
