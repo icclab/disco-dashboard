@@ -11,16 +11,26 @@
     </div>
   </div>
   <div class="row panel-body">
-    <div class="col-xs-6">
+    <div class="col-xs-4">
       <h3 class="text-info">Info</h3>
       <pre><%= group.desc %></pre>
     </div>
-    <div class="col-xs-6">
+    <div class="col-xs-4">
       <h3 class="text-info">Members</h3>
       <ul class="scrollable-list list-unstyled">
         <% group.users.each do |user| %>
           <li>
             <p><%= user.email %></p>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="col-xs-4">
+      <h3 class="text-info">Tasks <%= link_to "New Task", new_task_path(group_id: group.id), class: "btn btn-primary btn-xs" %></h3>
+      <ul>
+        <% group.tasks.each do |task| %>
+          <li>
+            <h4><%= task.name %> | <%= link_to "Show", task.attachment_url %> | <%= link_to "Delete",  task, method: :delete, confirm: "Are you sure that you wish to delete #{task.name}?" %></h4>
           </li>
         <% end %>
       </ul>

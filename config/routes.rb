@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
-  root 'pages#index'
+  root 'clusters#index'
   get    '/faq',   to: 'pages#faq'
   get    '/debug', to: 'pages#debug'
 
@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   resources :users
   resources :infrastructures
   resources :groups
+  resources :tasks, only: [:index, :new, :create, :destroy]
 
   get    '*unmatched_route', to: 'application#not_found'
 
