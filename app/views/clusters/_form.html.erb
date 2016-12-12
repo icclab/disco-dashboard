@@ -1,10 +1,6 @@
 <% if @infrastructure_id.to_i > 0 %>
     <%= form_for :cluster, method: "post", url: clusters_path, html: {role: "role", id: "cluster-form"} do |f| %>
         <%= f.hidden_field :infrastructure_id, :value => @infrastructure_id %>
-        <%= f.label(:password, "Password") %>
-        <div class="form-group">
-            <%= f.password_field(:password, placeholder: "Enter infrastructure password", class: 'form-control') %>
-        </div>
         <%= f.label(:cluster_name, "Cluster Name") %>
         <div class="form-group">
             <%= f.text_field(:name, placeholder: "Enter name", class: 'form-control') %>
@@ -54,8 +50,16 @@
             <% end %>
         </div>
 
-        <div class="modal-footer">
-            <%= f.submit "Create", class: "btn btn-success" %>
+        <%= f.label(:password, "Infrastructure password") %>
+        <div class="form-group">
+            <div class="input-group">
+              <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
+              <span class="input-group-btn">
+                <%= f.submit "Create", class: "btn btn-success" %>
+              </span>
+            </div>
         </div>
+
+
     <% end %>
 <% end %>

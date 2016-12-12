@@ -7,11 +7,10 @@ class AssignmentsController < ApplicationController
   def create
     user = User.find_by(email: params[:assignment][:email])
     group = Group.find(params[:assignment][:group_id])
-    if !group.assignments.find_by(user_id: user.id) && group.assignments.create(user: user)
-      ActionCable.server.broadcast "user_#{current_user[:id]}",
-                                     type: 3,
-                                     user: render_assignment(user, group.id)
+    if !group.assignments.find_by(user_id: user.id)
+      group.assignments.create(user: user)
     end
+    redirect_to groups_path
   end
 
   def destroy
@@ -19,10 +18,7 @@ class AssignmentsController < ApplicationController
     user_id = params[:user_id]
     assignment = group.assignments.find_by(user_id: user_id)
     if assignment.delete
-      ActionCable.server.broadcast "user_#{current_user[:id]}",
-                                     type: 4,
-                                     userId: user_id,
-                                     groupId: group.id
+      redirect_to groups_path
     end
   end
 

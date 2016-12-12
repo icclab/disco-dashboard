@@ -1,3 +1,4 @@
+<% provide(:title, "Infrastructures") %>
 <div class="row">
   <div class="col-lg-12">
       <h1 class="page-header text-primary">Infrastructures
@@ -9,7 +10,9 @@
       </h1>
   </div>
 </div>
-<% if @infrastructures && @infrastructures.any? %>
-  <%= render @infrastructures %>
-<% end %>
+<div class="row">
+  <% if @infrastructures && @infrastructures.any? %>
+      <%= render @infrastructures %>
+  <% end %>
+</div>
 

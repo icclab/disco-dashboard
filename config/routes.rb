@@ -14,10 +14,10 @@ Rails.application.routes.draw do
   get    '/clusters/render_form/', to: 'clusters#render_form'
   get    '/clusters/:id',          to: 'clusters#show'
   post   '/clusters/',             to: 'clusters#create'
-  delete '/clusters/:id',          to: 'clusters#destroy'
+  delete '/clusters/',             to: 'clusters#destroy'
 
-  get    '/render_groups',      to: 'groups#render_groups'
-  post   '/associate_cluster',  to: 'groups#associate_cluster'
+  post   '/associate_cluster', to: 'groups#associate_cluster'
+  delete '/associate_cluster', to: 'groups#deassociate_cluster'
 
   delete '/delete_assignment', to: 'assignments#destroy'
   post   '/create_assignment', to: 'assignments#create'

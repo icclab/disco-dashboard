@@ -32,14 +32,16 @@
         <% end %>
       </ul>
       <%= form_for :assignment, url: create_assignment_path, remote: true do |f| %>
-
-              <%= f.hidden_field :group_id, :value => group.id %>
-
-                <%= f.text_field :email, placeholder: "Email", class: 'form-control' %>
-
-              <%= f.submit "Add new member", class: "btn btn-success btn-xs" %>
-
-        <% end %>
+        <div class="input-group">
+          <%= f.hidden_field :group_id, :value => group.id %>
+          <%= f.text_field :email, placeholder: "Email", class: 'form-control' %>
+          <span class="input-group-btn">
+            <%= f.button(type: 'submit', class: "btn btn-primary") do %>
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            <% end %>
+          </span>
+        </div>
+      <% end %>
     </div>
     <div class="col-xs-4">
       <h3 class="text-info">Tasks <%= link_to "New Task", new_task_path(group_id: group.id), class: "btn btn-primary btn-xs" %></h3>

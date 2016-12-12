@@ -1,23 +1,15 @@
- <div class="panel panel-info">
-    <div class="panel-heading">
-        <h2><%= infrastructure.name %></h2>
-    </div>
-    <div class="row panel-body">
-        <div class="col-xs-6 specs">
-            <h3 class="text-info">Images <small>x<%= infrastructure.images.count %></small></h3>
-            <ul class="scrollable-list list-unstyled">
-                <% infrastructure.images.each do |image| %>
-                    <li><h4 class="text-info"><%= image.name %></h4></li>
-                <% end %>
-            </ul>
+<div class="col-md-6">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2><%= infrastructure.name %></h2>
         </div>
-        <div class="col-xs-6">
-            <h3 class="text-info">Flavors <small>x<%= infrastructure.flavors.count %></small></h3>
-            <ul class="scrollable-list list-unstyled">
-                <% infrastructure.flavors.each do |flavor| %>
-                    <li><h4 class="text-info"><%= flavor.name %> (VCPUs: <%= flavor.vcpus %>, RAM: <%= flavor.ram %>GB, Disk: <%= flavor.disk %>GB)</h4></li>
-                <% end %>
-            </ul>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt class="text-primary">Username</dt>
+                <dd class="text-info"><%= infrastructure.username %></dd>
+                <dt class="text-primary">Tenant</dt>
+                <dd class="text-info"><%= infrastructure.tenant %></dd>
+            </dl>
         </div>
     </div>
 </div>

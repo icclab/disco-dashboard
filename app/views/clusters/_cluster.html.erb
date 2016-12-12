@@ -3,20 +3,29 @@
       <div class="row">
         <div class="col-xs-6">
           <h2><%= cluster.name %></h2>
-          <p>
-            <% if cluster.group %>
+          <% if cluster.group %>
+            <p>
               Assigned to: <strong><%= cluster.group.name %></strong>
-            <% else %>
-              Not assigned
-              <%= form_for :assignment, url: associate_cluster_path, remote: true do |f| %>
-                <%= f.hidden_field :cluster_id, :value => cluster.id %>
-
-                <%= f.select(:group_id, options_for_select(@groups.map { |group| [group.name, group.id] }), {}, {class: 'form-control'}) %>
-
-                <%= f.submit "Assign", class: "btn btn-success btn-sm" %>
+              <% if current_user.usertype != 2 %>
+                <%= link_to associate_cluster_path(group_id: cluster.group.id, cluster_id: cluster.id), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "btn btn-outline btn-danger btn-circle btn-xs"  do %>
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                <% end %>
               <% end %>
+            </p>
+            <% else %>
+              <p> Not assigned </p>
+
+                <%= form_for :assignment, url: associate_cluster_path, remote: true do |f| %>
+                  <%= f.hidden_field :cluster_id, :value => cluster.id %>
+                  <div class="input-group">
+                    <%= f.select(:group_id, options_for_select(@groups.map { |group| [group.name, group.id] }), {}, {class: 'form-control'}) %>
+                    <span class="input-group-btn">
+                      <%= f.submit "Assign", class: "btn btn-success" %>
+                    </span>
+                  </div>
+                <% end %>
+
             <% end %>
-          </p>
         </div>
         <div class="col-xs-6 text-right">
           <h4 id = "cluster-<%= cluster.uuid %>">
@@ -67,6 +76,26 @@
                   <% end %>
                 </ul>
            </div>
+        </div>
+        <br>
+        <div class="row">
+          <% if current_user.infrastructures.any? && current_user.infrastructures.exists?(id: cluster.infrastructure_id) %>
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+              <%= form_for :delete, method: "delete", url: clusters_path, html: { id: "delete-form"} do |f| %>
+                <%= f.hidden_field :uuid, :value => cluster.uuid %>
+                <p class="text-info">Please, enter infrastructure password to delete</p>
+                <div class="input-group">
+                  <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
+                  <span class="input-group-btn">
+                    <%= f.button(type: 'submit', class: "btn btn-danger") do %>
+                      <i class="fa fa-trash" aria-hidden="true"></i>
+                    <% end %>
+                  </span>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
