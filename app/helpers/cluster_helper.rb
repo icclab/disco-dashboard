@@ -11,9 +11,9 @@ module ClusterHelper
         response = http.head(uri.path.size > 0 ? uri.path : "/")
       }
     rescue Errno::ECONNREFUSED
-      return "text-danger"
+      return "danger"
     end
-    "text-success"
+    "success"
   end
 
 end

@@ -29,6 +29,10 @@
         </div>
         <div class="col-xs-6 text-right">
           <h4 id = "cluster-<%= cluster.uuid %>">
+            <div class="circle-<%= get_status(cluster.state) %> pull-right">
+            </div>
+            <br>
+            <br>
             <%= cluster.state %>
           </h4>
         </div>
@@ -72,7 +76,10 @@
                   <% cluster.cluster_frameworks.all.each do |f| %>
                     <% framework = Framework.find(f.framework_id) %>
                     <% link = 'http://'+cluster.external_ip.to_s+framework.port %>
-                    <li><h4><%= link_to framework.name.capitalize, link, class: check_link(link), target: "blank" %></h4></li>
+                    <li><h4>
+                      <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>
+                      <%= link_to framework.name.capitalize, link, target: "blank" %>
+                    </h4></li>
                   <% end %>
                 </ul>
            </div>
