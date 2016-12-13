@@ -5,7 +5,7 @@
           <h2><%= cluster.name %></h2>
           <% if cluster.group %>
             <p>
-              Assigned to: <strong><%= cluster.group.name %></strong>
+              Assigned to group: <strong><%= cluster.group.name %></strong>
               <% if current_user.usertype != 2 %>
                 <%= link_to associate_cluster_path(group_id: cluster.group.id, cluster_id: cluster.id), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "btn btn-outline btn-danger btn-circle btn-xs"  do %>
                         <i class="fa fa-times" aria-hidden="true"></i>
@@ -79,6 +79,7 @@
                     <li><h4>
                       <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>
                       <%= link_to framework.name.capitalize, link, target: "blank" %>
+                      <button type="button" class="btn btn-link btn-xs" data-toggle="tooltip" data-placement="top" title="<%= framework.description %>"><i class="fa fa-question-circle-o fa-fw"></i></button>
                     </h4></li>
                   <% end %>
                 </ul>

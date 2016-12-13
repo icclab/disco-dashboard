@@ -45,7 +45,10 @@
         <div class="form-group">
             <% @frameworks.each do |framework| %>
                 <% if !framework[:name].eql? 'HDFS' %>
-                    <div class="checkbox"><label><%= f.check_box(framework[:name]) %><%= framework[:name] %></label></div>
+                    <div class="checkbox">
+                        <label><%= f.check_box(framework[:name]) %><%= framework[:name] %></label>
+                        <button type="button" class="btn btn-link btn-xs" data-toggle="tooltip" data-placement="top" title="<%= framework.description %>"><i class="fa fa-question-circle-o fa-fw"></i></button>
+                    </div>
                 <% end %>
             <% end %>
         </div>
