@@ -7,7 +7,7 @@
             <p>
               Assigned to group: <strong><%= cluster.group.name %></strong>
               <% if current_user.usertype != 2 %>
-                <%= link_to associate_cluster_path(group_id: cluster.group.id, cluster_id: cluster.id), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "btn btn-outline btn-danger btn-circle btn-xs"  do %>
+                <%= link_to associate_cluster_path(group_id: cluster.group.id, cluster_id: cluster.id), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-xs"  do %>
                         <i class="fa fa-times" aria-hidden="true"></i>
                 <% end %>
               <% end %>
@@ -28,11 +28,9 @@
             <% end %>
         </div>
         <div class="col-xs-6 text-right">
-          <h4 id = "cluster-<%= cluster.uuid %>">
-            <div class="circle-<%= get_status(cluster.state) %> pull-right">
-            </div>
+          <div id="circle-<%= cluster.uuid %>" class="circle-<%= get_status(cluster.state) %> pull-right"></div>
             <br>
-            <br>
+          <h4 id = "<%= cluster.uuid %>">
             <%= cluster.state %>
           </h4>
         </div>

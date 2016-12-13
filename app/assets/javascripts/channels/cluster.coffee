@@ -21,12 +21,12 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
     $("#new-cluster").modal('hide')
 
   update_cluster_state = (uuid, state) ->
-    $(uuid).html("<strong>#{state}</strong>")
-    $(uuid).attr("class", "text-info")
+    $("#"+uuid).html("#{state}")
+    $("#circle-"+uuid).attr("class", "circle-warning pull-right")
     if state.indexOf('READY') != -1
-      $(uuid).attr("class", "text-success")
+      $("#circle-"+uuid).attr("class", "circle-success pull-right")
     if state.indexOf('FAIL') != -1
-      $(uuid).attr("class", "text-danger")
+      $("#circle-"+uuid).attr("class", "circle-danger pull-right")
 
   add_new_assignment = (user) ->
     $("#assignment_email").val("")

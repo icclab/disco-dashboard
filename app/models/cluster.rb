@@ -14,9 +14,9 @@ class Cluster < ApplicationRecord
   validates_inclusion_of :slave_on_master, :in => [true, false]
 
   def update(id, uuid, state)
-    #ActionCable.server.broadcast "user_#{id}",
-    #                                     type: 2,
-    #                                     uuid: '#cluster-'+uuid,
-    #                                     state: state
+    ActionCable.server.broadcast "user_#{id}",
+                                  type:  2,
+                                  uuid:  uuid,
+                                  state: state
   end
 end
