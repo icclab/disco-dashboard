@@ -12,18 +12,10 @@
       </h1>
   </div>
 </div>
-<div class="panel-group" id="accordion">
-  <% if current_user.usertype == 1 %>
-    <% if @clusters && @clusters.any? %>
-        <%= render @clusters %>
-    <% end %>
-  <% else %>
-    <% if @groups && @groups.any? %>
-        <% @groups.each do |group| %>
-          <%= render group.clusters.all %>
-        <% end %>
-    <% end %>
-  <% end %>
-</div>
-
-<%= render 'layouts/modal' %>
+<% if @clusters && @clusters.any? %>
+  <div class="panel-group" id="accordion">
+    <%= render @clusters %>
+  </div>
+<% else %>
+  <%= render 'clusters/no_cluster' %>
+<% end %>

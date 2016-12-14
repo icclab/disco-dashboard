@@ -6,7 +6,7 @@
 </div>
 <div class="container">
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-8 col-xs-10">
       <%= form_for :infrastructure, method: "post", url: infrastructures_path, html: {role: "role", id: "infrastructure-form"} do |f| %>
           <%= f.label(:name, "Name") %>
           <div class="form-group">
@@ -31,6 +31,9 @@
           </div>
 
           <%= f.submit "Add", class: "btn btn-success" %>
+          <div class="row">
+
+          </div>
       <% end %>
     </div>
   </div>

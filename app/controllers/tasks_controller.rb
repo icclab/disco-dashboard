@@ -12,8 +12,10 @@ class TasksController < ApplicationController
     @task = @group.tasks.build(task_params)
 
     if @task.save
-      redirect_to groups_path, notice: "The task #{@task.name} has been uploaded"
+      flash[:success] = "The task #{@task.name} has been uploaded"
+      redirect_to groups_path
     else
+      flash[:danger] = "Failed to save and/or upload #{@task.name}"
       render 'new'
     end
   end
@@ -21,7 +23,8 @@ class TasksController < ApplicationController
   def destroy
     @task = Task.find(params[:id])
     @task.destroy
-    redirect_to groups_path, notice: "The task #{@task.name} has been deleted"
+    flash[:success] = "The task #{@task.name} has been deleted"
+    redirect_to groups_path
   end
 
   private
