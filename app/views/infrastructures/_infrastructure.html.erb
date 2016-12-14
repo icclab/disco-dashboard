@@ -1,17 +1,15 @@
- <div class="col-lg-4">
-    <%= link_to "#" do %>
-        <div class="panel panel-warning" id="<%= infrastructure[:id] %>">
-            <div class="panel-heading">
-                <%= infrastructure[:name] %>
-            </div>
-            <div class="panel-body text-left">
-                <dl class="dl-horizontal">
-                    <dt>Username</dt>
-                    <dd><%= infrastructure[:username] %></dd>
-                    <dt>Tenant</dt>
-                    <dd><%= infrastructure[:tenant] %></dd>
-                </dl>
-            </div>
+<div class="col-md-6">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2><%= infrastructure.name %></h2>
         </div>
-    <% end %>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt class="text-primary">Username</dt>
+                <dd class="text-info"><%= infrastructure.username %></dd>
+                <dt class="text-primary">Tenant</dt>
+                <dd class="text-info"><%= infrastructure.tenant %></dd>
+            </dl>
+        </div>
+    </div>
 </div>

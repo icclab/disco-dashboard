@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  rescue_from StandardError, :with => :render_500
+  #rescue_from StandardError, :with => :render_500
 
   include SessionsHelper
 
@@ -23,5 +23,9 @@ class ApplicationController < ActionController::Base
       unless logged_in?
         redirect_to login_url
       end
+    end
+
+    def is_professor?
+      redirect_to root_url if current_user.usertype != 1
     end
 end

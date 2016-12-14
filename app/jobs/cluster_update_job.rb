@@ -9,6 +9,9 @@ class ClusterUpdateJob < ApplicationJob
     Rails.logger.debug "Cluster initial state: #{state.inspect}"
     Rails.logger.debug "Cluster uuid: #{uuid.inspect}"
 
+    logger.debug "Cluster initial state: #{state.inspect}"
+    logger.debug "Cluster uuid: #{uuid.inspect}"
+
     begin
       sleep(3)
 

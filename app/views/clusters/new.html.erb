@@ -1,0 +1,15 @@
+<% provide(:title, "Create cluster") %>
+<div class="row">
+  <div class="col-lg-12">
+      <h1 class="page-header text-info">New cluster</h1>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <h3>Please choose infrastructure <small>(if you didn't add any yet, you can do it <%= link_to "here", new_infrastructure_path %>)</small></h3>
+    <%= select_tag(:infrastructure_id, options_for_select(@adapters.map { |key, value| [key, value] }), {class: 'form-control', id: 'infrastructure_id', role: 'role'}) %>
+  </div>
+  <div class="row" id="form-body">
+
+  </div>
+</div>

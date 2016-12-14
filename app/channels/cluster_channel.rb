@@ -22,6 +22,7 @@ class ClusterChannel < ApplicationCable::Channel
   # When timeout occurs, updates state to "CONNECTION FAILED"
   # Otherwise, if state is changed then updates state to the new state
   def update_clusters
+    Rails.logger.info "Update cluster is being performed on user #{user_id}"
     current_user = User.find(user_id)
     clusters = current_user.clusters.all
     clusters.each do |cluster|
@@ -39,10 +40,15 @@ class ClusterChannel < ApplicationCable::Channel
 
         rescue Net::OpenTimeout
           state = 'CONNECTION_FAILED'
+          Rails.logger.debug "Rescued from 'OpenTimeout'"
         rescue Errno::ECONNREFUSED
-
+          Rails.logger.debug "Rescued from 'CONNECTION REFUSED'"
         end
 
+        if response
+          Rails.logger.debug "#{response.code}"
+          Rails.logger.debug "#{response.body}"
+        end
         if response && response.code == "200"
           if response.body.to_i == 1
             state = 'READY'

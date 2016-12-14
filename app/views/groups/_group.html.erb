@@ -1,0 +1,99 @@
+<div class="panel panel-green">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2><%= group.name %></h2>
+      </div>
+      <% if current_user.usertype != 2 %>
+        <div class="col-xs-6 text-right">
+          <div class="huge"><%= group.users.count %></div>
+          <div>members</div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row panel-body">
+    <% if current_user.usertype != 2 %>
+      <div class="col-md-4 col-xs-12">
+        <h3 class="text-info">Info</h3>
+        <pre><%= group.desc %></pre>
+      </div>
+      <div class="col-md-4 col-xs-6">
+        <h3 class="text-info">Members</h3>
+        <ul class="scrollable-list list-unstyled">
+          <% group.users.each do |user| %>
+            <li id = "<%= group.id %>-assigned-to-<%= user.id %>">
+              <% if user.id != current_user.id %>
+                <%= user.email %>
+                  <%= link_to delete_assignment_path(group_id: group.id, user_id: user.id), method: :delete, remote: true, data: { confirm: "Are you sure?" } do %>
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                <% end %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+        <%= form_for :assignment, url: create_assignment_path, remote: true do |f| %>
+          <div class="input-group">
+            <%= f.hidden_field :group_id, :value => group.id %>
+            <%= f.text_field :email, placeholder: "Email", class: 'form-control' %>
+            <span class="input-group-btn">
+              <%= f.button(type: 'submit', class: "btn btn-primary") do %>
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              <% end %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-md-4 col-xs-6">
+        <h3 class="text-info">Tasks <%= link_to "New Task", new_task_path(group_id: group.id), class: "btn btn-primary btn-xs" %></h3>
+        <ul>
+          <% group.tasks.each do |task| %>
+            <li>
+              <h4><%= task.name %> | <%= link_to "Show", task.attachment_url %> | <%= link_to "Delete",  task, method: :delete, confirm: "Are you sure that you wish to delete #{task.name}?" %></h4>
+            </li>
+          <% end %>
+        </ul>
+        <br>
+        <%= link_to(group, method: :delete, confirm: "Are you sure that you wish to delete #{group.name}?", class: "btn btn-danger pull-right") do %>
+          Delete group <i class="fa fa-trash"></i>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="col-md-4 col-xs-12">
+        <h3 class="text-info">Info</h3>
+        <pre><%= group.desc %></pre>
+      </div>
+      <div class="col-md-4 col-xs-6">
+        <h3 class="text-info">Tasks</h3>
+        <ul>
+          <% group.tasks.each do |task| %>
+            <li>
+              <h4><%= task.name %> | <%= link_to "Show", task.attachment_url %> </h4>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="col-md-4 col-xs-6">
+        <h3 class="text-info">Clusters</h3>
+        <% group.clusters.all.each do |cluster| %>
+          <div class="well">
+              <h4 class="text-info">Name: <strong><%= cluster.name %></strong></h4>
+              <h4 class="text-info">Links:
+              <ul class="list-inline" id="framework-list">
+                  <% cluster.cluster_frameworks.all.each do |f| %>
+                    <% framework = Framework.find(f.framework_id) %>
+                    <% link = 'http://'+cluster.external_ip.to_s+framework.port %>
+                    <li><h4>
+                      <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>
+                      <%= link_to framework.name.capitalize, link, target: "blank" %>
+                    </h4></li>
+                  <% end %>
+              </ul>
+              </h4>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

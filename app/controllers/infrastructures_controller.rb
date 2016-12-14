@@ -1,5 +1,20 @@
 class InfrastructuresController < ApplicationController
+  before_action :logged_in_user
+  before_action :is_professor?
+
+  def index
+    @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
+  end
+
+  def show
+    @infrastructure = Infrastructure.find(params[:infrastructure][:id])
+  end
+
   def new
+    #@infrastructure = Infrastructure.new
+  end
+
+  def create
     @infrastructure = current_user.infrastructures.build(infrastructure_params)
     @infrastructure.adapter = params[:infrastructure][:type]
     if @infrastructure.save && connection = @infrastructure.authenticate(params[:infrastructure])

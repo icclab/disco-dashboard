@@ -3,6 +3,7 @@ module ClusterHelper
   # Returns "text-success" if link is working,
   #         "text-danger"  if link is broken.
   def check_link(url)
+    Rails.logger.debug url
     uri = URI.parse(url)
     response = nil
     begin
@@ -10,9 +11,9 @@ module ClusterHelper
         response = http.head(uri.path.size > 0 ? uri.path : "/")
       }
     rescue Errno::ECONNREFUSED
-      return "text-danger"
+      return "danger"
     end
-    "text-success"
+    "success"
   end
 
 end

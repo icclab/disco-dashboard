@@ -1,10 +1,6 @@
 <% if @infrastructure_id.to_i > 0 %>
-    <%= form_for :cluster, url: create_path, remote: true, html: {role: "role", id: "cluster-form"} do |f| %>
+    <%= form_for :cluster, method: "post", url: clusters_path, html: {role: "role", id: "cluster-form"} do |f| %>
         <%= f.hidden_field :infrastructure_id, :value => @infrastructure_id %>
-        <%= f.label(:password, "Password") %>
-        <div class="form-group">
-            <%= f.password_field(:password, placeholder: "Enter infrastructure password", class: 'form-control') %>
-        </div>
         <%= f.label(:cluster_name, "Cluster Name") %>
         <div class="form-group">
             <%= f.text_field(:name, placeholder: "Enter name", class: 'form-control') %>
@@ -29,7 +25,7 @@
         </div>
         <h5>
             Slave node on Master node?
-            <%= f.check_box(:slave_on_master) %>
+            <%= f.check_box(:slave_on_master, checked: false) %>
         </h5>
         <%= f.label(:network, "Network") %>
         <div class="form-group input-group">
@@ -49,13 +45,24 @@
         <div class="form-group">
             <% @frameworks.each do |framework| %>
                 <% if !framework[:name].eql? 'HDFS' %>
-                    <div class="checkbox"><label><%= f.check_box(framework[:name]) %><%= framework[:name] %></label></div>
+                    <div class="checkbox">
+                        <label><%= f.check_box(framework[:name]) %><%= framework[:name] %></label>
+                        <button type="button" class="btn btn-link btn-xs" data-toggle="tooltip" data-placement="top" title="<%= framework.description %>"><i class="fa fa-question-circle-o fa-fw"></i></button>
+                    </div>
                 <% end %>
             <% end %>
         </div>
 
-        <div class="modal-footer">
-            <%= f.submit "Create", class: "btn btn-success" %>
+        <%= f.label(:password, "Infrastructure password") %>
+        <div class="form-group">
+            <div class="input-group">
+              <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
+              <span class="input-group-btn">
+                <%= f.submit "Create", class: "btn btn-success" %>
+              </span>
+            </div>
         </div>
+
+
     <% end %>
 <% end %>

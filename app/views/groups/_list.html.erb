@@ -1,0 +1,10 @@
+<div class="row">
+    <h3>Please choose infrastructure <small>(if you didn't add any yet, you can do it <%= link_to "here", new_infrastructure_path %>)</small></h3>
+    <%= form_for :assignment, url: associate_cluster_path, remote: true, html: { class: 'form-control', role: "form" } do |f| %>
+           <%= f.hidden_field :cluster_id, :value => @cluster[:id] %>
+
+            <%= f.select(:group_id, options_for_select(@groups.map { |group| [group.name, group.id] })) %>
+
+        <%= f.submit "Assign", class: "btn btn-success" %>
+      <% end %>
+  </div>
