@@ -1,4 +1,7 @@
 class InfrastructuresController < ApplicationController
+  before_action :logged_in_user
+  before_action :is_professor?
+
   def index
     @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
   end

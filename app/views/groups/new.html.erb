@@ -1,12 +1,12 @@
 <% provide(:title, "New group") %>
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-md-12">
       <h1 class="page-header text-info">New group</h1>
   </div>
 </div>
 <div class="container">
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-md-8 col-xs-10">
       <%= form_for :group, method: "post", url: groups_path, html: {role: "role", id: "infrastructure-form"} do |f| %>
           <%= f.label(:name, "Name") %>
           <div class="form-group">
@@ -19,5 +19,6 @@
           <%= f.submit "Create", class: "btn btn-success" %>
       <% end %>
     </div>
+    <div class="col-md-4"></div>
   </div>
 </div>

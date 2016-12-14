@@ -24,8 +24,8 @@ Rails.application.routes.draw do
 
   resources :users
   resources :infrastructures
-  resources :groups
-  resources :tasks, only: [:index, :new, :create, :destroy]
+  resources :groups, only: [:index, :new, :create, :destroy]
+  resources :tasks,  only: [:index, :new, :create, :destroy]
 
   get    '*unmatched_route', to: 'application#not_found'
 

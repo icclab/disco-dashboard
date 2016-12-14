@@ -24,4 +24,8 @@ class ApplicationController < ActionController::Base
         redirect_to login_url
       end
     end
+
+    def is_professor?
+      redirect_to root_url if current_user.usertype != 1
+    end
 end

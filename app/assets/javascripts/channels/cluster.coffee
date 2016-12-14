@@ -22,7 +22,7 @@ App.cluster = App.cable.subscriptions.create "ClusterChannel",
 
   update_cluster_state = (uuid, state) ->
     $("#"+uuid).html("#{state}")
-    $("#circle-"+uuid).attr("class", "circle-warning pull-right")
+    $("#circle-"+uuid).attr("class", "circle-info pull-right")
     if state.indexOf('READY') != -1
       $("#circle-"+uuid).attr("class", "circle-success pull-right")
     if state.indexOf('FAIL') != -1

@@ -1,6 +1,7 @@
 class ClustersController < ApplicationController
   # Ensures that only logged in user can access to these methods
   before_action :logged_in_user
+  before_action :is_professor?
 
   def index
     @clusters = current_user.clusters.all
@@ -89,7 +90,7 @@ class ClustersController < ApplicationController
       flash[:success] = "The cluster is being deleted"
     end
 
-    redirect_to root_url
+    redirect_to clusters_path
   end
 
   # Retrieves data and renders a form for a cluster creation
