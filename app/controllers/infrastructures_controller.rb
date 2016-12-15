@@ -25,12 +25,12 @@ class InfrastructuresController < ApplicationController
     else
       flash[:danger] = "Please, fill all fields with correct information"
     end
-    redirect_to root_url
+    redirect_to infrastructures_path
   end
 
   def destroy
     Infrastructure.find(params[:id]).destroy
-    redirect_to root_url
+    redirect_to infrastructures_path
   end
 
   private
