@@ -31,7 +31,7 @@
             <% end %>
             <li class="divider"></li>
           </ul>
-          <p><small>Please, enter user's email to add a new member: <small></p>
+          <p><small>Please, enter user's email to add a new member: </small></p>
           <%= form_for :assignment, url: create_assignment_path, remote: true do |f| %>
             <div class="input-group">
               <%= f.hidden_field :group_id, :value => group.id %>

@@ -1,6 +1,6 @@
 default: &default
 adapter: redis
-url: redis://localhost:6379/1
+url: redis://86.119.25.148:6379/1
 
 development:
   <<: *default
