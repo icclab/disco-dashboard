@@ -40,7 +40,7 @@ If you have issues, first make sure you have all the tooling necessary to compil
 $ sudo apt-get install build-essential patch
 ```
 
-It’s possible that you don’t have important development header files installed on your system. (This has never happened to me personally, but I have it on good authority that otherwise good and noble Ruby developers run into this.) Here’s what you should do if you should find yourself in this situation:
+It’s possible that you don’t have important development header files installed on your system:
 ```
 $ sudo apt-get install ruby-dev zlib1g-dev liblzma-dev
 ```
@@ -50,3 +50,5 @@ $ sudo apt-get install ruby-dev zlib1g-dev liblzma-dev
 ```
 $ sudo gem install rails
 ```
+
+Rails should be set up at this point. If you have issues, you can follow the link above or email me "kenz[at]zhaw.ch".

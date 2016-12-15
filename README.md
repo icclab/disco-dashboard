@@ -14,6 +14,22 @@ To get started with the app, clone the repo and then install the needed gems:
 $ bundle install --without production
 ```
 
+Execute figare gem:
+
+```
+bundle exec figaro
+```
+
+Set up environment variables in *config/application.yml*:
+
+```
+development:
+  disco_ip: 'http://xxx.xxx.xxx.xxx:port/haas/'
+  fingerprint: "b2:c1:f1:50:e3:f8:7b:88:fa:e3:b1:97:a5:6b:32:27"
+  region: 'LS'
+```
+
+
 Next, migrate the database:
 
 ```
@@ -32,5 +48,12 @@ If the test suite passes, you'll be ready to run the app in a local server:
 $ rails server
 ```
 
-You will need a redis-server for Action Cable support.
+Run 'sidekiq' on another window/terminal, but from the main directory of the application:
+
+```
+$ bundle exec sidekiq
+```
+
+
+You will need a redis-server for Action Cable and Sidekiq(background jobs)support.
 Redis server is configured to the default port 6379.
