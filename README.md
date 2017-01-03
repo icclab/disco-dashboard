@@ -14,7 +14,7 @@ To get started with the app, clone the repo and then install the needed gems:
 $ bundle install --without production
 ```
 
-Execute figare gem:
+Execute figaro gem:
 
 ```
 bundle exec figaro
