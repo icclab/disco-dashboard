@@ -8,12 +8,12 @@
                     <h3 class="panel-title">Please, sign up</h3>
                 </div>
                 <div class="panel-body">
-                    <%= form_for @user, html: { role: "form" } do |f| %>
+                    <%= form_for :user, method: "post", url: users_path, html: { role: "form" } do |f| %>
                       <fieldset>
                         <%= render 'shared/error_messages' %>
 
-                        <%= f.label :usertype, "User Type" %>
-                        <%= f.select(:usertype, options_for_select(@usertypes.map { |usertype| [usertype[:name], usertype[:id]] }), {}, {class: 'form-control'}) %>
+                        <%= f.label :type, "User Type" %>
+                        <%= f.select(:type, options_for_select(@usertypes.map { |usertype| [usertype.to_s, usertype] }), {}, {class: 'form-control'}) %>
 
                         <%= f.label :email %>
                         <%= f.email_field :email, class: "form-control" %>

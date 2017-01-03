@@ -9,8 +9,6 @@ class User < ApplicationRecord
 
   before_save { self.email.downcase! }
 
-  validates :usertype, presence: true
-
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, length: { maximum: 255 },
                     format: { with: VALID_EMAIL_REGEX },
@@ -31,5 +29,85 @@ class User < ApplicationRecord
     def new_token
       SecureRandom.urlsafe_base64
     end
+  end
+
+  module Usertype
+    module Professor
+      class << self
+        def sidebar?
+          true
+        end
+
+        def infrastructure_permissions?
+          true
+        end
+
+        def cluster_permissions?
+          true
+        end
+
+        def group_permissions?
+          true
+        end
+
+        def task_permissions?
+          true
+        end
+      end
+    end
+
+    module Student
+      class << self
+        def sidebar?
+          false
+        end
+
+        def infrastructure_permissions?
+          false
+        end
+
+        def cluster_permissions?
+          false
+        end
+
+        def group_permissions?
+          false
+        end
+
+        def task_permissions?
+          false
+        end
+      end
+    end
+  end
+
+  def sidebar?
+    self.usertype.sidebar?
+  end
+
+  def infrastructure_permissions?
+    self.usertype.infrastructure_permissions?
+  end
+
+  def cluster_permissions?
+    self.usertype.cluster_permissions?
+  end
+
+  def group_permissions?
+    self.usertype.group_permissions?
+  end
+
+  def task_permissions?
+    self.usertype.task_permissions?
+  end
+
+  def usertype
+    return @usertype if @usertype
+    self.usertype = :Student
+    @usertype
+  end
+
+  def usertype=(usertype)
+    @usertype = User::Usertype.const_get(usertype.to_s.capitalize)
   end
 end

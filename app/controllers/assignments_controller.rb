@@ -21,9 +21,4 @@ class AssignmentsController < ApplicationController
       redirect_to groups_path
     end
   end
-
-  private
-    def render_assignment(user, cluster_id)
-      render(partial: 'assignment', locals: { cluster_id:  cluster_id, user: user })
-    end
 end

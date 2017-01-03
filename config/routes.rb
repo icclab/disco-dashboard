@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
+
   root 'groups#index'
   get    '/faq',   to: 'pages#faq'
   get    '/debug', to: 'pages#debug'
