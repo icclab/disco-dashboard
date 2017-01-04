@@ -118,20 +118,11 @@ ActiveRecord::Schema.define(version: 20161212102621) do
 
   create_table "users", force: :cascade do |t|
     t.string   "email"
+    t.string   "password_digest"
+    t.boolean  "admin",           default: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
-    t.string   "password_digest"
-    t.string   "remember_digest"
-    t.boolean  "admin",           default: false
-    t.integer  "usertype"
     t.index ["email"], name: "index_users_on_email", unique: true
-  end
-
-  create_table "usertypes", force: :cascade do |t|
-    t.string   "name"
-    t.string   "desc"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
 end

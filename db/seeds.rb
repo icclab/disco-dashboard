@@ -33,43 +33,33 @@ Framework.create([
   }
 ])
 
-Usertype.create([
-  {
-    name:        'Professor',
-    desc:        'Professor can create clusters and groups. However, in order, to create a cluster, a user should have an account and available resources on infrastructures as Openstack.'
-  },
-  {
-    name:        'Student',
-    desc:        'Students are assigned to groups, so they can get access to the clusters and tasks.'
-  }
-])
-
 user = User.create(email: "professor@zhaw.ch",
              password:              "password",
-             password_confirmation: "password",
-             usertype: 1)
+             password_confirmation: "password")
+user.usertype = :professor
 
 group = Group.create(name: 'CAS Machine Intelligence: group 1',
                      desc: "The CAS Machine Intelligence course will answer to the following questions:\n How to create optimal conditions for machine learning?\n What is Deep Learning and where can it be used?\n How can textual analysis methods determine whether someone is positive or negative about a specific topic on social networks?\n What are the big data methods and how are they used?")
 
 group.assignments.create(user: user)
 
-User.create!(email: "professor1@zhaw.ch",
-             password:              "password",
-             password_confirmation: "password",
-             usertype: 1)
+user = User.create(email: "professor1@zhaw.ch",
+                   password:              "password",
+                   password_confirmation: "password")
+user.usertype = :professor
 
-User.create!(email: "example@zhaw.ch",
-             password:              "password",
-             password_confirmation: "password",
-             usertype: 2)
+
+user = User.create(email: "example@zhaw.ch",
+                   password:              "password",
+                   password_confirmation: "password")
+user.usertype = :student
 
 25.times do |n|
   email = "example-#{n+1}@zhaw.ch"
   password = "password"
   user = User.create(email: email,
                      password:              password,
-                     password_confirmation: password,
-                     usertype: 2)
+                     password_confirmation: password)
+  user.usertype = :student
   group.assignments.create(user: user)
 end
