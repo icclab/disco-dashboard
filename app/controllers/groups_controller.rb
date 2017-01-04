@@ -1,5 +1,8 @@
 class GroupsController < ApplicationController
   before_action :logged_in_user
+  before_action do
+    is_permitted?("group")
+  end
 
   def index
     @groups = current_user.groups.all

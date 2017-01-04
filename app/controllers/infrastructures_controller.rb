@@ -1,6 +1,8 @@
 class InfrastructuresController < ApplicationController
   before_action :logged_in_user
-  before_action :is_professor?
+  before_action do
+    is_permitted?("infrastructure")
+  end
 
   def index
     @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
@@ -11,7 +13,6 @@ class InfrastructuresController < ApplicationController
   end
 
   def new
-    #@infrastructure = Infrastructure.new
   end
 
   def create

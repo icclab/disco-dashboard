@@ -1,4 +1,9 @@
 class AssignmentsController < ApplicationController
+  before_action :logged_in_user
+  before_action do
+    is_permitted?("group")
+  end
+
   def new
     @assignment = Assignment.new
     @users = User.all.except(current_user)

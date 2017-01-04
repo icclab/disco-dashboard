@@ -1,7 +1,9 @@
 class ClustersController < ApplicationController
   # Ensures that only logged in user can access to these methods
   before_action :logged_in_user
-  before_action :is_professor?
+  before_action do
+    is_permitted?("cluster")
+  end
 
   def index
     @clusters = current_user.clusters.all
