@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
   before_action :logged_in_user
-  before_action do
+  before_action only: [:new, :create, :destroy, :associate_cluster, :deassociate_cluster] do
     is_permitted?("group")
   end
 

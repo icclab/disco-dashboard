@@ -103,11 +103,7 @@ class User < ApplicationRecord
 
   def usertype
     return @usertype if @usertype
-    self.usertype = :Student
+    @usertype = User::Usertype.const_get(self.role.capitalize)
     @usertype
-  end
-
-  def usertype=(usertype)
-    @usertype = User::Usertype.const_get(usertype.to_s.capitalize)
   end
 end
