@@ -1,12 +1,12 @@
 module DiscoHelper
-  def create_req(cluster, infrastructure, frameworks)
+  def create_req(cluster, infrastructure)
     uri     = URI.parse(ENV["disco_ip"])
     request = Net::HTTP::Post.new(uri)
 
     request.content_type         = "text/occi"
     request["Category"]          = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
     request["X-Tenant-Name"]     = infrastructure[:tenant]
-    request["X-Region-Name"]     = ENV["region"]
+    request["X-Region-Name"]     = infrastructure[:region]
     request["X-User-Name"]       = infrastructure[:username]
     request["X-Password"]        = cluster[:password]
 
@@ -27,6 +27,7 @@ module DiscoHelper
 
     request["X-Occi-Attribute"] += 'icclab.haas.master.slaveonmaster="'+value(cluster[:slave_on_master])+'",'
 
+    frameworks = Framework.all
     frameworks.each do |framework|
       if !framework.name.eql? "HDFS"
         request["X-Occi-Attribute"] += 'icclab.disco.frameworks.'+framework[:name].downcase
@@ -52,7 +53,7 @@ module DiscoHelper
     request.content_type     = "text/occi"
     request["Category"]      = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
     request["X-Tenant-Name"] = infrastructure[:tenant]
-    request["X-Region-Name"] = ENV["region"]
+    request["X-Region-Name"] = infrastructure[:region]
     request["X-User-Name"]   = infrastructure[:username]
     request["X-Password"]    = password
 
@@ -70,12 +71,16 @@ module DiscoHelper
     request["X-User-Name"]   = infrastructure[:username]
     request["X-Password"]    = cluster[:password]
     request["X-Tenant-Name"] = infrastructure[:tenant]
-    request["X-Region-Name"] = ENV["region"]
+    request["X-Region-Name"] = infrastructure[:region]
     request["Accept"]        = "text/occi"
     response = Net::HTTP.start(uri.hostname, uri.port) do |http|
       http.request(request)
     end
 
     response
+  end
+
+  def value(val)
+    val.to_i==1 ? "true" : "false"
   end
 end

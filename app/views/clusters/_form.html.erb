@@ -27,15 +27,7 @@
             Slave node on Master node?
             <%= f.check_box(:slave_on_master, checked: false) %>
         </h5>
-        <%= f.label(:network, "Network") %>
-        <div class="form-group input-group">
-            <span class="input-group-addon">Configuration</span>
-            <select class="form-control">
-                <option>Default</option>
-                <option>User configuration 1</option>
-                <option>User configuration 2</option>
-            </select>
-        </div>
+
         <%= f.label(:access, "Access") %>
         <div class="form-group input-group">
             <span class="input-group-addon">Key</span>

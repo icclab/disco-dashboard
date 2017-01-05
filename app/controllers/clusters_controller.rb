@@ -29,34 +29,18 @@ class ClustersController < ApplicationController
     @adapters        = { "Choose" => 0 }
     @infrastructures.each { |inf| @adapters[inf.name] = inf.id } if @infrastructures
 
-    frameworks = Framework.all
     infrastructure = Infrastructure.find(params[:cluster][:infrastructure_id])
     cluster = infrastructure.clusters.build(cluster_params)
 
     if cluster.save
       # If new cluster is properly configured then we send request to the DISCO
       # to create a new cluster
-      response = create_req(params[:cluster], infrastructure, frameworks)
+      response = create_req(params[:cluster], infrastructure)
       if response.code == "201"
-        Rails.logger.debug "#{response.body.inspect}"
-        params[:cluster]["HDFS"] = params[:cluster]["Hadoop"]
-        frameworks.each { |framework|
-          cluster.cluster_frameworks.build(framework_id: framework[:id]) if params[:cluster][framework[:name]].to_i==1
-        }
-        uuid = nil
-        response.header.each_header { |key, value| uuid = value.split(//).last(36).join if key =="location" }
-        response.header.each_header { |key, value| Rails.logger.debug "#{key} => #{value}" }
+        get_frameworks cluster
+        cluster.get_uuid response.header
 
-        cluster.update_attribute(:uuid, uuid)
-        cluster.update_attribute(:external_ip, 0)
-        cluster.update_attribute(:state, "Deplyoing...")
-        #ActionCable.server.broadcast "user_#{current_user[:id]}",
-         #                            type: 1,
-          #                           cluster: render_cluster(cluster)
         ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
-
-        response = send_request(params[:cluster], infrastructure, uuid)
-        response.header.each_header { |key, value| Rails.logger.debug "#{key} => #{value}" }
 
         sleep(1)
         redirect_to clusters_path
@@ -119,13 +103,11 @@ class ClustersController < ApplicationController
                                       :slave_on_master)
     end
 
-    def render_cluster(cluster)
-      @images          = Image.all
-      @flavors         = Flavor.all
-      render(partial: 'cluster', locals: { cluster:  cluster })
-    end
-
-    def value(val)
-      val.to_i==1 ? "true" : "false"
+    def get_frameworks(cluster)
+      frameworks = Framework.all
+      params[:cluster]["HDFS"] = params[:cluster]["Hadoop"]
+      frameworks.each { |framework|
+        cluster.cluster_frameworks.build(framework_id: framework[:id]) if params[:cluster][framework[:name]].to_i==1
+      }
     end
 end

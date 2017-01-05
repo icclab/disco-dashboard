@@ -19,4 +19,10 @@ class Cluster < ApplicationRecord
                                   uuid:  uuid,
                                   state: state
   end
+
+  def get_uuid(header)
+    uuid = nil
+    header.each_header { |key, value| uuid = value.split(//).last(36).join if key =="location" }
+    self.update_attribute(:uuid, uuid)
+  end
 end

@@ -1,6 +1,6 @@
 class Infrastructure < ApplicationRecord
   belongs_to :user
-  has_many :clusters, dependent: :destroy
+  has_many :clusters
   has_many :images,   dependent: :destroy
   has_many :flavors,  dependent: :destroy
   has_many :keypairs, dependent: :destroy
@@ -9,6 +9,8 @@ class Infrastructure < ApplicationRecord
   validates :username, presence: true
   validates :auth_url, presence: true
   validates :tenant,   presence: true
+  validates :region,   presence: true
+  validates :provider, presence: true
 
   module Adapter
     module Openstack
@@ -19,7 +21,7 @@ class Infrastructure < ApplicationRecord
             api_key:    credentials[:password],
             auth_url:   credentials[:auth_url],
             authtenant: credentials[:tenant],
-            region:     ENV['region']
+            region:     credentials[:region]
           })
         end
 
@@ -36,7 +38,7 @@ class Infrastructure < ApplicationRecord
         end
       end
     end
-
+=begin
     module Cloudstack
       class << self
         def authenticate(credentials)
@@ -56,6 +58,7 @@ class Infrastructure < ApplicationRecord
         end
       end
     end
+=end
   end
 
   def authenticate(credentials)
@@ -75,12 +78,6 @@ class Infrastructure < ApplicationRecord
   end
 
   def adapter
-    return @adapter if @adapter
-    self.adapter = :openstack
-    @adapter
-  end
-
-  def adapter=(adapter)
-    @adapter = Infrastructure::Adapter.const_get(adapter.to_s.capitalize)
+    Infrastructure::Adapter.const_get(self.provider.capitalize)
   end
 end
