@@ -1,11 +1,12 @@
 class ClustersController < ApplicationController
+  include DiscoHelper
+  include ClusterHelper
   # Ensures that only logged in user can access to these methods
   before_action :logged_in_user
+  before_action :update_clusters, only: [:index, :show]
   before_action do
     is_permitted?("cluster")
   end
-
-  include DiscoHelper
 
   def index
     @clusters = current_user.clusters.all
@@ -32,11 +33,11 @@ class ClustersController < ApplicationController
     infrastructure = Infrastructure.find(params[:cluster][:infrastructure_id])
     cluster = infrastructure.clusters.build(cluster_params)
 
-    cluster.master_image = Image.find(params[:cluster][:master_image].to_i)
-    cluster.slave_image  = Image.find(params[:cluster][:slave_image].to_i)
+    cluster.master_image = Image.find(params[:cluster][:master_image])
+    cluster.slave_image  = Image.find(params[:cluster][:slave_image])
 
-    cluster.master_flavor = Flavor.find(params[:cluster][:master_flavor].to_i)
-    cluster.slave_flavor  = Flavor.find(params[:cluster][:slave_flavor].to_i)
+    cluster.master_flavor = Flavor.find(params[:cluster][:master_flavor])
+    cluster.slave_flavor  = Flavor.find(params[:cluster][:slave_flavor])
 
     if cluster.save
       # If new cluster is properly configured then we send request to the DISCO
