@@ -32,6 +32,12 @@ class ClustersController < ApplicationController
     infrastructure = Infrastructure.find(params[:cluster][:infrastructure_id])
     cluster = infrastructure.clusters.build(cluster_params)
 
+    cluster.master_image = Image.find(params[:cluster][:master_image].to_i)
+    cluster.slave_image  = Image.find(params[:cluster][:slave_image].to_i)
+
+    cluster.master_flavor = Flavor.find(params[:cluster][:master_flavor].to_i)
+    cluster.slave_flavor  = Flavor.find(params[:cluster][:slave_flavor].to_i)
+
     if cluster.save
       # If new cluster is properly configured then we send request to the DISCO
       # to create a new cluster
@@ -97,8 +103,6 @@ class ClustersController < ApplicationController
   private
     def cluster_params
       params.require(:cluster).permit(:name,  :uuid,  :state,
-                                      :master_image,  :slave_image,
-                                      :master_flavor, :slave_flavor,
                                       :master_num,    :slave_num,
                                       :slave_on_master)
     end

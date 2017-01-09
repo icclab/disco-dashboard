@@ -1,6 +1,11 @@
 class Cluster < ApplicationRecord
   belongs_to :infrastructure
   belongs_to :group, optional: true
+  belongs_to :master_image,  class_name: 'Image'
+  belongs_to :slave_image,   class_name: 'Image'
+  belongs_to :master_flavor, class_name: 'Flavor'
+  belongs_to :slave_flavor,  class_name: 'Flavor'
+
   has_many   :cluster_frameworks, dependent: :destroy
   has_many   :assignments,        dependent: :destroy
 

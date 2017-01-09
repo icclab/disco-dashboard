@@ -42,12 +42,12 @@
            <div class="col-md-4 col-xs-12 specs">
                <h3 class="text-primary"><strong>Master <small>x<%= cluster.master_num %></small></strong></h3>
                <% master_image = Image.find(cluster.master_image) %>
-               <p class="text-info"><strong><%= master_image.name %></strong></p>
+               <p class="text-info"><strong><%= cluster.master_image.name %></strong></p>
 
                <% master_flavor = Flavor.find(cluster.master_flavor) %>
-               <p class="text-info"><strong><%= master_flavor.vcpus %></strong> VCPUs</p>
-               <p class="text-info"><strong><%= master_flavor.ram   %>GB</strong> RAM</p>
-               <p class="text-info"><strong><%= master_flavor.disk  %>GB</strong> HDD</p>
+               <p class="text-info"><strong><%= cluster.master_flavor.vcpus %></strong> VCPUs</p>
+               <p class="text-info"><strong><%= cluster.master_flavor.ram   %>GB</strong> RAM</p>
+               <p class="text-info"><strong><%= cluster.master_flavor.disk  %>GB</strong> HDD</p>
            </div>
            <div class="col-md-4 col-xs-12 specs">
               <h3 class="text-primary">
@@ -61,12 +61,12 @@
                 </strong>
               </h3>
                <% slave_image = Image.find(cluster.slave_image) %>
-               <p class="text-info"><strong><%= slave_image.name %></strong></p>
+               <p class="text-info"><strong><%= cluster.slave_image.name %></strong></p>
 
                <% slave_flavor = Flavor.find(cluster.slave_flavor) %>
-               <p class="text-info"><strong><%= slave_flavor.vcpus %></strong> VCPUs</p>
-               <p class="text-info"><strong><%= slave_flavor.ram   %>GB</strong> RAM</p>
-               <p class="text-info"><strong><%= slave_flavor.disk  %>GB</strong> HDD</p>
+               <p class="text-info"><strong><%= cluster.slave_flavor.vcpus %></strong> VCPUs</p>
+               <p class="text-info"><strong><%= cluster.slave_flavor.ram   %>GB</strong> RAM</p>
+               <p class="text-info"><strong><%= cluster.slave_flavor.disk  %>GB</strong> HDD</p>
            </div>
            <div class="col-md-4 col-xs-12">
                 <h3 class="text-primary"><strong>Frameworks: </strong></h3>

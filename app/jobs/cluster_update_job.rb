@@ -6,12 +6,6 @@ class ClusterUpdateJob < ApplicationJob
     state    = cluster[:state]
     uuid     = cluster[:uuid]
 
-    Rails.logger.debug "Cluster initial state: #{state.inspect}"
-    Rails.logger.debug "Cluster uuid: #{uuid.inspect}"
-
-    logger.debug "Cluster initial state: #{state.inspect}"
-    logger.debug "Cluster uuid: #{uuid.inspect}"
-
     begin
       sleep(3)
 
@@ -49,7 +43,7 @@ class ClusterUpdateJob < ApplicationJob
       request["X-User-Name"]   = infrastructure[:username]
       request["X-Password"]    = password
       request["X-Tenant-Name"] = infrastructure[:tenant]
-      request["X-Region-Name"] = ENV["region"]
+      request["X-Region-Name"] = infrastructure[:region]
       request["Accept"]        = type == "json" ? "application/occi+json" : "text/occi"
       response = Net::HTTP.start(uri.hostname, uri.port) do |http|
         http.request(request)
