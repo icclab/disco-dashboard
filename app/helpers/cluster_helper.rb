@@ -1,3 +1,4 @@
+# ClusterHelper module is used to implement additional methods related to clusters
 module ClusterHelper
   # Checks link for being broken or not.
   # Returns "success" if link is working,
@@ -16,8 +17,8 @@ module ClusterHelper
     "success"
   end
 
-  # Method to update current user's clusters.
-  # Tries to connect to the clusters using its ip address.
+  # Method to update current user's clusters' state if there is any change.
+  # Tries to connect to the clusters using their ip addresses.
   # When timeout occurs, updates state to "CONNECTION FAILED"
   # Otherwise, if state is changed then updates state to the new state
   def update_clusters(user_id = current_user.id)
@@ -56,10 +57,8 @@ module ClusterHelper
           end
         end
 
-        if(state != old_state)
-          cluster.update_attribute(:state, state)
-          cluster.update(user_id, cluster[:uuid], state)
-        end
+        cluster.update(user_id, cluster[:uuid], state) if state != old_state
+
       end
     end
   end

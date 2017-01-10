@@ -1,3 +1,5 @@
+##
+# Infrastructure model relationships, validations, adapters and underlying methods.
 class Infrastructure < ApplicationRecord
   belongs_to :user
   has_many :clusters
@@ -12,6 +14,14 @@ class Infrastructure < ApplicationRecord
   validates :region,   presence: true
   validates :provider, presence: true
 
+  ##
+  # Adapter module contains modules for different infrastructure providers with its own implementation of methods such as:
+  #   - authenticate(credentials) => creates a connection between infrastructure and object
+  #   - get_images(connection)    => gets list of images from given infrastructure connection
+  #   - get_flavors(connection)   => gets list of flavors from given infrastructure connection
+  #   - get_keypair(connection)   => gets list of keypairs from given infrastructure connection
+  #
+  # Adapter can be easily extended with new infrastructure providers (e.g. Cloudstack), and its own methods can be implemented.
   module Adapter
     module Openstack
       class << self
@@ -77,6 +87,8 @@ class Infrastructure < ApplicationRecord
     self.adapter.get_keypairs connection
   end
 
+  ##
+  # Returns chosen infrastructure object's provider
   def adapter
     Infrastructure::Adapter.const_get(self.provider.capitalize)
   end

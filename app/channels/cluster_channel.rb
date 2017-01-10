@@ -1,9 +1,12 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
+#
+# ClusterChannel is used to create subscription between client and server.
+# After subscription, channel can run some methods related to the subscribed user.
 class ClusterChannel < ApplicationCable::Channel
-
+  # Including ClusterHelper since it contains 'update_cluster' method which is used by this channel
   include ClusterHelper
 
-  # Periodically (every 30 seconds) updates cluster states
+  # Periodically (every 30 seconds) check for updates on cluster states
   periodically every: 30 do
     update_clusters(user_id)
   end

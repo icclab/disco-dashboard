@@ -1,3 +1,5 @@
+##
+# Keypair model relationships and validations
 class Keypair < ApplicationRecord
   belongs_to :infrastructure
 

@@ -65,8 +65,7 @@
            <div class="col-md-4 col-xs-12">
                 <h3 class="text-primary"><strong>Frameworks: </strong></h3>
                 <ul class="list-unstyled" id="framework-list">
-                  <% cluster.cluster_frameworks.all.each do |f| %>
-                    <% framework = Framework.find(f.framework_id) %>
+                  <% cluster.frameworks.all.each do |framework| %>
                     <% link = 'http://'+cluster.external_ip.to_s+framework.port %>
                     <li><h4>
                       <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>

@@ -1,4 +1,9 @@
+# DiscoHelper contains all methods to connect to the DISCO framework
+# through http connection.
 module DiscoHelper
+  # Method accepts new cluster parameters and infrastructure credentials
+  # to send new cluster creation request to DISCO framework.
+  # Returns response from the DISCO if any.
   def create_req(cluster, infrastructure)
     uri     = URI.parse(ENV["disco_ip"])
     request = Net::HTTP::Post.new(uri)
@@ -46,6 +51,9 @@ module DiscoHelper
     response
   end
 
+  # Method accepts infrastructure credentials and cluster uuid
+  # to send delete request to DISCO to delete chosen cluster from the stacks.
+  # Returns response from DISCO framework.
   def delete_req(infrastructure, password, uuid)
     uri  = URI.parse(ENV["disco_ip"]+uuid)
 
@@ -64,23 +72,31 @@ module DiscoHelper
     response
   end
 
-  def send_request(cluster, infrastructure, uuid = '')
+  # Method accepts infratructure credentials and optional parameters as 'uuid' and 'type'
+  # to send http request to DISCO framework.
+  # When uuid is not given, returns list of clusters on chosen infrastructure.
+  # When uuid is given, returns full details of chosen cluster from infrastructure.
+  # When type is 'text', DISCO framework response is in text/occi format.
+  # When type is 'json', DISCO framework response is in json format.
+  def send_request(infrastructure, password, uuid = '', type = 'text')
     url = ENV["disco_ip"]+uuid
     uri     = URI.parse(url)
     request = Net::HTTP::Get.new(uri)
     request["X-User-Name"]   = infrastructure[:username]
-    request["X-Password"]    = cluster[:password]
+    request["X-Password"]    = password
     request["X-Tenant-Name"] = infrastructure[:tenant]
     request["X-Region-Name"] = infrastructure[:region]
-    request["Accept"]        = "text/occi"
+    request["Accept"]        = type == "json" ? "application/occi+json" : "text/occi"
     response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(request)
+        http.request(request)
     end
 
     response
   end
 
-  def value(val)
-    val.to_i==1 ? "true" : "false"
-  end
+  private
+    # Method that converts incoming 0 and 1 integer to "true" and "false" string, respectively.
+    def value(val)
+      val.to_i==1 ? "true" : "false"
+    end
 end

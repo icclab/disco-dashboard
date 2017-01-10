@@ -1,3 +1,5 @@
+##
+# User model relationships, validations, and underlying usertypes and its methods.
 class User < ApplicationRecord
   has_many :infrastructures, dependent: :destroy
   has_many :images,   through: :infrastructures
@@ -7,8 +9,9 @@ class User < ApplicationRecord
   has_many :assignments
   has_many :groups, through: :assignments
 
+  # Ensures that all emails are saved in downcase
   before_save { self.email.downcase! }
-
+  # Regex for email validity checking
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, length: { maximum: 255 },
                     format: { with: VALID_EMAIL_REGEX },
@@ -17,6 +20,8 @@ class User < ApplicationRecord
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }
 
+  ##
+  # User class instance methods.
   class << self
     # Returns the hash digest of the given string.
     def digest(string)

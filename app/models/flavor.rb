@@ -1,3 +1,5 @@
+##
+# Flavor model relationships and validations.
 class Flavor < ApplicationRecord
   belongs_to :infrastructure
 

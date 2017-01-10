@@ -1,3 +1,4 @@
+# AJAX which renders a form according to selected infrastructure during cluster creation process.
 $ ->
   $(document).on 'change', '#infrastructure_id', (evt) ->
     $.ajax 'render_form',

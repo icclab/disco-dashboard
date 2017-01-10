@@ -1,3 +1,5 @@
+##
+# Image model relationships and validations.
 class Image < ApplicationRecord
   belongs_to :infrastructure
 
