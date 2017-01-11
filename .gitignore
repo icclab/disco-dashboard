@@ -22,7 +22,9 @@
 
 # Ignore application configuration
 /config/application.yml
-/dumb.rdb
+
+# Ignore dumb file
+dumb.rdb
 
 *.gem
 *.rbc
