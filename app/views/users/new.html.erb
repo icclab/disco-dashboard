@@ -12,8 +12,8 @@
                       <fieldset>
                         <%= render 'shared/error_messages' %>
 
-                        <%= f.label :usertype, "User Type" %>
-                        <%= f.select(:usertype, options_for_select(@usertypes.map { |usertype| [usertype[:name], usertype[:id]] }), {}, {class: 'form-control'}) %>
+                        <%= f.label :role, "User Type" %>
+                        <%= f.select(:role, options_for_select(@usertypes.map { |usertype| [usertype.to_s, usertype] }), {}, {class: 'form-control'}) %>
 
                         <%= f.label :email %>
                         <%= f.email_field :email, class: "form-control" %>

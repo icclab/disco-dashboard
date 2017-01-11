@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col-lg-12">
       <h1 class="page-header text-primary">Groups
-          <% if current_user.usertype != 2 %>
+          <% if current_user.group_permissions? %>
             <%= link_to new_group_path do %>
               <button type="button" class="btn btn-outline btn-primary pull-right">
                   <i class="fa fa-plus fa-fw"></i> Create

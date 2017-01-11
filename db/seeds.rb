@@ -33,21 +33,10 @@ Framework.create([
   }
 ])
 
-Usertype.create([
-  {
-    name:        'Professor',
-    desc:        'Professor can create clusters and groups. However, in order, to create a cluster, a user should have an account and available resources on infrastructures as Openstack.'
-  },
-  {
-    name:        'Student',
-    desc:        'Students are assigned to groups, so they can get access to the clusters and tasks.'
-  }
-])
-
 user = User.create(email: "professor@zhaw.ch",
-             password:              "password",
-             password_confirmation: "password",
-             usertype: 1)
+                   role:  "Professor",
+                   password:              "password",
+                   password_confirmation: "password")
 
 group = Group.create(name: 'CAS Machine Intelligence: group 1',
                      desc: "The CAS Machine Intelligence course will answer to the following questions:\n How to create optimal conditions for machine learning?\n What is Deep Learning and where can it be used?\n How can textual analysis methods determine whether someone is positive or negative about a specific topic on social networks?\n What are the big data methods and how are they used?")
@@ -55,21 +44,22 @@ group = Group.create(name: 'CAS Machine Intelligence: group 1',
 group.assignments.create(user: user)
 
 User.create!(email: "professor1@zhaw.ch",
+             role:  "Professor",
              password:              "password",
-             password_confirmation: "password",
-             usertype: 1)
+             password_confirmation: "password")
+
 
 User.create!(email: "example@zhaw.ch",
+             role:  "Student",
              password:              "password",
-             password_confirmation: "password",
-             usertype: 2)
+             password_confirmation: "password")
 
 25.times do |n|
   email = "example-#{n+1}@zhaw.ch"
   password = "password"
   user = User.create(email: email,
+                     role: "Student",
                      password:              password,
-                     password_confirmation: password,
-                     usertype: 2)
+                     password_confirmation: password)
   group.assignments.create(user: user)
 end

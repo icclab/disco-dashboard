@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
+
   root 'groups#index'
   get    '/faq',   to: 'pages#faq'
   get    '/debug', to: 'pages#debug'
@@ -19,8 +20,8 @@ Rails.application.routes.draw do
   post   '/associate_cluster', to: 'groups#associate_cluster'
   delete '/associate_cluster', to: 'groups#deassociate_cluster'
 
-  delete '/delete_assignment', to: 'assignments#destroy'
   post   '/create_assignment', to: 'assignments#create'
+  delete '/delete_assignment', to: 'assignments#destroy'
 
   resources :users
   resources :infrastructures

@@ -6,7 +6,7 @@
           <% if cluster.group %>
             <p>
               Assigned to group: <strong><%= cluster.group.name %></strong>
-              <% if current_user.usertype != 2 %>
+              <% if current_user.group_permissions? %>
                 <%= link_to associate_cluster_path(group_id: cluster.group.id, cluster_id: cluster.id), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-xs"  do %>
                         <i class="fa fa-times" aria-hidden="true"></i>
                 <% end %>
@@ -14,17 +14,17 @@
             </p>
             <% else %>
               <p> Not assigned </p>
-
-                <%= form_for :assignment, url: associate_cluster_path, remote: true do |f| %>
-                  <%= f.hidden_field :cluster_id, :value => cluster.id %>
-                  <div class="input-group">
-                    <%= f.select(:group_id, options_for_select(@groups.map { |group| [group.name, group.id] }), {}, {class: 'form-control'}) %>
-                    <span class="input-group-btn">
-                      <%= f.submit "Assign", class: "btn btn-success" %>
-                    </span>
-                  </div>
+                <% if current_user.group_permissions? && @groups.any? %>
+                  <%= form_for :assignment, url: associate_cluster_path, remote: true do |f| %>
+                    <%= f.hidden_field :cluster_id, :value => cluster.id %>
+                    <div class="input-group">
+                      <%= f.select(:group_id, options_for_select(@groups.map { |group| [group.name, group.id] }), {}, {class: 'form-control'}) %>
+                      <span class="input-group-btn">
+                        <%= f.submit "Assign", class: "btn btn-success" %>
+                      </span>
+                    </div>
+                  <% end %>
                 <% end %>
-
             <% end %>
         </div>
         <div class="col-xs-8 text-right">
@@ -41,13 +41,10 @@
       <div class="row">
            <div class="col-md-4 col-xs-12 specs">
                <h3 class="text-primary"><strong>Master <small>x<%= cluster.master_num %></small></strong></h3>
-               <% master_image = Image.find(cluster.master_image) %>
-               <p class="text-info"><strong><%= master_image.name %></strong></p>
-
-               <% master_flavor = Flavor.find(cluster.master_flavor) %>
-               <p class="text-info"><strong><%= master_flavor.vcpus %></strong> VCPUs</p>
-               <p class="text-info"><strong><%= master_flavor.ram   %>GB</strong> RAM</p>
-               <p class="text-info"><strong><%= master_flavor.disk  %>GB</strong> HDD</p>
+               <p class="text-info"><strong><%= cluster.master_image.name %></strong></p>
+               <p class="text-info"><strong><%= cluster.master_flavor.vcpus %></strong> VCPUs</p>
+               <p class="text-info"><strong><%= cluster.master_flavor.ram   %>GB</strong> RAM</p>
+               <p class="text-info"><strong><%= cluster.master_flavor.disk  %>GB</strong> HDD</p>
            </div>
            <div class="col-md-4 col-xs-12 specs">
               <h3 class="text-primary">
@@ -60,19 +57,15 @@
                   </small>
                 </strong>
               </h3>
-               <% slave_image = Image.find(cluster.slave_image) %>
-               <p class="text-info"><strong><%= slave_image.name %></strong></p>
-
-               <% slave_flavor = Flavor.find(cluster.slave_flavor) %>
-               <p class="text-info"><strong><%= slave_flavor.vcpus %></strong> VCPUs</p>
-               <p class="text-info"><strong><%= slave_flavor.ram   %>GB</strong> RAM</p>
-               <p class="text-info"><strong><%= slave_flavor.disk  %>GB</strong> HDD</p>
+               <p class="text-info"><strong><%= cluster.slave_image.name %></strong></p>
+               <p class="text-info"><strong><%= cluster.slave_flavor.vcpus %></strong> VCPUs</p>
+               <p class="text-info"><strong><%= cluster.slave_flavor.ram   %>GB</strong> RAM</p>
+               <p class="text-info"><strong><%= cluster.slave_flavor.disk  %>GB</strong> HDD</p>
            </div>
            <div class="col-md-4 col-xs-12">
                 <h3 class="text-primary"><strong>Frameworks: </strong></h3>
                 <ul class="list-unstyled" id="framework-list">
-                  <% cluster.cluster_frameworks.all.each do |f| %>
-                    <% framework = Framework.find(f.framework_id) %>
+                  <% cluster.frameworks.all.each do |framework| %>
                     <% link = 'http://'+cluster.external_ip.to_s+framework.port %>
                     <li><h4>
                       <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>

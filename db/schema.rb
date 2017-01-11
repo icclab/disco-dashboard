@@ -32,19 +32,19 @@ ActiveRecord::Schema.define(version: 20161212102621) do
 
   create_table "clusters", force: :cascade do |t|
     t.string   "uuid"
-    t.string   "state"
+    t.string   "state",                       default: "DEPLOYING"
     t.string   "name"
-    t.string   "master_image"
-    t.string   "slave_image"
-    t.string   "master_flavor"
-    t.string   "slave_flavor"
+    t.integer  "master_image_id"
+    t.integer  "slave_image_id"
+    t.integer  "master_flavor_id"
+    t.integer  "slave_flavor_id"
     t.integer  "master_num"
     t.integer  "slave_num"
-    t.integer  "external_ip",       limit: 8
+    t.integer  "external_ip",       limit: 8, default: 0
     t.boolean  "slave_on_master"
     t.integer  "infrastructure_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
     t.integer  "group_id"
     t.index ["group_id"], name: "index_clusters_on_group_id"
     t.index ["infrastructure_id"], name: "index_clusters_on_infrastructure_id"
@@ -93,6 +93,8 @@ ActiveRecord::Schema.define(version: 20161212102621) do
     t.string   "username"
     t.string   "auth_url"
     t.string   "tenant"
+    t.string   "region"
+    t.string   "provider"
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -118,20 +120,12 @@ ActiveRecord::Schema.define(version: 20161212102621) do
 
   create_table "users", force: :cascade do |t|
     t.string   "email"
+    t.string   "password_digest"
+    t.string   "role"
+    t.boolean  "admin",           default: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
-    t.string   "password_digest"
-    t.string   "remember_digest"
-    t.boolean  "admin",           default: false
-    t.integer  "usertype"
     t.index ["email"], name: "index_users_on_email", unique: true
-  end
-
-  create_table "usertypes", force: :cascade do |t|
-    t.string   "name"
-    t.string   "desc"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
 end

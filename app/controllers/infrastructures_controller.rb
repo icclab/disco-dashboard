@@ -1,6 +1,8 @@
 class InfrastructuresController < ApplicationController
   before_action :logged_in_user
-  before_action :is_professor?
+  before_action do
+    is_permitted?("infrastructure")
+  end
 
   def index
     @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
@@ -11,21 +13,22 @@ class InfrastructuresController < ApplicationController
   end
 
   def new
-    #@infrastructure = Infrastructure.new
+    @infrastructure = Infrastructure.new
+    @adapters = Infrastructure::Adapter.constants
   end
 
   def create
     @infrastructure = current_user.infrastructures.build(infrastructure_params)
-    @infrastructure.adapter = params[:infrastructure][:type]
     if @infrastructure.save && connection = @infrastructure.authenticate(params[:infrastructure])
       save_images   @infrastructure.get_images   connection
       save_flavors  @infrastructure.get_flavors  connection
       save_keypairs @infrastructure.get_keypairs connection
       flash[:success] = "New infrastructure was added successfully"
+      redirect_to infrastructures_path
     else
       flash[:danger] = "Please, fill all fields with correct information"
+      render 'new'
     end
-    redirect_to infrastructures_path
   end
 
   def destroy
@@ -35,7 +38,7 @@ class InfrastructuresController < ApplicationController
 
   private
     def infrastructure_params
-      params.require(:infrastructure).permit(:name, :username, :tenant, :auth_url)
+      params.require(:infrastructure).permit(:name, :username, :tenant, :auth_url, :region, :provider)
     end
 
     def save_images(images)

@@ -18,9 +18,9 @@ module ApplicationHelper
   # To get right status according to a state
   def get_status(state)
     state ||= 'info'
-    if state.downcase.include? "failed"
+    if state.downcase.include? "fail"
       'danger'
-    elsif state.downcase.include?("create_complete")||state.downcase.include?("ready")
+    elsif state.downcase.include?("complete")||state.downcase.include?("ready")
       'success'
     else
       'info'

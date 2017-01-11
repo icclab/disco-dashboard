@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    def is_professor?
-      redirect_to root_url if current_user.usertype != 1
+    def is_permitted?(method)
+      redirect_to root_url if !current_user.send("#{method}_permissions?")
     end
 end

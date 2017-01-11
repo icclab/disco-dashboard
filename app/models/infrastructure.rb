@@ -1,6 +1,8 @@
+##
+# Infrastructure model relationships, validations, adapters and underlying methods.
 class Infrastructure < ApplicationRecord
   belongs_to :user
-  has_many :clusters, dependent: :destroy
+  has_many :clusters
   has_many :images,   dependent: :destroy
   has_many :flavors,  dependent: :destroy
   has_many :keypairs, dependent: :destroy
@@ -9,7 +11,17 @@ class Infrastructure < ApplicationRecord
   validates :username, presence: true
   validates :auth_url, presence: true
   validates :tenant,   presence: true
+  validates :region,   presence: true
+  validates :provider, presence: true
 
+  ##
+  # Adapter module contains modules for different infrastructure providers with its own implementation of methods such as:
+  #   - authenticate(credentials) => creates a connection between infrastructure and object
+  #   - get_images(connection)    => gets list of images from given infrastructure connection
+  #   - get_flavors(connection)   => gets list of flavors from given infrastructure connection
+  #   - get_keypair(connection)   => gets list of keypairs from given infrastructure connection
+  #
+  # Adapter can be easily extended with new infrastructure providers (e.g. Cloudstack), and its own methods can be implemented.
   module Adapter
     module Openstack
       class << self
@@ -19,7 +31,7 @@ class Infrastructure < ApplicationRecord
             api_key:    credentials[:password],
             auth_url:   credentials[:auth_url],
             authtenant: credentials[:tenant],
-            region:     ENV['region']
+            region:     credentials[:region]
           })
         end
 
@@ -36,7 +48,7 @@ class Infrastructure < ApplicationRecord
         end
       end
     end
-
+=begin
     module Cloudstack
       class << self
         def authenticate(credentials)
@@ -56,6 +68,7 @@ class Infrastructure < ApplicationRecord
         end
       end
     end
+=end
   end
 
   def authenticate(credentials)
@@ -74,13 +87,9 @@ class Infrastructure < ApplicationRecord
     self.adapter.get_keypairs connection
   end
 
+  ##
+  # Returns chosen infrastructure object's provider
   def adapter
-    return @adapter if @adapter
-    self.adapter = :openstack
-    @adapter
-  end
-
-  def adapter=(adapter)
-    @adapter = Infrastructure::Adapter.const_get(adapter.to_s.capitalize)
+    Infrastructure::Adapter.const_get(self.provider.capitalize)
   end
 end
