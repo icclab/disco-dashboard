@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class User - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="ApplicationRecord.html">ApplicationRecord</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-digest">::digest</a>
+    
+    <li ><a href="#method-c-new_token">::new_token</a>
+    
+    <li ><a href="#method-i-cluster_permissions-3F">#cluster_permissions?</a>
+    
+    <li ><a href="#method-i-group_permissions-3F">#group_permissions?</a>
+    
+    <li ><a href="#method-i-infrastructure_permissions-3F">#infrastructure_permissions?</a>
+    
+    <li ><a href="#method-i-sidebar-3F">#sidebar?</a>
+    
+    <li ><a href="#method-i-task_permissions-3F">#task_permissions?</a>
+    
+    <li ><a href="#method-i-usertype">#usertype</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-User">
+  <h1 id="class-User" class="class">
+    class User
+  </h1>
+
+  <section class="description">
+    
+<p><a href="User.html">User</a> model relationships, validations, and
+underlying usertypes and its methods.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="VALID_EMAIL_REGEX">VALID_EMAIL_REGEX
+        
+        <dd><p>Regex for email validity checking</p>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-digest" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">digest</span><span
+            class="method-args">(string)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the hash digest of the given string.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="digest-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">digest</span>(<span class="ruby-identifier">string</span>)
+  <span class="ruby-identifier">cost</span> = <span class="ruby-constant">ActiveModel</span><span class="ruby-operator">::</span><span class="ruby-constant">SecurePassword</span>.<span class="ruby-identifier">min_cost</span> <span class="ruby-operator">?</span> <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Engine</span><span class="ruby-operator">::</span><span class="ruby-constant">MIN_COST</span> <span class="ruby-operator">:</span>
+                                                <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Engine</span>.<span class="ruby-identifier">cost</span>
+  <span class="ruby-constant">BCrypt</span><span class="ruby-operator">::</span><span class="ruby-constant">Password</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">string</span>, <span class="ruby-identifier">cost</span><span class="ruby-operator">:</span> <span class="ruby-identifier">cost</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-new_token" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new_token</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a random token.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new_token-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">new_token</span>
+  <span class="ruby-constant">SecureRandom</span>.<span class="ruby-identifier">urlsafe_base64</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-cluster_permissions-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cluster_permissions?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="cluster_permissions-3F-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 106</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">cluster_permissions?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">usertype</span>.<span class="ruby-identifier">cluster_permissions?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-group_permissions-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">group_permissions?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="group_permissions-3F-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">group_permissions?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">usertype</span>.<span class="ruby-identifier">group_permissions?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-infrastructure_permissions-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">infrastructure_permissions?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="infrastructure_permissions-3F-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 102</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">infrastructure_permissions?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">usertype</span>.<span class="ruby-identifier">infrastructure_permissions?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-sidebar-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sidebar?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="sidebar-3F-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 98</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sidebar?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">usertype</span>.<span class="ruby-identifier">sidebar?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-task_permissions-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">task_permissions?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="task_permissions-3F-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">task_permissions?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">usertype</span>.<span class="ruby-identifier">task_permissions?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-usertype" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">usertype</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the module corresponding to the user role</p>
+          
+          
+
+          
+          <div class="method-source-code" id="usertype-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 119</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">usertype</span>
+  <span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">Usertype</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">capitalize</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

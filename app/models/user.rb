@@ -36,6 +36,15 @@ class User < ApplicationRecord
     end
   end
 
+  ##
+  # Usertype module contains modules for different user roles to define their permission policy.
+  #   - sidebar? => returns true if user can see a sidebar on a dashboard
+  #   - infrastructure_permissions? => returns true if user can add/use/delete infrastructures
+  #   - cluster_permissions? => returns true if user can create/delete clusters
+  #   - group_permissions? => returns true if user can create/delete groups and assign_new_user/associate_cluster to the groups
+  #   - task_permissions? => returns true if user can create/delete tasks
+  #
+  # This module can be extended with new usertypes and underlying methods.
   module Usertype
     module Professor
       class << self
@@ -106,6 +115,7 @@ class User < ApplicationRecord
     self.usertype.task_permissions?
   end
 
+  # Returns the module corresponding to the user role
   def usertype
     User::Usertype.const_get(self.role.capitalize)
   end

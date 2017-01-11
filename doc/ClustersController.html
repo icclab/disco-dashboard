@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class ClustersController - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="DiscoHelper.html">DiscoHelper</a>
+  
+  
+  
+    <li><a class="include" href="ClusterHelper.html">ClusterHelper</a>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-create">#create</a>
+    
+    <li ><a href="#method-i-destroy">#destroy</a>
+    
+    <li ><a href="#method-i-index">#index</a>
+    
+    <li ><a href="#method-i-new">#new</a>
+    
+    <li ><a href="#method-i-render_form">#render_form</a>
+    
+    <li ><a href="#method-i-show">#show</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-ClustersController">
+  <h1 id="class-ClustersController" class="class">
+    class ClustersController
+  </h1>
+
+  <section class="description">
+    
+<p>ClusterController is responsible for the clusters&#39; retrieval, creation,
+and deletion.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates new cluster entity and sends cluster create request to DISCO if
+everything filled correctly(cluster parameters and infrastructure
+password). After success redirects to the clusters page. After failure
+redirects to the new cluster creation page. Failure may occure since:</p>
+
+<pre>1) Cluster parameters were not filled correctly,
+   in this case: &quot;Cluster details were not filled correctly&quot; warning will show up.
+2) Incorrect password was typed or DISCO connection problem occured,
+   in this case: &quot;DISCO connection error&quot; warning will show up.</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="create-source">
+            <pre><span class="ruby-comment"># File app/controllers/clusters_controller.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
+  <span class="ruby-comment"># Retrieves chosen infrastructure and creates new cluster entity which belongs to that infrastructure</span>
+  <span class="ruby-identifier">infrastructure</span> = <span class="ruby-constant">Infrastructure</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:cluster</span>][<span class="ruby-value">:infrastructure_id</span>])
+  <span class="ruby-identifier">cluster</span> = <span class="ruby-identifier">infrastructure</span>.<span class="ruby-identifier">clusters</span>.<span class="ruby-identifier">build</span>(<span class="ruby-identifier">cluster_params</span>)
+  <span class="ruby-comment"># Retrieves chosen master and slave image from database to reference them from new cluster entity</span>
+  <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">master_image</span> = <span class="ruby-constant">Image</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:cluster</span>][<span class="ruby-value">:master_image</span>])
+  <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">slave_image</span>  = <span class="ruby-constant">Image</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:cluster</span>][<span class="ruby-value">:slave_image</span>])
+  <span class="ruby-comment"># Retrieves chosen master and slave flavor from database to reference them from new cluster entity</span>
+  <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">master_flavor</span> = <span class="ruby-constant">Flavor</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:cluster</span>][<span class="ruby-value">:master_flavor</span>])
+  <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">slave_flavor</span>  = <span class="ruby-constant">Flavor</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:cluster</span>][<span class="ruby-value">:slave_flavor</span>])
+  <span class="ruby-comment"># If new cluster is properly configured it will be saved in database</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-comment"># Then we send request to the DISCO to create a new cluster</span>
+    <span class="ruby-identifier">response</span> = <span class="ruby-identifier">create_req</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:cluster</span>], <span class="ruby-identifier">infrastructure</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">response</span>.<span class="ruby-identifier">code</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;201&quot;</span>
+      <span class="ruby-comment"># If the request was accepted, continues to add chosen framework(s) to the new cluster entity</span>
+      <span class="ruby-identifier">get_frameworks</span> <span class="ruby-identifier">cluster</span>
+      <span class="ruby-comment"># Gets cluster uuid, so we can get detailed information from the DISCO of the current cluster</span>
+      <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">get_uuid</span> <span class="ruby-identifier">response</span>.<span class="ruby-identifier">header</span>
+      <span class="ruby-comment"># Starts a background job which will update state of the cluster as deployment proceeds</span>
+      <span class="ruby-constant">ClusterUpdateJob</span>.<span class="ruby-identifier">perform_later</span>(<span class="ruby-identifier">infrastructure</span>, <span class="ruby-identifier">current_user</span>[<span class="ruby-value">:id</span>], <span class="ruby-identifier">cluster</span>[<span class="ruby-value">:id</span>], <span class="ruby-identifier">params</span>[<span class="ruby-value">:cluster</span>][<span class="ruby-value">:password</span>])
+
+      <span class="ruby-identifier">sleep</span>(<span class="ruby-value">1</span>)
+      <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">clusters_path</span>
+      <span class="ruby-keyword">return</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-comment"># In case of failed DISCO connection, new cluster is deleted from database</span>
+      <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">delete</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:danger</span>] = <span class="ruby-string">&quot;DISCO connection error&quot;</span>
+      <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;DISCO connection error&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:warning</span>] = <span class="ruby-string">&quot;Cluster details were not filled correctly&quot;</span>
+    <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">&quot;Cluster details were not filled correctly&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-comment"># Retrieves infrastructures and putting them to adapters so in case of failure in creation, we can render them again</span>
+  <span class="ruby-ivar">@infrastructures</span> = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">infrastructures</span>.<span class="ruby-identifier">all</span>
+  <span class="ruby-ivar">@adapters</span>        = { <span class="ruby-string">&quot;Choose&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> }
+  <span class="ruby-ivar">@infrastructures</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">inf</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@adapters</span>[<span class="ruby-identifier">inf</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">inf</span>.<span class="ruby-identifier">id</span> } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@infrastructures</span>
+  <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">clusters_new_path</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-destroy" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">destroy</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Deletes chosen cluster from stack and database if success response returned
+from DISCO framework</p>
+          
+          
+
+          
+          <div class="method-source-code" id="destroy-source">
+            <pre><span class="ruby-comment"># File app/controllers/clusters_controller.rb, line 92</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
+  <span class="ruby-comment"># Chosen cluster is retrieved from the database according to its uuid</span>
+  <span class="ruby-identifier">uuid</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:delete</span>][<span class="ruby-value">:uuid</span>]
+  <span class="ruby-identifier">cluster</span> = <span class="ruby-constant">Cluster</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">uuid</span><span class="ruby-operator">:</span> <span class="ruby-identifier">uuid</span>)
+  <span class="ruby-comment"># Retrieves cluster&#39;s infrastructure to get credentials</span>
+  <span class="ruby-identifier">infrastructure</span> = <span class="ruby-constant">Infrastructure</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">infrastructure_id</span>)
+  <span class="ruby-comment"># Sends DISCO delete request using credentials, password, and cluster uuid</span>
+  <span class="ruby-identifier">response</span> = <span class="ruby-identifier">delete_req</span>(<span class="ruby-identifier">infrastructure</span>, <span class="ruby-identifier">params</span>[<span class="ruby-value">:delete</span>][<span class="ruby-value">:password</span>], <span class="ruby-identifier">uuid</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">response</span>.<span class="ruby-identifier">code</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;200&quot;</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:danger</span>] = <span class="ruby-string">&quot;DISCO connection error&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># After a successful delete request cluster will be deleted from database</span>
+    <span class="ruby-identifier">cluster</span>.<span class="ruby-identifier">delete</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:success</span>] = <span class="ruby-string">&quot;The cluster is being deleted&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">clusters_path</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-index" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">index</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrieves current user clusters and groups from database</p>
+          
+          
+
+          
+          <div class="method-source-code" id="index-source">
+            <pre><span class="ruby-comment"># File app/controllers/clusters_controller.rb, line 18</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
+  <span class="ruby-ivar">@clusters</span> = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">clusters</span>.<span class="ruby-identifier">all</span>
+  <span class="ruby-ivar">@groups</span>   = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">groups</span>.<span class="ruby-identifier">all</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrieves current user infrastructures and puts them to the adapter
+dictionary(hash) so user can select needed infrastructure</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File app/controllers/clusters_controller.rb, line 26</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@infrastructures</span> = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">infrastructures</span>.<span class="ruby-identifier">all</span>
+  <span class="ruby-ivar">@adapters</span>        = { <span class="ruby-string">&quot;Choose&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> }
+  <span class="ruby-ivar">@infrastructures</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">inf</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@adapters</span>[<span class="ruby-identifier">inf</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">inf</span>.<span class="ruby-identifier">id</span> } <span class="ruby-keyword">if</span> <span class="ruby-ivar">@infrastructures</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-render_form" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">render_form</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrieves data and renders a form for a cluster creation Called by AJAX Get
+request from dashboard</p>
+          
+          
+
+          
+          <div class="method-source-code" id="render_form-source">
+            <pre><span class="ruby-comment"># File app/controllers/clusters_controller.rb, line 115</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">render_form</span>
+  <span class="ruby-ivar">@infrastructure_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:infrastructure_id</span>]
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@infrastructure_id</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;0&quot;</span>
+    <span class="ruby-ivar">@frameworks</span> = <span class="ruby-constant">Framework</span>.<span class="ruby-identifier">all</span>
+    <span class="ruby-ivar">@images</span>     = <span class="ruby-constant">Image</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">infrastructure_id</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@infrastructure_id</span>)
+    <span class="ruby-ivar">@flavors</span>    = <span class="ruby-constant">Flavor</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">infrastructure_id</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@infrastructure_id</span>)
+    <span class="ruby-ivar">@keypairs</span>   = <span class="ruby-constant">Keypair</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">infrastructure_id</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@infrastructure_id</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">js</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-show" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">show</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>(This is not used currently) Retrieves selected cluster from database</p>
+          
+          
+
+          
+          <div class="method-source-code" id="show-source">
+            <pre><span class="ruby-comment"># File app/controllers/clusters_controller.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
+  <span class="ruby-ivar">@cluster</span> = <span class="ruby-constant">Cluster</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:cluster</span>][<span class="ruby-value">:id</span>])
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
