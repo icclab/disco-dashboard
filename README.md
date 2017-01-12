@@ -58,7 +58,7 @@ To fill the database with a fake data run:
 $ rails db:seed
 ```
 
-On a different terminal or screen, but from the same directory run sidekiq:
+On a different terminal or screen, but from the same directory run [sidekiq](https://github.com/mperham/sidekiq):
 ```
 $ bundle exec sidekiq
 ```

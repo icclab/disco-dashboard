@@ -20,6 +20,11 @@ $ sudo apt-get install git curl
 $ sudo apt-get install nodejs
 ```
 
+### Redis
+```
+$ sudo apt-get install redis-server
+```
+
 ### RVM and Ruby 2.3.1
 
 ```
@@ -64,12 +69,12 @@ Then try to install Nokogiri again.
 
 ### Rails 5.0.1
 ```
-gem install rails --version=5.0.1
+$ gem install rails --version=5.0.1
 ```
 
 Check if rails is installed correctly:
 ```
-rails -v
+$ rails -v
 ```
 
 At this point everything should be set up to run the application.
