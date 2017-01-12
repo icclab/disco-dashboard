@@ -76,4 +76,4 @@ At this point everything should be set up to run the application.
 
 ## Option #2 (Automated)
 
-### Work on progress. 
+#### Work on progress 
