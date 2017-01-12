@@ -136,7 +136,6 @@ GEM
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    pg (0.18.4)
     pkg-config (1.1.7)
     pry (0.10.4)
       coderay (~> 1.1.0)
@@ -245,7 +244,6 @@ DEPENDENCIES
   listen (= 3.0.8)
   minitest-reporters (= 1.1.9)
   openstack!
-  pg (= 0.18.4)
   puma (= 3.4.0)
   rails (= 5.0.0.1)
   rails-controller-testing (= 0.1.1)
