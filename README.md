@@ -1,8 +1,10 @@
 # DISCO Dashboard
 
-A management dashboard for the DISCO, cluster orchestration framework.
+A management dashboard for the [DISCO](https://github.com/icclab/disco), cluster orchestration framework.
 
 Implemented in Ruby on Rails 5.0.1.
+Background job is handled by Sidekiq.
+Message/work qeueuing is handled by Redis. 
 
 Requirements:
      [Ruby Version Manager (RVM)](https://rvm.io/)
@@ -68,23 +70,16 @@ $ redis-server
 ```
 It's needed for ActionCable and Sidekiq support. In the app redis server is configured to the default port 6379.
 
-Finally, to run the app in a local server:
+Finally, to run the app in a local server(will run on localhost):
 ```
 $ rails server
 ```
-Or from remote server:
+Or from remote server you also need to bind it to the IP address (e.g. VM on cloud):
 ```
 $ rails server -b "server_ip" -p "port"
 ```
-"server_ip" is local ip, not floating ip if server is running on Cloud VM. And make sure that specified port is open. *Rails will run on port '3000' by default, if port is not specified.*
-
-Run 'sidekiq' on another window/terminal, but from the main directory of the application:
-
-```
-$ bundle exec sidekiq
-```
-
-You will need a redis-server for Action Cable and Sidekiq(background jobs)support.
+"server_ip" is a local ip, not a floating ip if server is running on Cloud VM, however should be accessed using a floating ip. And make sure that specified port is open. 
+*Rails will run on port '3000' by default, if port is not specified.*
 
 
 ### Option #2 (Semi-automated)
