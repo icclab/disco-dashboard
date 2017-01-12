@@ -10,7 +10,7 @@ $ sudo apt-get update
 $ sudo apt-get upgrade
 ```
 
-Just in case, install git and curl if you don't have them:
+Install git and curl if you don't have them:
 ```
 $ sudo apt-get install git curl
 ```
