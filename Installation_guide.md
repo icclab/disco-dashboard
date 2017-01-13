@@ -29,9 +29,6 @@ $ sudo apt-get install redis-server
 
 ```
 $ \curl -L https://get.rvm.io | bash -s stable --ruby=2.3.1
-```
-ATTENTION! After installation is finished, you will be asked to run some command like this:
-```
 $ source /home/$USER/.rvm/scripts/rvm
 ```
 Please, check for the instructions on the terminal.
@@ -100,6 +97,8 @@ $ ./install.sh
 
 After everything finishes, check all dependencies:
 ```
+$ source /home/$USER/.rvm/scripts/rvm
+$ cd ..
 $ ruby -v
 $ gem -v
 $ nodejs -v
@@ -107,4 +106,5 @@ $ bundle -v
 $ nokogiri -v
 $ redis-server -v
 $ rails -v
+$ cd disco-dashboard
 ```

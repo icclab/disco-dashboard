@@ -16,13 +16,13 @@ Requirements:
     - [Redis](https://redis.io/)
 
 ## Getting started (development mode)
-#### *currently runs only in a development mode, production mode guide will be added in the future*
+#### *currently runs only in a development mode*
 
 
 *To configure your whole system for the application, please follow this [link](Installation_guide.md)*
 
 ### Option #1 (Manual)
-To get started with the app, move to the work directory where you want to have the app and clone the repo: 
+To get started with the app, move to the work directory where you want to have the app and clone the repo if you haven't done it before: 
 ```
 $ git clone https://github.com/icclab/disco-dashboard.git
 ```
@@ -58,6 +58,12 @@ To fill the database with a fake data run:
 $ rails db:seed
 ```
 
+To get basic information about app you can run:
+```
+$ rails about
+```
+
+Now to run the application you need to do following steps.
 On a different terminal or screen, but from the same directory run [sidekiq](https://github.com/mperham/sidekiq):
 ```
 $ bundle exec sidekiq

@@ -56,4 +56,6 @@ bundle -v
 nokogiri -v
 echo "Gem Manager"
 gem -v
+cd ..
 rails -v
+cd disco-dashboard
