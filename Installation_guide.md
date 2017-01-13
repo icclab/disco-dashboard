@@ -81,4 +81,30 @@ At this point everything should be set up to run the application.
 
 ## Option #2 (Automated)
 
-#### Work on progress 
+Install git if you don't have it"
+```
+$ sudo apt-get install git
+```
+
+Clone current repository to your working directory:
+```
+$ git clone https://github.com/icclab/disco-dashboard.git
+```
+
+Move to the app's directory and run following commands:
+```
+$ cd disco-dashboard
+$ chmod +x install.sh
+$ ./install.sh
+```
+
+After everything finishes, check all dependencies:
+```
+$ ruby -v
+$ gem -v
+$ nodejs -v
+$ bundle -v
+$ nokogiri -v
+$ redis-server -v
+$ rails -v
+```

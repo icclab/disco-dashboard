@@ -25,22 +25,21 @@
 
 # System updates
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get upgrade -y
 # Curl
 sudo apt-get install -y curl
 # NodeJS
 sudo apt-get install -y nodejs
 # Redis
 sudo apt-get install -y redis-server
-# Dependencies that might be needed to Nokogiri gem
-sudo apt-get install -y build-essential patch
-sudo apt-get install -y ruby-dev zlib1g-dev liblzma-dev
+
 # Downloading and installing RVM and Ruby 2.3.1
 \curl -L https://get.rvm.io | bash -s stable --ruby=2.3.1
 source /home/$USER/.rvm/scripts/rvm
 # Configuring and updating Gem Manager
-rvm gemset use global
 gem update --system
+rvm gemset use global
+
 gem update
 # Installing required gems: Bundler and Nokogiri
 gem install bundler
