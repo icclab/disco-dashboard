@@ -39,7 +39,7 @@ sudo apt-get install -y ruby-dev zlib1g-dev liblzma-dev
 \curl -L https://get.rvm.io | bash -s stable --ruby=2.3.1
 source /home/$USER/.rvm/scripts/rvm
 # Configuring and updating Gem Manager
-rvm gemeset use global
+rvm gemset use global
 gem update --system
 gem update
 # Installing required gems: Bundler and Nokogiri
@@ -50,7 +50,11 @@ gem install rails --version=5.0.1
 
 # Checking if everything was properly installed
 echo "Checking if all dependencies were properly installed"
-node -v
-gem -v
+nodejs -v
+redis-server -v
 ruby -v
+bundle -v
+nokogiri -v
+echo "Gem Manager"
+gem -v
 rails -v

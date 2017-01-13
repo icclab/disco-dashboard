@@ -24,7 +24,7 @@ Requirements:
 ### Option #1 (Manual)
 To get started with the app, move to the work directory where you want to have the app and clone the repo: 
 ```
-git clone https://github.com/icclab/disco-dashboard.git
+$ git clone https://github.com/icclab/disco-dashboard.git
 ```
 
 Move to app's folder and run bundle install:
@@ -35,7 +35,7 @@ $ bundle install --without production
 
 Execute [figaro](https://github.com/laserlemon/figaro) gem:
 ```
-bundle exec figaro install
+$ bundle exec figaro install
 ```
 
 Set up environment variables in *config/application.yml*:
