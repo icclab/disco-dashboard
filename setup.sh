@@ -59,3 +59,9 @@ gem -v
 cd ..
 rails -v
 cd disco-dashboard
+
+bundle install --without production
+bundle exec figaro install
+
+rails db:migrate
+rails about
