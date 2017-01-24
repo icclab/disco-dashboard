@@ -106,6 +106,11 @@ Next, do the database migration:
 $ rails db:migrate
 ```
 
+Fill the database with data (This file located in './db/seeds.rb' can be edited as you need it):
+```
+$ rails db:seed
+```
+
 To get basic information about app you can run:
 ```
 $ rails about

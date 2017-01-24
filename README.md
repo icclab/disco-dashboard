@@ -26,11 +26,6 @@ Before everything, to be sure, source RVM:
 source /home/$USER/.rvm/scripts/rvm
 ```
 
-(Optional) Before running the application to fill the database with a fake data run:
-```
-$ rails db:seed
-```
-
 To run the application you need to do following steps.
 On a different terminal or screen, but from the same directory run [sidekiq](https://github.com/mperham/sidekiq):
 ```
