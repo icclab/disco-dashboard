@@ -64,4 +64,5 @@ bundle install --without production
 bundle exec figaro install
 
 rails db:migrate
+rails db:seed
 rails about
