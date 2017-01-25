@@ -57,7 +57,7 @@ class GroupsController < ApplicationController
     @group = Group.new(group_params)
     if @group.save
       @group.assignments.create(user: current_user)
-      flash[:success] = "Group '#{group.name}' was created successfully."
+      flash[:success] = "Group '#{@group.name}' was created successfully."
       redirect_to groups_path
     else
       flash[:warning] = "Please, fill all required fields."
