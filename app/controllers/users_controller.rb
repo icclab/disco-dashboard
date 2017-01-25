@@ -41,6 +41,7 @@ class UsersController < ApplicationController
   end
 
   def create
+    @usertypes = User::Usertype.constants
     @user = User.new(user_params)
     @usertypes = User::Usertype.constants
     if @user.save
