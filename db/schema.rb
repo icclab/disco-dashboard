@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20161212102621) do
     t.integer  "slave_flavor_id"
     t.integer  "slave_num"
     t.integer  "external_ip",       limit: 8, default: 0
+    t.string   "ssh_private_key"
     t.boolean  "slave_on_master"
     t.integer  "infrastructure_id"
     t.datetime "created_at",                                        null: false

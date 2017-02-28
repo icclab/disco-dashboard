@@ -10,6 +10,7 @@ class CreateClusters < ActiveRecord::Migration[5.0]
       t.integer :slave_flavor_id
       t.integer :slave_num
       t.integer :external_ip, limit: 8, default: 0
+      t.string  :ssh_private_key
       t.boolean :slave_on_master
       t.references :infrastructure, foreign_key: true
 

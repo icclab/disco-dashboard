@@ -59,6 +59,13 @@ class ClustersController < ApplicationController
   end
 
   ##
+  # returns the SSH private key for the selected cluster for login to the master
+  def sshprivatekey
+    @cluster = Cluster.find(params[:id])
+    send_data(@cluster.ssh_private_key, :filename => "id_rsa")
+  end
+
+  ##
   # Creates new cluster entity and sends cluster create request to DISCO
   # if everything filled correctly(cluster parameters and infrastructure password).
   # After success redirects to the clusters page.

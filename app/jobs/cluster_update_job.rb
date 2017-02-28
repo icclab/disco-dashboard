@@ -49,6 +49,8 @@ class ClusterUpdateJob < ApplicationJob
         if state.downcase.include?('complete')
           ip = convert_ip(res["attributes"]["external_ip"])
           cluster.update_attribute(:external_ip, ip)
+          spk = res["attributes"]["ssh_private_key"]
+          cluster.update_attribute(:ssh_private_key, spk)
         end
       end
     end until state.downcase.include?('complete') || state.downcase.include?('fail')
