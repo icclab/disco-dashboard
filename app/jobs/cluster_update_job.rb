@@ -30,6 +30,8 @@ class ClusterUpdateJob < ApplicationJob
     state    = cluster[:state]
     uuid     = cluster[:uuid]
 
+    puts(cluster)
+
     begin
       sleep(3)
 
@@ -45,7 +47,7 @@ class ClusterUpdateJob < ApplicationJob
         cluster.update(user_id, uuid, state) if state != cluster[:state]
 
         if state.downcase.include?('complete')
-          ip = convert_ip(res["attributes"]["externalIP"])
+          ip = convert_ip(res["attributes"]["external_ip"])
           cluster.update_attribute(:external_ip, ip)
         end
       end
