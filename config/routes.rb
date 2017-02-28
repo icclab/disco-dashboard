@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
 
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   root 'groups#index'
   get    '/faq',   to: 'pages#faq'
   get    '/debug', to: 'pages#debug'

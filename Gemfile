@@ -6,7 +6,12 @@ gem 'carrierwave'
 gem 'figaro'
 gem 'bcrypt'
 gem 'redis'
-gem 'sidekiq'
+
+# the special version of sidekiq might be because of Mac OS - the package manager version always had a dependency problem
+gem 'sidekiq', github: 'mperham/sidekiq'
+# sinatra is needed for the sidekiq web interface
+gem 'sinatra', github: 'sinatra/sinatra'
+
 gem 'bootstrap-sass',  '3.3.7'
 gem 'bootstrap-social-rails'
 gem 'font-awesome-rails'
