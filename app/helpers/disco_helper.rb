@@ -30,39 +30,72 @@ module DiscoHelper
     uri     = URI.parse(ENV["disco_ip"])
     request = Net::HTTP::Post.new(uri)
 
+    require 'uri'
+    require 'net/http'
+    require 'net/https'
+
+    @toSend = JSON.generate({ "auth" =>  { "passwordCredentials" => { "username" => infrastructure[:username], "password" => cluster[:password] }, "tenantName" => infrastructure[:tenant]}})
+
+    keystone = infrastructure[:auth_url] # 'https://keystone.cloud.switch.ch:5000/v2.0'
+    keystoneuri = URI.parse(keystone+'/tokens')
+    https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
+    https.use_ssl = true
+    req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
+    req.body = @toSend
+    res = https.request(req)
+
+    obj = JSON.parse(res.body)
+    token = obj['access']['token']['id']
+
     request.content_type         = "text/occi"
-    request["Category"]          = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
+    request["Category"]          = 'disco; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
     request["X-Tenant-Name"]     = infrastructure[:tenant]
     request["X-Region-Name"]     = infrastructure[:region]
     request["X-User-Name"]       = infrastructure[:username]
     request["X-Password"]        = cluster[:password]
+    request["X-Auth-Token"]      = token
 
     master_image = Image.find(cluster[:master_image])
-    request["X-Occi-Attribute"]  = 'icclab.haas.master.image="'+master_image.img_id+'",'
+    request["X-Occi-Attribute"]  = 'icclab.disco.components.heat.masterimage="'+master_image.img_id+'",'
     slave_image = Image.find(cluster[:slave_image])
-    request["X-Occi-Attribute"] += 'icclab.haas.slave.image="'+slave_image.img_id+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.slaveimage="'+slave_image.img_id+'",'
 
-    request["X-Occi-Attribute"] += 'icclab.haas.master.sshkeyname="'+cluster[:keypair]+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.components.sshkeyname="'+cluster[:keypair]+'",'
 
     master_flavor = Flavor.find(cluster[:master_flavor])
-    request["X-Occi-Attribute"] += 'icclab.haas.master.flavor="'+master_flavor.fl_id+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.masterflavor="'+master_flavor.fl_id+'",'
     slave_flavor = Flavor.find(cluster[:slave_flavor])
-    request["X-Occi-Attribute"] += 'icclab.haas.slave.flavor="'+slave_flavor.fl_id+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.slaveflavor="'+slave_flavor.fl_id+'",'
 
-    request["X-Occi-Attribute"] += 'icclab.haas.master.number="'+cluster[:master_num].to_s+'",'
-    request["X-Occi-Attribute"] += 'icclab.haas.slave.number="'+cluster[:slave_num].to_s+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.slavecount="'+cluster[:slave_num].to_s+'",'
 
-    request["X-Occi-Attribute"] += 'icclab.haas.master.slaveonmaster="'+value(cluster[:slave_on_master])+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.deployer.username="'+infrastructure[:username]+'",'
+#    request["X-Occi-Attribute"] += 'icclab.disco.deployer.tenantname="'+infrastructure[:tenant]+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.deployer.region="'+infrastructure[:region]+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.deployer.password="'+cluster[:password]+'",'
+#    request["X-Occi-Attribute"] += 'icclab.disco.deployer.designuri="'+keystone+'",'
 
+
+    # from here on, there are only a few dummy data sets:
+    randomstring = (0...8).map { (65 + rand(26)).chr }.join
+    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.sshkeypairname="discokey-'+randomstring+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.networkname="disconetwork-'+randomstring+'",'
+    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.externalnetworkname="public",'
+    # until here
+
+
+    request["X-Occi-Attribute"] += 'icclab.disco.dependencies.inject="{\''
     frameworks = Framework.all
     frameworks.each do |framework|
-      if !framework.name.eql? "HDFS"
-        request["X-Occi-Attribute"] += 'icclab.disco.frameworks.'+framework[:name].downcase
-        request["X-Occi-Attribute"] += '.included="'+value(cluster[framework[:name]])+'",'
+      # puts(value(cluster[framework[:name]]))
+      if value(cluster[framework[:name]]) == 'true'
+        request["X-Occi-Attribute"] += framework[:name].downcase+"','"
       end
     end
+    # remove the last comma from "framework1,framework2,"
+    request["X-Occi-Attribute"] = request["X-Occi-Attribute"].chomp(",\'")
+    request["X-Occi-Attribute"] += '}"'
 
-    request["X-Occi-Attribute"] += 'icclab.haas.master.withfloatingip="true"'
 
     Rails.logger.debug {"Cluster attributes: #{request["X-Occi-Attribute"].inspect}"}
 
@@ -77,18 +110,47 @@ module DiscoHelper
   # to send delete request to DISCO to delete chosen cluster from the stacks.
   # Returns response from DISCO framework.
   def delete_req(infrastructure, password, uuid)
+    require 'uri'
+    require 'net/http'
+    require 'net/https'
+
+    @toSend = JSON.generate({ "auth" =>  { "passwordCredentials" => { "username" => infrastructure[:username], "password" => password }, "tenantName" => infrastructure[:tenant]}})
+
+    keystone = infrastructure[:auth_url] # 'https://keystone.cloud.switch.ch:5000/v2.0'
+    keystoneuri = URI.parse(keystone+'/tokens')
+    https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
+    https.use_ssl = true
+    req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
+    req.body = @toSend
+    res = https.request(req)
+
+    obj = JSON.parse(res.body)
+    token = obj['access']['token']['id']
+
+
+
     uri  = URI.parse(ENV["disco_ip"]+uuid)
 
     request = Net::HTTP::Delete.new(uri)
     request.content_type     = "text/occi"
-    request["Category"]      = 'haas; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
+    request["Category"]      = 'disco; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
     request["X-Tenant-Name"] = infrastructure[:tenant]
     request["X-Region-Name"] = infrastructure[:region]
     request["X-User-Name"]   = infrastructure[:username]
     request["X-Password"]    = password
+    request["X-Auth-Token"]  = token
 
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(request)
+    begin
+      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+        http.request(request)
+    end
+    rescue => ex
+      logger.error ex.message
+      # devilish code: DISCO is not online
+      # a new class had to be created with property code
+      response = Object.new
+      response.class.module_eval { attr_accessor :code}
+      response.code = "666"
     end
 
     response
@@ -101,6 +163,24 @@ module DiscoHelper
   # When type is 'text', DISCO framework response is in text/occi format.
   # When type is 'json', DISCO framework response is in json format.
   def send_request(infrastructure, password, uuid = '', type = 'text')
+    require 'uri'
+    require 'net/http'
+    require 'net/https'
+
+    @toSend = JSON.generate({ "auth" =>  { "passwordCredentials" => { "username" => infrastructure[:username], "password" => password }, "tenantName" => infrastructure[:tenant]}})
+
+    keystone = infrastructure[:auth_url]
+    keystoneuri = URI.parse(keystone+'/tokens')
+    https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
+    https.use_ssl = true
+    req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
+    req.body = @toSend
+    res = https.request(req)
+
+    obj = JSON.parse(res.body)
+    token = obj['access']['token']['id']
+
+
     url = ENV["disco_ip"]+uuid
     uri     = URI.parse(url)
     request = Net::HTTP::Get.new(uri)
@@ -108,6 +188,7 @@ module DiscoHelper
     request["X-Password"]    = password
     request["X-Tenant-Name"] = infrastructure[:tenant]
     request["X-Region-Name"] = infrastructure[:region]
+    request["X-Auth-Token"]  = token
     request["Accept"]        = type == "json" ? "application/occi+json" : "text/occi"
     response = Net::HTTP.start(uri.hostname, uri.port) do |http|
         http.request(request)
