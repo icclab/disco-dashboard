@@ -16,11 +16,11 @@ Framework.create([
     description: "Hadoop is an open-source software framework used for distributed storage and processing of very large data sets. It consists of computer clusters built from commodity hardware. All the modules in Hadoop are designed with a fundamental assumption that hardware failures are a common occurrence and should be automatically handled by the framework.",
     port:        ':8088'
   },
-  {
-    name:        'HDFS',
-    description: "Hadoop Distributed File System (HDFS) – a distributed file-system that stores data on commodity machines, providing very high aggregate bandwidth across the cluster.",
-    port:        ':50070'
-  },
+  # {
+  #   name:        'HDFS',
+  #   description: "Hadoop Distributed File System (HDFS) – a distributed file-system that stores data on commodity machines, providing very high aggregate bandwidth across the cluster.",
+  #   port:        ':50070'
+  # },
   {
     name:        'Zeppelin',
     description: "Apache Zeppelin is a new and upcoming web-based notebook which brings data exploration, visualization, sharing and collaboration features to Spark. It support Python, but also a growing list of programming languages such as Scala, Hive, SparkSQL, shell and markdown.",
