@@ -53,7 +53,7 @@ module ClusterHelper
     Rails.logger.info "Update cluster is being performed on user #{current_user.id}"
     clusters = current_user.clusters.all
     clusters.each do |cluster|
-      if cluster[:external_ip]
+      if cluster[:external_ip]!=0
         state = old_state = cluster[:state]
         ip = IPAddr.new(cluster[:external_ip], Socket::AF_INET).to_s
         url = "http://"+ip+":8084/progress.log"

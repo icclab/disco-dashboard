@@ -62,7 +62,7 @@ class ClustersController < ApplicationController
   # returns the SSH private key for the selected cluster for login to the master
   def sshprivatekey
     @cluster = Cluster.find(params[:id])
-    send_data(@cluster.ssh_private_key, :filename => "id_rsa")
+    send_data(@cluster.ssh_private_key.gsub('\n',"\n").chomp("%"), :filename => "id_rsa")
   end
 
   ##

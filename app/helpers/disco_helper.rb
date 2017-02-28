@@ -180,9 +180,7 @@ module DiscoHelper
     obj = JSON.parse(res.body)
     token = obj['access']['token']['id']
 
-
-    url = ENV["disco_ip"]+uuid
-    uri     = URI.parse(url)
+    uri  = URI.parse(ENV["disco_ip"]+uuid)
     request = Net::HTTP::Get.new(uri)
     request["X-User-Name"]   = infrastructure[:username]
     request["X-Password"]    = password
