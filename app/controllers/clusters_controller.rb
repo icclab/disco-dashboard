@@ -87,8 +87,18 @@ class ClustersController < ApplicationController
         get_frameworks cluster
         # Gets cluster uuid, so we can get detailed information from the DISCO of the current cluster
         cluster.get_uuid response.header
-        # Starts a background job which will update state of the cluster as deployment proceeds
-        ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
+
+
+        # this is a hotfix for the case that cluster has been inserted into database but not "sent" to DISCO
+        if cluster.read_attribute('uuid') == ""
+          cluster.delete
+        else
+
+          # Starts a background job which will update state of the cluster as deployment proceeds
+          ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
+
+        end
+
 
         sleep(1)
         redirect_to clusters_path
@@ -114,20 +124,40 @@ class ClustersController < ApplicationController
   def destroy
     # Chosen cluster is retrieved from the database according to its uuid
     uuid = params[:delete][:uuid]
-    cluster = Cluster.find_by(uuid: uuid)
-    # Retrieves cluster's infrastructure to get credentials
-    infrastructure = Infrastructure.find(cluster.infrastructure_id)
-    # Sends DISCO delete request using credentials, password, and cluster uuid
-    response = delete_req(infrastructure, params[:delete][:password], uuid)
-
-    if response.code != "200"
-      flash[:danger] = "DISCO connection error"
-    else
-      # After a successful delete request cluster will be deleted from database
-      cluster.delete
-      flash[:success] = "The cluster is being deleted"
+    if uuid==""
+      self.current_user.clusters.all.each do |cluster|
+        if cluster.read_attribute('uuid')==""
+          cluster.delete
+        end
+      end
     end
+    begin
+      cluster = Cluster.find_by(uuid: uuid)
+      # Retrieves cluster's infrastructure to get credentials
+      infrastructure = Infrastructure.find(cluster.infrastructure_id)
 
+      # Sends DISCO delete request using credentials, password, and cluster uuid
+      response = delete_req(infrastructure, params[:delete][:password], uuid)
+
+      # response code 200 indicates that cluster was removed successfully
+      # response code 400 indicates that cluster doesn't exist anymore and should be removed from the dashboard
+      if response.code == "200"
+        # After a successful delete request cluster will be deleted from database
+        cluster.delete
+        flash[:success] = "The cluster is being deleted"
+      elsif response.code == "400"
+        # response code 400
+        cluster.delete
+        flash[:warning] = "Given cluster not found - maybe, the dashboard was bypassed - removing cluster from database"
+      elsif response.code == "666"
+        # DISCO is not online
+        flash[:danger] = "DISCO is not online"
+      else
+        flash[:danger] = "DISCO connection error"
+      end
+    rescue
+      puts "Cluster could not be found"
+    end
     redirect_to clusters_path
   end
 
@@ -153,7 +183,7 @@ class ClustersController < ApplicationController
     # Grants a permit for chosen parameters
     def cluster_params
       params.require(:cluster).permit(:name,  :uuid,  :state,
-                                      :master_num,    :slave_num,
+                                      :slave_num,
                                       :slave_on_master)
     end
 

@@ -8,10 +8,9 @@ class ClusterTest < ActiveSupport::TestCase
                                               slave_image: "1",
                                               master_flavor: "1",
                                               slave_flavor: "1",
-                                              master_num: 1,
                                               slave_num: 1,
                                               external_ip: 0,
-                                              slave_on_master: true )
+                                              slave_on_master: true)
   end
 
   test "should be valid" do
@@ -43,18 +42,8 @@ class ClusterTest < ActiveSupport::TestCase
     assert_not @cluster.valid?
   end
 
-  test "master num should be present" do
-    @cluster.master_num = nil
-    assert_not @cluster.valid?
-  end
-
   test "slave num should be present" do
     @cluster.slave_num = nil
-    assert_not @cluster.valid?
-  end
-
-  test "master num should be larger than zero" do
-    @cluster.master_num = 0
     assert_not @cluster.valid?
   end
 
@@ -67,4 +56,5 @@ class ClusterTest < ActiveSupport::TestCase
     @cluster.slave_on_master = nil
     assert_not @cluster.valid?
   end
+
 end

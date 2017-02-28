@@ -8,7 +8,6 @@ class CreateClusters < ActiveRecord::Migration[5.0]
       t.integer :slave_image_id
       t.integer :master_flavor_id
       t.integer :slave_flavor_id
-      t.integer :master_num
       t.integer :slave_num
       t.integer :external_ip, limit: 8, default: 0
       t.boolean :slave_on_master

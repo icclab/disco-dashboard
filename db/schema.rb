@@ -38,7 +38,6 @@ ActiveRecord::Schema.define(version: 20161212102621) do
     t.integer  "slave_image_id"
     t.integer  "master_flavor_id"
     t.integer  "slave_flavor_id"
-    t.integer  "master_num"
     t.integer  "slave_num"
     t.integer  "external_ip",       limit: 8, default: 0
     t.boolean  "slave_on_master"

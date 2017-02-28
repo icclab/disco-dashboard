@@ -40,7 +40,6 @@ class Cluster < ApplicationRecord
   validates :slave_image,     presence: true
   validates :master_flavor,   presence: true
   validates :slave_flavor,    presence: true
-  validates :master_num,      presence: true, numericality: { greater_than: 0 }
   validates :slave_num,       presence: true, numericality: { greater_than: 0 }
   validates_inclusion_of :slave_on_master, :in => [true, false]
 

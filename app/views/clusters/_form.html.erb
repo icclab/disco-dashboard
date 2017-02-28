@@ -7,8 +7,6 @@
         </div>
         <%= f.label(:master, "Master") %>
         <div class="form-group input-group">
-            <span class="input-group-addon">#</span>
-            <%= f.select(:master_num, options_for_select((1..10).map { |i| [i, i] }), {}, {class: 'form-control'}) %>
             <span class="input-group-addon">Image</span>
             <%= f.select(:master_image, options_for_select(@images.map { |image| [image[:name], image.id] }), {}, {class: 'form-control'}) %>
             <span class="input-group-addon">Flavor</span>
