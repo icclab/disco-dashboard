@@ -30,9 +30,14 @@ module ClusterHelper
     uri = URI.parse(url)
     response = nil
     begin
-      Net::HTTP.start(uri.host, uri.port) { |http|
-        response = http.head(uri.path.size > 0 ? uri.path : "/")
-      }
+      # uri.host is 0 as long as no other value has been delivered by DISCO
+      if uri.host != "0"
+        Net::HTTP.start(uri.host, uri.port) { |http|
+          response = http.head(uri.path.size > 0 ? uri.path : "/")
+        }
+      else
+        return "danger"
+      end
     rescue StandardError
       return "danger"
     end
