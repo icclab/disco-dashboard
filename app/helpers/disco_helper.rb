@@ -60,7 +60,7 @@ module DiscoHelper
     slave_image = Image.find(cluster[:slave_image])
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.slaveimage="'+slave_image.img_id+'",'
 
-    request["X-Occi-Attribute"] += 'icclab.disco.components.sshkeyname="'+cluster[:keypair]+'",'
+    # request["X-Occi-Attribute"] += 'icclab.disco.components.sshkeyname="'+cluster[:keypair]+'",'
 
     master_flavor = Flavor.find(cluster[:master_flavor])
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.masterflavor="'+master_flavor.fl_id+'",'

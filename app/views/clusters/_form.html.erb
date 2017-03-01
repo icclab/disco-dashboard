@@ -21,16 +21,7 @@
             <span class="input-group-addon">Flavor</span>
             <%= f.select(:slave_flavor, options_for_select(@flavors.map { |flavor| [flavor[:name], flavor.id] }), {}, {class: 'form-control'}) %>
         </div>
-        <h5>
-            Slave node on Master node?
-            <%= f.check_box(:slave_on_master, checked: false) %>
-        </h5>
 
-        <%= f.label(:access, "Access") %>
-        <div class="form-group input-group">
-            <span class="input-group-addon">Key</span>
-            <%= f.select(:keypair, options_for_select(@keypairs.map { |key| [key[:name], key[:name]] }), {}, {class: 'form-control'}) %>
-        </div>
         <%= f.label(:frameworks, "BIG Data frameworks") %>
         <div class="form-group">
             <% @frameworks.each do |framework| %>
