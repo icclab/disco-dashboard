@@ -10,6 +10,11 @@
             <% end %>
           <% end %>
       </h1>
+    <% if params[:registered]=="true" %>
+      <div class="alert alert-success" role="alert">
+        <strong>Registration successful!</strong>
+      </div>
+    <% end %>
   </div>
 </div>
 <% if @groups.any? %>

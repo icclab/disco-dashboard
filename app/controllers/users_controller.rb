@@ -46,7 +46,8 @@ class UsersController < ApplicationController
     @usertypes = User::Usertype.constants
     if @user.save
       log_in @user
-      redirect_to root_url
+      redirect_to root_path(:registered => "true")
+      # redirect_to root_url
     else
       render 'new'
     end
