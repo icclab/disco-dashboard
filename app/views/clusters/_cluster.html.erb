@@ -51,10 +51,7 @@
               <h3 class="text-primary">
                 <strong>Slave
                   <small>
-                    x<%= cluster.slave_num %>
-                    <% if cluster.slave_on_master %>
-                      + slave on master
-                    <% end %>
+                    x<%= (cluster.slave_num+1) %>
                   </small>
                 </strong>
               </h3>
@@ -82,7 +79,7 @@
           <% if current_user.infrastructures.any? && current_user.infrastructures.exists?(id: cluster.infrastructure_id) %>
             <div class="col-md-8"></div>
             <div class="col-md-4">
-              <%= form_for :delete, method: "delete", url: clusters_path, html: { id: "delete-form"} do |f| %>
+              <%= form_for :delete, method: "delete", url: clusters_path, html: { id: "delete-form"}, data: {confirm: "Do you really want to delete this cluster?"} do |f| %>
                 <%= f.hidden_field :uuid, :value => cluster.uuid %>
                 <p class="text-info">Please, enter infrastructure password to delete</p>
                 <div class="input-group">

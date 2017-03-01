@@ -25,5 +25,5 @@
 class Keypair < ApplicationRecord
   belongs_to :infrastructure
 
-  validates :name, presence: true
+  validates :name, presence: false
 end

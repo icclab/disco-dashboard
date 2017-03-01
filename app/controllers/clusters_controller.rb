@@ -97,7 +97,7 @@ class ClustersController < ApplicationController
 
 
         # this is a hotfix for the case that cluster has been inserted into database but not "sent" to DISCO
-        if cluster.read_attribute('uuid') == ""
+        if cluster.read_attribute('uuid') == "" or cluster.read_attribute('uuid') == nil
           cluster.delete
         else
 
@@ -133,7 +133,7 @@ class ClustersController < ApplicationController
     uuid = params[:delete][:uuid]
     if uuid==""
       self.current_user.clusters.all.each do |cluster|
-        if cluster.read_attribute('uuid')==""
+        if cluster.read_attribute('uuid')=="" or cluster.read_attribute('uuid')==nil
           cluster.delete
         end
       end
