@@ -39,7 +39,7 @@ module DiscoHelper
     keystone = infrastructure[:auth_url] # 'https://keystone.cloud.switch.ch:5000/v2.0'
     keystoneuri = URI.parse(keystone+'/tokens')
     https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
-    https.use_ssl = true
+    https.use_ssl = keystoneuri.instance_of? URI::HTTPS
     req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
     req.body = @toSend
     res = https.request(req)
@@ -119,7 +119,7 @@ module DiscoHelper
     keystone = infrastructure[:auth_url] # 'https://keystone.cloud.switch.ch:5000/v2.0'
     keystoneuri = URI.parse(keystone+'/tokens')
     https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
-    https.use_ssl = true
+    https.use_ssl = keystoneuri.instance_of? URI::HTTPS
     req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
     req.body = @toSend
     res = https.request(req)
@@ -172,7 +172,7 @@ module DiscoHelper
     keystone = infrastructure[:auth_url]
     keystoneuri = URI.parse(keystone+'/tokens')
     https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
-    https.use_ssl = true
+    https.use_ssl = keystoneuri.instance_of? URI::HTTPS
     req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
     req.body = @toSend
     res = https.request(req)
