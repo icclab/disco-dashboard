@@ -80,7 +80,7 @@ module DiscoHelper
     randomstring = (0...8).map { (65 + rand(26)).chr }.join
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.sshkeypairname="discokey-'+randomstring+'",'
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.networkname="disconetwork-'+randomstring+'",'
-    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.externalnetworkname="public",'
+    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.externalnetworkname="'+ENV['external_network']+'",'
     # until here
 
 
