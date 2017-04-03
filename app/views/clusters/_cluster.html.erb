@@ -65,7 +65,7 @@
                 <h3 class="text-primary"><strong>Frameworks: </strong></h3>
                 <ul class="list-unstyled" id="framework-list">
                   <% cluster.frameworks.all.each do |framework| %>
-                    <% link = 'http://'+cluster.external_ip.to_s+framework.port %>
+                    <% link = 'http://'+((cluster.external_ip/(256*256*256))%256).to_s+'.'+((cluster.external_ip/(256*256))%256).to_s+'.'+((cluster.external_ip/256)%256).to_s+'.'+(cluster.external_ip%256).to_s+framework.port %>
                     <li><h4>
                       <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>
                       <%= link_to framework.name.capitalize, link, target: "blank" %>

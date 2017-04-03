@@ -41,13 +41,19 @@ class InfrastructuresController < ApplicationController
 
   def create
     @infrastructure = current_user.infrastructures.build(infrastructure_params)
-    if @infrastructure.save && connection = @infrastructure.authenticate(params[:infrastructure])
-      save_images   @infrastructure.get_images   connection
-      save_flavors  @infrastructure.get_flavors  connection
-      save_keypairs @infrastructure.get_keypairs connection
-      flash[:success] = "New infrastructure was added successfully"
-      redirect_to infrastructures_path
-    else
+    @adapters = Infrastructure::Adapter.constants
+    begin
+      if @infrastructure.save && connection = @infrastructure.authenticate(params[:infrastructure])
+        save_images   @infrastructure.get_images   connection
+        save_flavors  @infrastructure.get_flavors  connection
+        save_keypairs @infrastructure.get_keypairs connection
+        flash[:success] = "New infrastructure was added successfully"
+        redirect_to infrastructures_path
+      else
+        flash[:danger] = "Please, fill all fields with correct information"
+        render 'new'
+      end
+    rescue Exception
       flash[:danger] = "Please, fill all fields with correct information"
       render 'new'
     end
