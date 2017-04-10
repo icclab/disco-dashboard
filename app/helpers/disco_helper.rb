@@ -85,15 +85,24 @@ module DiscoHelper
 
 
     request["X-Occi-Attribute"] += 'icclab.disco.dependencies.inject="{\''
+    current_length = request["X-Occi-Attribute"].length
     frameworks = Framework.all
     frameworks.each do |framework|
       # puts(value(cluster[framework[:name]]))
       if value(cluster[framework[:name]]) == 'true'
-        request["X-Occi-Attribute"] += framework[:name].downcase+"','"
+        request["X-Occi-Attribute"] += framework[:name].downcase+"': '','"
       end
     end
-    # remove the last comma from "framework1,framework2,"
-    request["X-Occi-Attribute"] = request["X-Occi-Attribute"].chomp(",\'")
+
+    # remove the last comma from "framework1,framework2," if
+    if request["X-Occi-Attribute"].length!=current_length
+      # if there were frameworks added, there is a `,'` too much at the end
+      request["X-Occi-Attribute"] = request["X-Occi-Attribute"].chomp(",\'")
+    else
+      # if there was no framework added, there is still a `'` too much at the and
+      request["X-Occi-Attribute"] = request["X-Occi-Attribute"].chomp("\'")
+    end
+
     request["X-Occi-Attribute"] += '}"'
 
 
