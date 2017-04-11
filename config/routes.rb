@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   post   '/create_assignment', to: 'assignments#create'
   delete '/delete_assignment', to: 'assignments#destroy'
 
+  delete '/infrastructures',       to: 'infrastructures#destroy'
+
   resources :users
   resources :infrastructures
   resources :groups, only: [:index, :new, :create, :destroy]

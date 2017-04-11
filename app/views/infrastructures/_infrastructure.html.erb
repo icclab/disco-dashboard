@@ -2,6 +2,7 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <h2><%= infrastructure.name %></h2>
+            <!--<h2><a href="" role="button" class="btn btn-primary btn-lg">reload infrastructure</a></h2>-->
         </div>
         <div class="panel-body">
             <dl class="dl-horizontal">
@@ -11,7 +12,27 @@
                 <dd class="text-info"><%= infrastructure.tenant %></dd>
                 <dt class="text-primary">Region</dt>
                 <dd class="text-info"><%= infrastructure.region %></dd>
+                <dt class="text-primary">Deployed Clusters</dt>
+                <dd class="text-info">
+                  <% @clusters.where(infrastructure_id: infrastructure.id).each do |cluster| %>
+                      <%= cluster.name %>
+                  <% end %>
+                </dd>
             </dl>
         </div>
+      <div class="panel-body">
+              <%= form_for :delete, method: "delete", url: infrastructures_path, html: { id: "delete-form"}, data: {confirm: "Do you really want to delete this infrastructure? Note: all associated clusters will be deleted too!"} do |f| %>
+                <%= f.hidden_field :id, :value => infrastructure.id %>
+                  <p class="text-info">Please, enter infrastructure password to delete</p>
+                  <div class="input-group">
+                    <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
+                    <span class="input-group-btn">
+                    <%= f.button(type: 'submit', class: "btn btn-danger") do %>
+                      <i class="fa fa-trash" aria-hidden="true"></i>
+                    <% end %>
+                  </span>
+                  </div>
+              <% end %>
+      </div>
     </div>
 </div>

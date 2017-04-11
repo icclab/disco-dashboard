@@ -21,6 +21,9 @@
 #
 
 class InfrastructuresController < ApplicationController
+  # DiscoHelper is included to be able to send create/delete/retrieve requests from this controller.
+  include DiscoHelper
+
   before_action :logged_in_user
   before_action do
     is_permitted?("infrastructure")
@@ -28,6 +31,8 @@ class InfrastructuresController < ApplicationController
 
   def index
     @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
+
+    @clusters = current_user.clusters.all if current_user.clusters.any?
   end
 
   def show
@@ -51,6 +56,7 @@ class InfrastructuresController < ApplicationController
         redirect_to infrastructures_path
       else
         flash[:danger] = "Please, fill all fields with correct information"
+        @infrastructure.delete
         render 'new'
       end
     rescue Exception
@@ -60,7 +66,55 @@ class InfrastructuresController < ApplicationController
   end
 
   def destroy
-    Infrastructure.find(params[:id]).destroy
+
+
+    # OpenStack::Connection.create ({
+    #     username:   credentials[:username],
+    #     api_key:    credentials[:password],
+    #     auth_url:   credentials[:auth_url],
+    #     authtenant: credentials[:tenant],
+    #     region:     credentials[:region]
+
+
+    infrastructure_to_delete = Infrastructure.find(params[:delete][:id].to_i)
+    begin
+      if OpenStack::Connection.create(:username=>infrastructure_to_delete.username,
+                                            :api_key=>params[:delete][:password].to_s,
+                                            :auth_url=>infrastructure_to_delete.auth_url,
+                                            :tenant=>infrastructure_to_delete.tenant,
+                                            :region=>infrastructure_to_delete.region)
+        # the user ID has to be checked - else, a different user's infrastructures might be deleted
+        if infrastructure_to_delete.user_id==current_user.id
+
+
+          # begin
+          #   if params[:delete][:deleteclusters]=="true"
+
+              clusters_to_delete = Cluster.where(infrastructure_id: params[:delete][:id].to_i)
+              # clusters_to_delete.destroy_all
+              clusters_to_delete.find_each do |cluster|
+                begin
+                  delete_req(infrastructure_to_delete, params[:delete][:password], cluster.uuid)
+                rescue
+                end
+
+                cluster.delete
+              end
+            # end
+          # rescue Exception => exception
+          #   puts exception.to_s
+          # end
+
+
+
+
+          infrastructure_to_delete.destroy
+        end
+      end
+    rescue
+      flash[:danger] = "Wrong password provided"
+    end
+
     redirect_to infrastructures_path
   end
 
@@ -70,13 +124,14 @@ class InfrastructuresController < ApplicationController
     end
 
     def save_images(images)
-      images.each do |img|
-        image = @infrastructure.images.build(
-          img_id: img[:id],
-          name:   img[:name],
-          size:   img[:minDisk] )
-
-        image.save
+      images.each do |img|0
+#        if (img[:name].downcase().include? "ubuntu") && (img[:name].include? "14.04")
+          image = @infrastructure.images.build(
+            img_id: img[:id],
+            name:   img[:name],
+            size:   img[:minDisk] )
+          image.save
+#        end
       end
     end
 
