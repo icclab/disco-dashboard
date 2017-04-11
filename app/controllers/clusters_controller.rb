@@ -31,7 +31,9 @@ class ClustersController < ApplicationController
   before_action :logged_in_user
   # Ensures that current_user has appropriate permission to access to the controller methods.
   before_action do
-    is_permitted?("cluster")
+    if params[:action]!='sshprivatekey'
+      is_permitted?("cluster")
+    end
   end
   # Ensures that cluster details are up to date before showing them to the user.
   before_action :update_clusters, only: [:index, :show]
@@ -62,7 +64,7 @@ class ClustersController < ApplicationController
   # returns the SSH private key for the selected cluster for login to the master
   def sshprivatekey
     @cluster = Cluster.find(params[:id])
-    send_data(@cluster.ssh_private_key.gsub('\n',"\n").chomp("%"), :filename => "id_rsa")
+    send_data(@cluster.ssh_private_key.gsub('\n',"\n").chomp("%"), :filename => @cluster.name+".id_rsa")
   end
 
   ##
