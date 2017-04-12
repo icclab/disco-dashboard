@@ -15,7 +15,7 @@
                 <dt class="text-primary">Deployed Clusters</dt>
                 <dd class="text-info">
                   <% @clusters.where(infrastructure_id: infrastructure.id).each do |cluster| %>
-                      <%= cluster.name %>
+                      <%= cluster.name %><br />
                   <% end %>
                 </dd>
             </dl>
