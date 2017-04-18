@@ -2,7 +2,12 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <h2><%= infrastructure.name %></h2>
-            <!--<h2><a href="" role="button" class="btn btn-primary btn-lg">reload infrastructure</a></h2>-->
+          <%= form_for(infrastructure) do |f| %>
+            <!--<h2><a href="" role="button" class="btn btn-primary btn-lg"></a></h2>-->
+              <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
+              <%= f.submit "reload infrastructure", class: "btn btn-primary btn-lg" %>
+          <% end %>
+
         </div>
         <div class="panel-body">
             <dl class="dl-horizontal">
@@ -15,9 +20,11 @@
                 <dt class="text-primary">Deployed Clusters</dt>
                 <dd class="text-info">
                   <% if @clusters && @clusters.any? %>
+                      <ul>
                       <% @clusters.where(infrastructure_id: infrastructure.id).each do |cluster| %>
-                        <%= cluster.name %><br />
+                          <li><%= cluster.name %></li><br />
                       <% end %>
+                      </ul>
                   <% end %>
                 </dd>
             </dl>

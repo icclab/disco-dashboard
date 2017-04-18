@@ -65,6 +65,37 @@ class InfrastructuresController < ApplicationController
     end
   end
 
+  def update
+    @infrastructure = current_user.infrastructures.find(params[:id])
+    credentials = {   username:   @infrastructure.username,
+                      password:    params[:infrastructure][:password],
+                      auth_url:   @infrastructure.auth_url,
+                      authtenant: @infrastructure.tenant,
+                      region:     @infrastructure.region
+    }
+    begin
+      connection = @infrastructure.authenticate(credentials)
+      if connection
+        current_user.images.where(infrastructure_id: params[:id]).delete_all
+        current_user.flavors.where(infrastructure_id: params[:id]).delete_all
+        current_user.keypairs.where(infrastructure_id: params[:id]).delete_all
+
+        save_images   @infrastructure.get_images   connection
+        save_flavors  @infrastructure.get_flavors  connection
+        save_keypairs @infrastructure.get_keypairs connection
+        flash[:success] = "Infrastructure was reloaded successfully"
+        redirect_to infrastructures_path
+      else
+        flash[:danger] = "Wrong password provided"
+        redirect_to infrastructures_path
+      end
+    rescue Exception
+      flash[:danger] = "Wrong password provided"
+      redirect_to infrastructures_path
+    end
+
+  end
+
   def destroy
 
 
@@ -105,6 +136,8 @@ class InfrastructuresController < ApplicationController
           #   puts exception.to_s
           # end
 
+
+          current_user.images.where(infrastructure_id: params[:delete][:id]).delete_all
           current_user.flavors.where(infrastructure_id: params[:delete][:id]).delete_all
           current_user.keypairs.where(infrastructure_id: params[:delete][:id]).delete_all
 
