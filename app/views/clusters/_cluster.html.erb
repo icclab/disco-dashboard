@@ -41,10 +41,13 @@
     <div class="panel-body">
       <div class="row">
            <div class="col-md-4 col-xs-12 specs">
-               <p class="text-info"><strong><%= cluster.master_image.name %></strong></p>
-               <p class="text-info"><strong><%= cluster.master_flavor.vcpus %></strong> VCPUs</p>
-               <p class="text-info"><strong><%= cluster.master_flavor.ram   %>MB</strong> RAM</p>
-               <p class="text-info"><strong><%= cluster.master_flavor.disk  %>GB</strong> HDD</p>
+               <p class="text-info"><strong><% if defined?(cluster.master_image.name) %><%= cluster.master_image.name %><% end %></strong></p>
+               <p class="text-info"><% if defined?(cluster.master_flavor.vcpus) %>
+                     <strong><%= cluster.master_flavor.vcpus %></strong> VCPUs<% end %></p>
+               <p class="text-info"><% if defined?(cluster.master_flavor.ram) %>
+                     <strong><%= cluster.master_flavor.ram   %>MB</strong> RAM<% end %></p>
+               <p class="text-info"><% if defined?(cluster.master_flavor.disk) %>
+                     <strong><%= cluster.master_flavor.disk  %>GB</strong> HDD<% end %></p>
                <p class="text-info"><a href="/clusters/<%= cluster.id %>/sshprivatekey"><strong>SSH private key</strong></a></p>
                <p class="text-info">IP: <strong><%= ((cluster.external_ip/(256*256*256))%256).to_s %>.<%= ((cluster.external_ip/(256*256))%256).to_s %>.<%= ((cluster.external_ip/256)%256).to_s %>.<%= (cluster.external_ip%256).to_s %></strong></p>
                <p class="text-info">Username: <strong>ubuntu</strong></p>
@@ -57,10 +60,10 @@
                   </small>
                 </strong>
               </h3>
-               <p class="text-info"><strong><%= cluster.slave_image.name %></strong></p>
-               <p class="text-info"><strong><%= cluster.slave_flavor.vcpus %></strong> VCPUs</p>
-               <p class="text-info"><strong><%= cluster.slave_flavor.ram   %>MB</strong> RAM</p>
-               <p class="text-info"><strong><%= cluster.slave_flavor.disk  %>GB</strong> HDD</p>
+               <p class="text-info"><strong><% if defined?(cluster.slave_image.name) %><%= cluster.slave_image.name %><% end %></strong></p>
+               <p class="text-info"><% if defined?(cluster.slave_flavor.vcpus) %><strong><%= cluster.slave_flavor.vcpus %></strong> VCPUs<% end %></p>
+               <p class="text-info"><% if defined?(cluster.slave_flavor.ram) %><strong><%= cluster.slave_flavor.ram   %>MB</strong> RAM<% end %></p>
+               <p class="text-info"><% if defined?(cluster.slave_flavor.disk) %><strong><%= cluster.slave_flavor.disk  %>GB</strong> HDD<% end %></p>
            </div>
            <div class="col-md-4 col-xs-12">
                 <h3 class="text-primary"><strong>Frameworks: </strong></h3>
