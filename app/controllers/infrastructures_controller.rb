@@ -105,8 +105,8 @@ class InfrastructuresController < ApplicationController
           #   puts exception.to_s
           # end
 
-
-
+          current_user.flavors.where(infrastructure_id: params[:delete][:id]).delete_all
+          current_user.keypairs.where(infrastructure_id: params[:delete][:id]).delete_all
 
           infrastructure_to_delete.destroy
         end
