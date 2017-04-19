@@ -87,6 +87,21 @@ class ClustersController < ApplicationController
     # Retrieves chosen master and slave flavor from database to reference them from new cluster entity
     cluster.master_flavor = Flavor.find(params[:cluster][:master_flavor])
     cluster.slave_flavor  = Flavor.find(params[:cluster][:slave_flavor])
+
+    # save image name and flavor informations for both master and slaves directly with cluster
+    master_image = Image.find(params[:cluster][:master_image])
+    slave_image  = Image.find(params[:cluster][:slave_image])
+    master_flavor = Flavor.find(params[:cluster][:master_flavor])
+    slave_flavor  = Flavor.find(params[:cluster][:slave_flavor])
+    cluster.master_image_name = master_image[:name]
+    cluster.slave_image_name = slave_image[:name]
+    cluster.slave_flavor_memory = slave_flavor[:ram]
+    cluster.slave_flavor_vcpu = slave_flavor[:vcpus]
+    cluster.slave_flavor_disk = slave_flavor[:disk]
+    cluster.master_flavor_memory = master_flavor[:ram]
+    cluster.master_flavor_vcpu = master_flavor[:vcpus]
+    cluster.master_flavor_disk = master_flavor[:disk]
+
     # If new cluster is properly configured it will be saved in database
     if cluster.save
       # Then we send request to the DISCO to create a new cluster

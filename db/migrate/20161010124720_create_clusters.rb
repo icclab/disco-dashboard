@@ -13,6 +13,14 @@ class CreateClusters < ActiveRecord::Migration[5.0]
       t.string  :ssh_private_key
       t.boolean :slave_on_master
       t.references :infrastructure, foreign_key: true
+      t.string  :slave_flavor_memory
+      t.string  :slave_flavor_disk
+      t.string  :slave_flavor_vcpu
+      t.string  :master_flavor_memory
+      t.string  :master_flavor_disk
+      t.string  :master_flavor_vcpu
+      t.string  :master_image_name
+      t.string  :slave_image_name
 
       t.timestamps
     end
