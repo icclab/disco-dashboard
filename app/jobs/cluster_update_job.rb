@@ -26,36 +26,43 @@ class ClusterUpdateJob < ApplicationJob
   queue_as :default
 
   def perform(infrastructure, user_id, cluster_id, password)
-    cluster  = Cluster.find(cluster_id)
-    state    = cluster[:state]
-    uuid     = cluster[:uuid]
-
-    puts(cluster)
-
+    # all this method is prone to exceptions - see rescue branch!
     begin
-      sleep(3)
+      cluster  = Cluster.find(cluster_id)
+      state    = cluster[:state]
+      uuid     = cluster[:uuid]
 
-      send_request(infrastructure, password, uuid)
-      response = send_request(infrastructure, password, uuid, 'json')
+      puts(cluster)
 
-      if(response.code == "200")
-        if(response.body)
-          res = JSON.parse(response.body)
-          state = res["attributes"]["stack_status"] if res["attributes"]["stack_status"]
+      begin
+        sleep(3)
+
+        send_request(infrastructure, password, uuid)
+        response = send_request(infrastructure, password, uuid, 'json')
+
+        if(response.code == "200")
+          if(response.body)
+            res = JSON.parse(response.body)
+            state = res["attributes"]["stack_status"] if res["attributes"]["stack_status"]
+          end
+
+          cluster.update(user_id, uuid, state) if state != cluster[:state]
+
+          if state.downcase.include?('complete')
+            ip = convert_ip(res["attributes"]["external_ip"])
+            cluster.update_attribute(:external_ip, ip)
+            spk = res["attributes"]["ssh_private_key"]
+            cluster.update_attribute(:ssh_private_key, spk)
+          end
         end
+      end until state.downcase.include?('complete') || state.downcase.include?('fail')
 
-        cluster.update(user_id, uuid, state) if state != cluster[:state]
-
-        if state.downcase.include?('complete')
-          ip = convert_ip(res["attributes"]["external_ip"])
-          cluster.update_attribute(:external_ip, ip)
-          spk = res["attributes"]["ssh_private_key"]
-          cluster.update_attribute(:ssh_private_key, spk)
-        end
-      end
-    end until state.downcase.include?('complete') || state.downcase.include?('fail')
-
-    cluster.update(user_id, uuid, 'INSTALLING_FRAMEWORKS') if state.downcase.include? 'complete'
+      cluster.update(user_id, uuid, 'INSTALLING_FRAMEWORKS') if state.downcase.include? 'complete'
+    rescue Exception => e
+      # nothing can be done here; cluster might have been removed before its state was complete
+      # (flash is impossible as no request is being handled and cluster.update is impossible as
+      # cluster with requested ID might not exist -> let's just pretend no exception happened)
+    end
   end
 
   private
