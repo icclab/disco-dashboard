@@ -158,26 +158,26 @@ class InfrastructuresController < ApplicationController
 
     def save_images(images)
       images.each do |img|0
-#        if (img[:name].downcase().include? "ubuntu") && (img[:name].include? "14.04")
-          image = @infrastructure.images.build(
-            img_id: img[:id],
-            name:   img[:name],
-            size:   img[:minDisk] )
-          image.save
-#        end
+        image = @infrastructure.images.build(
+          img_id: img[:id],
+          name:   img[:name],
+          size:   img[:minDisk] )
+        image.save
       end
     end
 
     def save_flavors(flavors)
       flavors.each do |flv|
-        flavor = @infrastructure.flavors.build(
-          fl_id: flv[:id],
-          name:  flv[:name],
-          vcpus: flv[:vcpus],
-          ram:   flv[:ram],
-          disk:  flv[:disk] )
-
-        flavor.save
+        # minimum memory size should be at least 4G for used flavors
+        if flv[:ram]>4000
+          flavor = @infrastructure.flavors.build(
+            fl_id: flv[:id],
+            name:  flv[:name],
+            vcpus: flv[:vcpus],
+            ram:   flv[:ram],
+            disk:  flv[:disk] )
+          flavor.save
+        end
       end
     end
 

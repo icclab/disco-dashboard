@@ -197,6 +197,10 @@ class ClustersController < ApplicationController
       @keypairs   = Keypair.where(infrastructure_id: @infrastructure_id)
     end
 
+    # Ubuntu Trusty (14.04) should be pre-selected - determine ID for view
+    ubuntutrusty = Image.where('"name" LIKE "%ubuntu%14%04%"')[0]
+    @selectedimage = ubuntutrusty.id
+
     respond_to do |format|
       format.js
     end

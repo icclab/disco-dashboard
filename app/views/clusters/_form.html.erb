@@ -8,7 +8,7 @@
         <%= f.label(:master, "Master") %>
         <div class="form-group input-group">
             <span class="input-group-addon">Image</span>
-            <%= f.select(:master_image, options_for_select(@images.map { |image| [image[:name], image.id] }), {}, {class: 'form-control'}) %>
+            <%= f.select(:master_image, options_for_select(@images.map { |image| [image[:name], image.id] }, :selected => @selectedimage), {}, {class: 'form-control'}) %>
             <span class="input-group-addon">Flavor</span>
             <%= f.select(:master_flavor, options_for_select(@flavors.map { |flavor| [flavor[:name], flavor.id] }), {}, {class: 'form-control'}) %>
         </div>
@@ -17,7 +17,7 @@
             <span class="input-group-addon">#</span>
             <%= f.select(:slave_num, options_for_select((1..10).map { |i| [i, i] }), {}, {class: 'form-control'}) %>
             <span class="input-group-addon">Image</span>
-            <%= f.select(:slave_image, options_for_select(@images.map { |image| [image[:name], image.id] }), {}, {class: 'form-control'}) %>
+            <%= f.select(:slave_image, options_for_select(@images.map { |image| [image[:name], image.id] }, :selected => @selectedimage), {}, {class: 'form-control'}) %>
             <span class="input-group-addon">Flavor</span>
             <%= f.select(:slave_flavor, options_for_select(@flavors.map { |flavor| [flavor[:name], flavor.id] }), {}, {class: 'form-control'}) %>
         </div>
