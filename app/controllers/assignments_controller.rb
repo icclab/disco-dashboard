@@ -32,10 +32,23 @@ class AssignmentsController < ApplicationController
   end
 
   def create
-    user = User.find_by(email: params[:assignment][:email])
-    group = Group.find(params[:assignment][:group_id])
-    if !group.assignments.find_by(user_id: user.id)
-      group.assignments.create(user: user)
+    email = params[:assignment][:email]
+    group_id = params[:assignment][:group_id]
+
+    # is given email address just one address or CSV?
+    if email.include?(",")
+
+      # multiple email addresses
+      emails = email.split(",")
+      for cur_email in emails
+        # handle each email separately
+        find_user_and_create_if_not_existing(cur_email)
+        associate_user_to_group(cur_email, group_id)
+      end
+    else
+      # just one email address procedure as usual
+      find_user_and_create_if_not_existing(email)
+      associate_user_to_group(email, group_id)
     end
     redirect_to groups_path
   end
@@ -47,5 +60,33 @@ class AssignmentsController < ApplicationController
     if assignment.delete
       redirect_to groups_path
     end
+  end
+
+  private
+
+  # generate random string
+  def generate_code(number)
+    charset = Array('A'..'Z') + Array('a'..'z')
+    Array.new(number) { charset.sample }.join
+  end
+
+  # associate user to group; at this point, no user existence checking done anymore
+  def associate_user_to_group(user_email, group_id)
+    user = User.find_by(email: user_email)
+    group = Group.find(group_id)
+    if !group.assignments.find_by(user_id: user.id)
+      group.assignments.create(user: user)
+    end
+  end
+
+  # new user will be created
+  def find_user_and_create_if_not_existing(email)
+    user = User.find_by(email: email)
+    if user==nil
+      #TODO: currently, email address is taken as password - has to be changed
+      user = User.new({"email" => email, "role" => "Student", "password" => email})
+      user.save
+    end
+    return user
   end
 end
