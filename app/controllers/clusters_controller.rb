@@ -198,8 +198,12 @@ class ClustersController < ApplicationController
     end
 
     # Ubuntu Trusty (14.04) should be pre-selected - determine ID for view
-    ubuntutrusty = Image.where('"name" LIKE "%ubuntu%14%04%"')[0]
-    @selectedimage = ubuntutrusty.id
+    begin
+      ubuntutrusty = @images.where('"name" LIKE "%ubuntu%14%04%"')[0]
+      @selectedimage = ubuntutrusty.id
+    rescue
+      # Ubuntu Trusty not found
+    end
 
     respond_to do |format|
       format.js
