@@ -43,7 +43,7 @@ $ gem -v
 Configure and update gem manager and its gems:
 ```
 $ gem update --system
-$ rvm gemset user global
+$ rvm gemset use global
 $ gem update
 ```
 
