@@ -86,7 +86,9 @@
             <div class="well">
                 <h4 class="text-info">Name: <strong><%= cluster.name %></strong></h4>
                 <h4 class="text-info">Links:
+              <% if cluster.external_ip!=0 %>
                 <p class="text-info"><a href="/clusters/<%= cluster.id %>/sshprivatekey"><strong>SSH private key</strong></a></p>
+              <% end %>
                 <p class="text-info">IP: <strong><%= ((cluster.external_ip/(256*256*256))%256).to_s %>.<%= ((cluster.external_ip/(256*256))%256).to_s %>.<%= ((cluster.external_ip/256)%256).to_s %>.<%= (cluster.external_ip%256).to_s %></strong></p>
                 <p class="text-info">Username: <strong>ubuntu</strong></p>
                 <ul class="list-inline" id="framework-list">

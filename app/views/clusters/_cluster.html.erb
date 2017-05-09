@@ -51,7 +51,9 @@
                      <strong><%= cluster.master_flavor_memory   %>MB</strong> RAM</p>
                <p class="text-info">
                      <strong><%= cluster.master_flavor_disk  %>GB</strong> HDD</p>
-               <p class="text-info"><a href="/clusters/<%= cluster.id %>/sshprivatekey"><strong>SSH private key</strong></a></p>
+               <% if cluster.external_ip!=0 %>
+                 <p class="text-info"><a href="/clusters/<%= cluster.id %>/sshprivatekey"><strong>SSH private key</strong></a></p>
+               <% end %>
                <p class="text-info">IP: <strong><%= ((cluster.external_ip/(256*256*256))%256).to_s %>.<%= ((cluster.external_ip/(256*256))%256).to_s %>.<%= ((cluster.external_ip/256)%256).to_s %>.<%= (cluster.external_ip%256).to_s %></strong></p>
                <p class="text-info">Username: <strong>ubuntu</strong></p>
            </div>
@@ -59,14 +61,14 @@
               <h3 class="text-primary">
                 <strong>Slave
                   <small>
-                    x<%= (cluster.slave_num+1) %>
+                    x<%= cluster.slave_num %>
                   </small>
                 </strong>
               </h3>
                <p class="text-info"><strong><%= cluster.slave_image_name %></strong></p>
                <p class="text-info"><strong><%= cluster.slave_flavor_vcpu %></strong> VCPUs</p>
-               <p class="text-info"><strong><%= cluster.slave_flavor_memory   %>MB</strong> RAM</p>
-               <p class="text-info"><strong><%= cluster.slave_flavor_disk  %>GB</strong> HDD</p>
+               <p class="text-info"><strong><%= cluster.slave_flavor_memory %>MB</strong> RAM</p>
+               <p class="text-info"><strong><%= cluster.slave_flavor_disk %>GB</strong> HDD</p>
            </div>
            <div class="col-md-4 col-xs-12">
                 <h3 class="text-primary"><strong>Frameworks: </strong></h3>
@@ -76,7 +78,7 @@
                     <li><h4>
                       <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>
                       <%= link_to framework.name.capitalize, link, target: "blank" %>
-                      <button type="button" class="btn btn-link btn-xs" data-toggle="tooltip" data-placement="top" title="<%= framework.description %>"><i class="fa fa-question-circle-o fa-fw"></i></button>
+                      <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="bottom" title="<%= framework.name %>" data-content="<%= framework.description %>"></span>
                     </h4></li>
                   <% end %>
                 </ul>
@@ -85,19 +87,39 @@
         <br>
         <div class="row">
           <% if current_user.infrastructures.any? && current_user.infrastructures.exists?(id: cluster.infrastructure_id) %>
-            <div class="col-md-8"></div>
+            <div class="col-md-4">
+
+              <%= form_for :put, method: "put", url: clusters_path, html: { id: "suspend-form"}, data: {confirm: "Do you really want to suspend this cluster?"} do |f| %>
+                  <%= f.hidden_field :uuid, :value => cluster.uuid %>
+                  <%= f.hidden_field :action, :value => "suspend" %>
+                  <p class="text-info"><b>Suspending cluster?</b>
+                    <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="top" title="Suspending a cluster" data-content="Suspending a cluster stops the cluster from operating. Once suspended, it will use less resources and can save money. It can be resumed again as soon as its operation is needed."></span>
+                    <br />Please, enter infrastructure password to suspend cluster</p>
+                  <div class="input-group">
+                    <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
+                    <span class="input-group-btn">
+                    <%= f.button(type: 'submit', class: "btn btn-warning") do %>
+                      <i class="glyphicon glyphicon-pause" aria-hidden="true"></i>
+                    <% end %>
+                  </span>
+                  </div>
+              <% end %>
+            </div>
+              <div class="col-md-4"></div>
             <div class="col-md-4">
               <%= form_for :delete, method: "delete", url: clusters_path, html: { id: "delete-form"}, data: {confirm: "Do you really want to delete this cluster?"} do |f| %>
-                <%= f.hidden_field :uuid, :value => cluster.uuid %>
-                <p class="text-info">Please, enter infrastructure password to delete</p>
-                <div class="input-group">
-                  <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
-                  <span class="input-group-btn">
+                  <%= f.hidden_field :uuid, :value => cluster.uuid %>
+                  <p class="text-info"><b>Deleting?</b>
+                    <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="top" title="Deleting a cluster" data-content="When the cluster is deleted, its resources are freed up on OpenStack and stop consuming money. The data on a deleted cluster cannot be re-created. As soon as a cluster has been deleted, its resources are available for new clusters."></span>
+                    <br />Please, enter infrastructure password to delete</p>
+                  <div class="input-group">
+                    <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
+                    <span class="input-group-btn">
                     <%= f.button(type: 'submit', class: "btn btn-danger") do %>
                       <i class="fa fa-trash" aria-hidden="true"></i>
                     <% end %>
                   </span>
-                </div>
+                  </div>
               <% end %>
             </div>
           <% end %>

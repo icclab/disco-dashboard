@@ -20,6 +20,8 @@
 #     URL: https://github.com/skenzhegulov
 #
 
+include DiscoHelper
+
 ##
 # Cluster model shows all its relationship with other models,
 # model validations, and underlying methods and logic
@@ -48,6 +50,18 @@ class Cluster < ApplicationRecord
     ActionCable.server.broadcast "user_#{id}",
                                   uuid:  uuid,
                                   state: state
+  end
+
+  def suspend(password)
+    #TODO: set cluster to suspended
+    puts "suspending cluster "+self.uuid
+    runstate_req(self.infrastructure, password, self.uuid, "suspend")
+  end
+
+  def resume(password)
+    #TODO: set cluster to running
+    puts "suspending cluster "+self.uuid
+    runstate_req(self.infrastructure, password, self.uuid, "resume")
   end
 
   # Parses uuid from the response header and updates cluster's uuid

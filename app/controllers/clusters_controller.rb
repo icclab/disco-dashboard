@@ -143,6 +143,16 @@ class ClustersController < ApplicationController
     @infrastructures.each { |inf| @adapters[inf.name] = inf.id } if @infrastructures
     redirect_to clusters_new_path
   end
+
+  def update
+    if params[:put][:action]=="suspend"
+      cluster = Cluster.find_by(uuid: params[:put][:uuid])
+      cluster.suspend(params[:put][:password])
+    end
+
+    redirect_to clusters_path
+  end
+
   ##
   # Deletes chosen cluster from stack and database if success response returned from DISCO framework
   def destroy

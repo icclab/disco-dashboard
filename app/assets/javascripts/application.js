@@ -33,7 +33,15 @@
 // about supported directives.
 //
 //= require jquery
+//= require bootstrap-sprockets
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
 //= require bootstrap.min
+
+$(document).ready(function() {
+    $('.has-tooltip').tooltip();
+    $('.has-popover').popover({
+        trigger: 'hover'
+    });
+});

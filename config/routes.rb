@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get    '/clusters/:id',          to: 'clusters#show'
   get    '/clusters/:id/sshprivatekey', to: 'clusters#sshprivatekey'
   post   '/clusters/',             to: 'clusters#create'
+  put    '/clusters/',             to: 'clusters#update'
   delete '/clusters/',             to: 'clusters#destroy'
 
   post   '/associate_cluster', to: 'groups#associate_cluster'

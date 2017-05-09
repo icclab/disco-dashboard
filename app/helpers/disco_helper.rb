@@ -115,6 +115,47 @@ module DiscoHelper
     response
   end
 
+  def runstate_req(infrastructure, password, uuid, runstate)
+    uri     = URI.parse(ENV["disco_ip"]+uuid)
+    request = Net::HTTP::Post.new(uri)
+
+    require 'uri'
+    require 'net/http'
+    require 'net/https'
+
+    @toSend = JSON.generate({ "auth" =>  { "passwordCredentials" => { "username" => infrastructure[:username], "password" => password }, "tenantName" => infrastructure[:tenant]}})
+
+    keystone = infrastructure[:auth_url] # 'https://keystone.cloud.switch.ch:5000/v2.0'
+    keystoneuri = URI.parse(keystone+'/tokens')
+    https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
+    https.use_ssl = keystoneuri.instance_of? URI::HTTPS
+    req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
+    req.body = @toSend
+    res = https.request(req)
+
+    obj = JSON.parse(res.body)
+    token = obj['access']['token']['id']
+
+    request.content_type         = "text/occi"
+    request["Category"]          = 'disco; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
+    request["X-Tenant-Name"]     = infrastructure[:tenant]
+    request["X-Region-Name"]     = infrastructure[:region]
+    request["X-User-Name"]       = infrastructure[:username]
+    request["X-Password"]        = password
+    request["X-Auth-Token"]      = token
+
+    request["X-Occi-Attribute"]  = 'action="'+runstate+'",'
+
+
+    Rails.logger.debug {"Cluster attributes: #{request["X-Occi-Attribute"].inspect}"}
+
+    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(request)
+    end
+
+    response
+  end
+
   # Method accepts infrastructure credentials and cluster uuid
   # to send delete request to DISCO to delete chosen cluster from the stacks.
   # Returns response from DISCO framework.
