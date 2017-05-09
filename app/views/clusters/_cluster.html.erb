@@ -89,21 +89,39 @@
           <% if current_user.infrastructures.any? && current_user.infrastructures.exists?(id: cluster.infrastructure_id) %>
             <div class="col-md-4">
 
-              <%= form_for :put, method: "put", url: clusters_path, html: { id: "suspend-form"}, data: {confirm: "Do you really want to suspend this cluster?"} do |f| %>
-                  <%= f.hidden_field :uuid, :value => cluster.uuid %>
-                  <%= f.hidden_field :action, :value => "suspend" %>
-                  <p class="text-info"><b>Suspending cluster?</b>
-                    <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="top" title="Suspending a cluster" data-content="Suspending a cluster stops the cluster from operating. Once suspended, it will use less resources and can save money. It can be resumed again as soon as its operation is needed."></span>
-                    <br />Please, enter infrastructure password to suspend cluster</p>
-                  <div class="input-group">
-                    <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
-                    <span class="input-group-btn">
-                    <%= f.button(type: 'submit', class: "btn btn-warning") do %>
-                      <i class="glyphicon glyphicon-pause" aria-hidden="true"></i>
-                    <% end %>
-                  </span>
-                  </div>
-              <% end %>
+                <% if cluster.is_suspended==false %>
+                  <%= form_for :put, method: "put", url: clusters_path, html: { id: "suspend-form"}, data: {confirm: "Do you really want to suspend this cluster?"} do |f| %>
+                      <%= f.hidden_field :uuid, :value => cluster.uuid %>
+                    <%= f.hidden_field :action, :value => "suspend" %>
+                    <p class="text-info"><b>Suspending cluster?</b>
+                      <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="top" title="Suspending a cluster" data-content="Suspending a cluster stops the cluster from operating. Once suspended, it will use less resources and can save money. It can be resumed again as soon as its operation is needed."></span>
+                      <br />Please, enter infrastructure password to suspend cluster</p>
+                    <div class="input-group">
+                      <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
+                      <span class="input-group-btn">
+                      <%= f.button(type: 'submit', class: "btn btn-warning") do %>
+                        <i class="glyphicon glyphicon-pause" aria-hidden="true"></i>
+                      <% end %>
+                    </span>
+                    </div>
+                  <% end %>
+                  <% else %>
+                      <%= form_for :put, method: "put", url: clusters_path, html: { id: "suspend-form"}, data: {confirm: "Do you really want to resume this cluster?"} do |f| %>
+                          <%= f.hidden_field :uuid, :value => cluster.uuid %>
+                      <%= f.hidden_field :action, :value => "resume" %>
+                      <p class="text-info"><b>Resuming cluster?</b>
+                        <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="top" title="Resuming a cluster" data-content="Resuming a cluster puts it back into operation. Keep in mind that the costs will increase with a running cluster."></span>
+                        <br />Please, enter infrastructure password to resume cluster</p>
+                      <div class="input-group">
+                        <%= f.password_field(:password, placeholder: "Password", class: 'form-control') %>
+                        <span class="input-group-btn">
+                      <%= f.button(type: 'submit', class: "btn btn-warning") do %>
+                        <i class="glyphicon glyphicon-pause" aria-hidden="true"></i>
+                      <% end %>
+                    </span>
+                      </div>
+                      <% end %>
+                  <% end %>
             </div>
               <div class="col-md-4"></div>
             <div class="col-md-4">

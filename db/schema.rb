@@ -32,14 +32,14 @@ ActiveRecord::Schema.define(version: 20161212102621) do
 
   create_table "clusters", force: :cascade do |t|
     t.string   "uuid"
-    t.string   "state",                          default: "DEPLOYING"
+    t.string   "state",                           default: "DEPLOYING"
     t.string   "name"
     t.integer  "master_image_id"
     t.integer  "slave_image_id"
     t.integer  "master_flavor_id"
     t.integer  "slave_flavor_id"
     t.integer  "slave_num"
-    t.integer  "external_ip",          limit: 8, default: 0
+    t.integer  "external_ip",           limit: 8, default: 0
     t.string   "ssh_private_key"
     t.boolean  "slave_on_master"
     t.integer  "infrastructure_id"
@@ -51,8 +51,10 @@ ActiveRecord::Schema.define(version: 20161212102621) do
     t.string   "master_flavor_vcpu"
     t.string   "master_image_name"
     t.string   "slave_image_name"
-    t.datetime "created_at",                                           null: false
-    t.datetime "updated_at",                                           null: false
+    t.string   "openstack_clustername"
+    t.boolean  "is_suspended",                    default: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.integer  "group_id"
     t.index ["group_id"], name: "index_clusters_on_group_id"
     t.index ["infrastructure_id"], name: "index_clusters_on_infrastructure_id"

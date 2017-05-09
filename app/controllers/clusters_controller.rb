@@ -101,6 +101,7 @@ class ClustersController < ApplicationController
     cluster.master_flavor_memory = master_flavor[:ram]
     cluster.master_flavor_vcpu = master_flavor[:vcpus]
     cluster.master_flavor_disk = master_flavor[:disk]
+    cluster.is_suspended = false
 
     # If new cluster is properly configured it will be saved in database
     if cluster.save
@@ -148,6 +149,9 @@ class ClustersController < ApplicationController
     if params[:put][:action]=="suspend"
       cluster = Cluster.find_by(uuid: params[:put][:uuid])
       cluster.suspend(params[:put][:password])
+    elsif params[:put][:action]=="resume"
+      cluster = Cluster.find_by(uuid: params[:put][:uuid])
+      cluster.resume(params[:put][:password])
     end
 
     redirect_to clusters_path

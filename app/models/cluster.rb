@@ -55,12 +55,16 @@ class Cluster < ApplicationRecord
   def suspend(password)
     #TODO: set cluster to suspended
     puts "suspending cluster "+self.uuid
+    self.is_suspended = true
+    self.save
     runstate_req(self.infrastructure, password, self.uuid, "suspend")
   end
 
   def resume(password)
     #TODO: set cluster to running
     puts "suspending cluster "+self.uuid
+    self.is_suspended = false
+    self.save
     runstate_req(self.infrastructure, password, self.uuid, "resume")
   end
 
