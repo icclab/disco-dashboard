@@ -28,10 +28,14 @@
             <% end %>
         </div>
         <div class="col-xs-8 text-right">
-          <div id="circle-<%= cluster.uuid %>" class="circle-<%= get_status(cluster.state) %> pull-right"></div>
+          <div id="circle-<%= cluster.uuid %>" class="circle-<%= get_status(cluster.state,cluster.is_suspended) %> pull-right"></div>
             <br>
           <h4 id = "<%= cluster.uuid %>">
-            <%= cluster.state %>
+            <% if cluster.is_suspended %>
+                SUSPENDED
+            <% else %>
+                <%= cluster.state %>
+            <% end %>
           </h4><br />
           <h4>Deployed on infrastructure <%= cluster.infrastructure.name %></h4>
         </div>

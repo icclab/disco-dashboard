@@ -83,26 +83,30 @@
         <div class="col-md-4 col-xs-6">
           <h3 class="text-info">Clusters</h3>
           <% group.clusters.all.each do |cluster| %>
-            <div class="well">
-                <h4 class="text-info">Name: <strong><%= cluster.name %></strong></h4>
-                <h4 class="text-info">Links:
-              <% if cluster.external_ip!=0 %>
-                <p class="text-info"><a href="/clusters/<%= cluster.id %>/sshprivatekey"><strong>SSH private key</strong></a></p>
-              <% end %>
-                <p class="text-info">IP: <strong><%= ((cluster.external_ip/(256*256*256))%256).to_s %>.<%= ((cluster.external_ip/(256*256))%256).to_s %>.<%= ((cluster.external_ip/256)%256).to_s %>.<%= (cluster.external_ip%256).to_s %></strong></p>
-                <p class="text-info">Username: <strong>ubuntu</strong></p>
-                <ul class="list-inline" id="framework-list">
-                    <% cluster.cluster_frameworks.all.each do |f| %>
-                      <% framework = Framework.find(f.framework_id) %>
-                      <% link = 'http://'+((cluster.external_ip/(256*256*256))%256).to_s+'.'+((cluster.external_ip/(256*256))%256).to_s+'.'+((cluster.external_ip/256)%256).to_s+'.'+(cluster.external_ip%256).to_s+framework.port %>
-                      <li><h4>
-                        <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>
-                        <%= link_to framework.name.capitalize, link, target: "blank" %>
-                      </h4></li>
-                    <% end %>
-                </ul>
-                </h4>
-            </div>
+              <% if cluster.is_suspended==false %>
+              <div class="well">
+                  <h4 class="text-info">Name: <strong><%= cluster.name %></strong></h4>
+                  <h4 class="text-info">Links:
+                <% if cluster.external_ip!=0 %>
+                  <p class="text-info"><a href="/clusters/<%= cluster.id %>/sshprivatekey"><strong>SSH private key</strong></a></p>
+                <% end %>
+                  <p class="text-info">IP: <strong><%= ((cluster.external_ip/(256*256*256))%256).to_s %>.<%= ((cluster.external_ip/(256*256))%256).to_s %>.<%= ((cluster.external_ip/256)%256).to_s %>.<%= (cluster.external_ip%256).to_s %></strong></p>
+                  <p class="text-info">Username: <strong>ubuntu</strong></p>
+                  <ul class="list-inline" id="framework-list">
+                      <% cluster.cluster_frameworks.all.each do |f| %>
+                        <% framework = Framework.find(f.framework_id) %>
+                        <% link = 'http://'+((cluster.external_ip/(256*256*256))%256).to_s+'.'+((cluster.external_ip/(256*256))%256).to_s+'.'+((cluster.external_ip/256)%256).to_s+'.'+(cluster.external_ip%256).to_s+framework.port %>
+                        <li><h4>
+                          <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>
+                          <%= link_to framework.name.capitalize, link, target: "blank" %>
+                        </h4></li>
+                      <% end %>
+                  </ul>
+                  </h4>
+              </div>
+                  <% else %>
+              <h4 class="text-info">Cluster is suspended at the moment.</h4>
+                  <% end %>
           <% end %>
         </div>
       </div>

@@ -69,7 +69,11 @@ module ClusterHelper
           state = 'CONNECTION_FAILED'
           Rails.logger.debug "Rescued from 'OpenTimeout'"
         rescue Errno::ECONNREFUSED
+          state = 'CONNECTION_FAILED'
           Rails.logger.debug "Rescued from 'CONNECTION REFUSED'"
+        rescue Errno::EHOSTDOWN
+          state = 'CONNECTION_FAILED'
+          Rails.logger.debug "Rescued from 'EHOSTDOWN'"
         end
 
         if response

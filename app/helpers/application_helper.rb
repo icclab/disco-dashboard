@@ -38,14 +38,18 @@ module ApplicationHelper
   end
 
   # To get right status according to a state
-  def get_status(state)
+  def get_status(state, suspended)
     state ||= 'info'
-    if state.downcase.include? "fail"
-      'danger'
-    elsif state.downcase.include?("complete")||state.downcase.include?("ready")
-      'success'
+    if suspended==true
+      return 'danger'
     else
-      'info'
+      if state.downcase.include? "fail"
+        'danger'
+      elsif state.downcase.include?("complete")||state.downcase.include?("ready")
+        'success'
+      else
+        'info'
+      end
     end
   end
 
