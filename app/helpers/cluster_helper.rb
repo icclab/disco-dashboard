@@ -74,6 +74,9 @@ module ClusterHelper
         rescue Errno::EHOSTDOWN
           state = 'CONNECTION_FAILED'
           Rails.logger.debug "Rescued from 'EHOSTDOWN'"
+        rescue
+          state = 'CONNECTION_FAILED'
+          Rails.logger.debug "Rescied from other exception"
         end
 
         if response
