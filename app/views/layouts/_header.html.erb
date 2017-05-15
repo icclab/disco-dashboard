@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-static-top navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+<nav class="navbar navbar-default navbar-static-top navbar-fixed-top shadow" role="navigation" style="margin-bottom: 0">
   <!-- Navigation -->
   <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -41,7 +41,7 @@
     <!-- /.navbar-top-links -->
     <% if current_user.sidebar? %>
         <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
+                <div class="sidebar-nav navbar-collapse list-shadow">
                     <ul class="nav" id="side-menu">
                         <li>
                             <%= link_to clusters_path do %>

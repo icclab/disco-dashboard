@@ -3,7 +3,7 @@
         <%= f.hidden_field :infrastructure_id, :value => @infrastructure_id %>
 
         <br />
-        <div class="form-control form-group input-group" style="box-shadow: 0 0 10px gray;">
+        <div class="form-control form-group input-group shadow">
         <%= f.label(:cluster_name, "Cluster Name") %>
         <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="bottom" title="Cluster name" data-content="The cluster name can be anything which helps you and the cluster's users. It will not be forwarded to OpenStack but is a label solely within the Dashboard."></span>
         <div class="form-group">
@@ -11,7 +11,7 @@
         </div>
         </div>
 
-        <div class="form-control form-group input-group" style="box-shadow: 0 0 10px gray;">
+        <div class="form-control form-group input-group shadow">
         <%= f.label(:master, "Master") %>
         <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="bottom" title="Master" data-content="The chosen image should always be Ubuntu Trusty 14.04; the processing power depends on the flavor. Keep in mind: on the master node, there is no slave node executed."></span>
         <div class="form-group input-group">
@@ -24,7 +24,7 @@
         </div>
         </div>
 
-        <div class="form-control form-group input-group" style="box-shadow: 0 0 10px gray;">
+        <div class="form-control form-group input-group shadow">
         <%= f.label(:slave, "Slave") %>
         <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="bottom" title="Slaves" data-content="The more slaves are deployed, the faster usually the computation finishes; the chosen image should always be Ubuntu Trusty 14.04; the processing power of an individual machine depends on the flavor. Don't forget: a higher amount of slaves and flavors with more resources cost more."></span>
         <div class="form-group input-group">
@@ -39,7 +39,7 @@
         </div>
         </div>
 
-        <div class="form-control form-group input-group" style="box-shadow: 0 0 10px gray;">
+        <div class="form-control form-group input-group shadow">
         <%= f.label(:frameworks, "BIG Data frameworks") %>
         <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="bottom" title="Frameworks" data-content="Which frameworks should be automatically installed to the cluster?"></span>
         <div class="form-group">
@@ -54,7 +54,7 @@
         </div>
         </div>
 
-        <div class="form-control form-group input-group" style="box-shadow: 0 0 10px gray;">
+        <div class="form-control form-group input-group shadow">
         <%= f.label(:password, "Infrastructure password") %>
         <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="top" title="Password" data-content="The OpenStack password for the username that the infrastructure has been registered with."></span>
         <div class="form-group">

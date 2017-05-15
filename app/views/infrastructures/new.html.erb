@@ -11,15 +11,16 @@
           <%= f.label(:name, "Name") %>
           <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="bottom" title="Infrastructure name" data-content="The infrastructure will be saved under this name within the Dashboard. You will have to select it when creating new clusters."></span>
           <div class="form-group">
-              <%= f.text_field(:name, placeholder: "Enter name", class: 'form-control') %>
+              <%= f.text_field(:name, placeholder: "Enter name", class: 'form-control shadow') %>
           </div>
           <%= f.label(:provider, "Provider") %>
           <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="bottom" title="Infrastructure provider" data-content="The provider is currently only OpenStack. Please refer to your OpenStack admin for your credentials."></span>
           <div class="form-group">
-              <%= f.select(:provider, options_for_select(@adapters.map { |adapter| [adapter.to_s, adapter] }), {}, {class: 'form-control'}) %>
+              <%= f.select(:provider, options_for_select(@adapters.map { |adapter| [adapter.to_s, adapter] }), {}, {class: 'form-control shadow'}) %>
           </div>
           <%= f.label("Account credentials") %>
           <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="bottom" title="Credentials" data-content="Your OpenStack admin will provide you with the needed credentials. These are your username / password, the tenant, OpenStack's authentication URL and a region. Please refer to the manual for more details."></span>
+          <div class="panel shadow" style="padding: 20px;">
           <div class="form-group">
               <%= f.text_field(:username, placeholder: "Username", class: 'form-control') %>
               <%= f.password_field :password, placeholder: "Password", class: 'form-control' %>
@@ -34,10 +35,13 @@
               <%= f.text_field(:region, placeholder: "Region", class: 'form-control') %>
           </div>
 
+          </div>
+
           <%= f.submit "Add", class: "btn btn-success" %>
           <div class="row">
 
           </div>
+
       <% end %>
     </div>
   </div>
