@@ -16,12 +16,17 @@
       <%= render 'layouts/header' %>
 
       <div <% if current_user && current_user.sidebar? %> id="page-wrapper" <% end %> >
-        <div class="container-fluid window-high">
+        <% if current_user && current_user.sidebar? %>
+            <div class="window-high transparent-white background-div"></div>
+        <% end %>
+        <div class="container-fluid">
           <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header"></h1>
             </div>
           </div>
+
+
           <div class="row">
             <% flash.each do |message_type, message| %>
               <div class="center alert alert-<%= message_type %>"><%= message %></div>
@@ -29,6 +34,7 @@
           </div>
           <%= yield %>
         </div>
+
       </div>
     </div>
     <!-- /#wrapper -->

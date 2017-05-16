@@ -50,7 +50,6 @@ body {
 #page-wrapper {
     padding: 0 15px;
     min-height: 568px;
-    background-color: rgba(255,255,255,0.8);
 }
 
 @media(min-width:768px) {
@@ -643,4 +642,16 @@ table.dataTable thead .sorting:after {
 
 .list-shadow {
   box-shadow: 0px 3px 10px gray;
+}
+
+.transparent-white {
+  background-color: rgba(255,255,255,0.8);
+}
+
+.background-div {
+  position:fixed;
+  width:100vw;
+  z-index: -1;
+  left: 250px;
+  //border-left: 1px solid $gray-lighter;
 }
