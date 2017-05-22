@@ -30,9 +30,14 @@ class InfrastructuresController < ApplicationController
   end
 
   def index
-    @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
+    if current_user.is_admin?
+      @infrastructures = Infrastructure.all
+      @clusters = Cluster.all
+    else
+      @infrastructures = current_user.infrastructures.all if current_user.infrastructures.any?
+      @clusters = current_user.clusters.all if current_user.clusters.any?
+    end
 
-    @clusters = current_user.clusters.all if current_user.clusters.any?
   end
 
   def show
@@ -51,7 +56,6 @@ class InfrastructuresController < ApplicationController
       if @infrastructure.save && connection = @infrastructure.authenticate(params[:infrastructure])
         save_images   @infrastructure.get_images   connection
         save_flavors  @infrastructure.get_flavors  connection
-        save_keypairs @infrastructure.get_keypairs connection
         flash[:success] = "New infrastructure was added successfully"
         redirect_to infrastructures_path
       else
@@ -78,11 +82,9 @@ class InfrastructuresController < ApplicationController
       if connection
         current_user.images.where(infrastructure_id: params[:id]).delete_all
         current_user.flavors.where(infrastructure_id: params[:id]).delete_all
-        current_user.keypairs.where(infrastructure_id: params[:id]).delete_all
 
         save_images   @infrastructure.get_images   connection
         save_flavors  @infrastructure.get_flavors  connection
-        save_keypairs @infrastructure.get_keypairs connection
         flash[:success] = "Infrastructure was reloaded successfully"
         redirect_to infrastructures_path
       else
@@ -139,7 +141,6 @@ class InfrastructuresController < ApplicationController
 
           current_user.images.where(infrastructure_id: params[:delete][:id]).delete_all
           current_user.flavors.where(infrastructure_id: params[:delete][:id]).delete_all
-          current_user.keypairs.where(infrastructure_id: params[:delete][:id]).delete_all
 
           infrastructure_to_delete.destroy
         end
@@ -178,16 +179,6 @@ class InfrastructuresController < ApplicationController
             disk:  flv[:disk] )
           flavor.save
         end
-      end
-    end
-
-    def save_keypairs(keypairs)
-      keypairs.each do |key, value|
-        keypair = @infrastructure.keypairs.build(
-          name: value[:name]
-        ) if !value[:fingerprint].eql? ENV["fingerprint"]
-
-        keypair.save if keypair
       end
     end
 end

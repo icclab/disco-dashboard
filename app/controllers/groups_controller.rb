@@ -31,7 +31,11 @@ class GroupsController < ApplicationController
   ##
   # Retrieves current user's groups
   def index
-    @groups = current_user.groups.all
+    if current_user.is_admin?
+      @groups = Group.all
+    else
+      @groups = current_user.groups.all
+    end
   end
 
   ##

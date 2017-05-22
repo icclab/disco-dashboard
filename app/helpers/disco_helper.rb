@@ -60,8 +60,6 @@ module DiscoHelper
     slave_image = Image.find(cluster[:slave_image])
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.slaveimage="'+slave_image.img_id+'",'
 
-    # request["X-Occi-Attribute"] += 'icclab.disco.components.sshkeyname="'+cluster[:keypair]+'",'
-
     master_flavor = Flavor.find(cluster[:master_flavor])
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.masterflavor="'+master_flavor.fl_id+'",'
     slave_flavor = Flavor.find(cluster[:slave_flavor])
@@ -78,7 +76,6 @@ module DiscoHelper
 
     # from here on, there are only a few dummy data sets:
     randomstring = (0...8).map { (65 + rand(26)).chr }.join
-    request["X-Occi-Attribute"] += 'icclab.disco.components.heat.sshkeypairname="discokey-'+randomstring+'",'
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.networkname="disconetwork-'+randomstring+'",'
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.externalnetworkname="'+ENV['external_network']+'",'
     # until here

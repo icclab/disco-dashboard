@@ -40,8 +40,13 @@ class ClustersController < ApplicationController
 
   # Retrieves current user clusters and groups from database
   def index
-    @clusters = current_user.clusters.all
-    @groups   = current_user.groups.all
+    if current_user.is_admin?
+      @clusters = Cluster.all
+      @groups = Group.all
+    else
+      @clusters = current_user.clusters.all
+      @groups   = current_user.groups.all
+    end
   end
 
   ##
@@ -208,7 +213,6 @@ class ClustersController < ApplicationController
       @frameworks = Framework.all
       @images     = Image.where(infrastructure_id: @infrastructure_id)
       @flavors    = Flavor.where(infrastructure_id: @infrastructure_id)
-      @keypairs   = Keypair.where(infrastructure_id: @infrastructure_id)
     end
 
     # Ubuntu Trusty (14.04) should be pre-selected - determine ID for view

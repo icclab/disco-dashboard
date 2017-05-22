@@ -111,14 +111,6 @@ ActiveRecord::Schema.define(version: 20161212102621) do
     t.index ["user_id"], name: "index_infrastructures_on_user_id"
   end
 
-  create_table "keypairs", force: :cascade do |t|
-    t.integer  "infrastructure_id"
-    t.string   "name"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.index ["infrastructure_id"], name: "index_keypairs_on_infrastructure_id"
-  end
-
   create_table "tasks", force: :cascade do |t|
     t.string   "name"
     t.string   "attachment"

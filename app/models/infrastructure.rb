@@ -27,7 +27,6 @@ class Infrastructure < ApplicationRecord
   has_many :clusters
   has_many :images,   dependent: :destroy
   has_many :flavors,  dependent: :destroy
-  has_many :keypairs, dependent: :destroy
 
   validates :name,     presence: true, length: { maximum: 255 }
   validates :username, presence: true
@@ -41,7 +40,6 @@ class Infrastructure < ApplicationRecord
   #   - authenticate(credentials) => creates a connection between infrastructure and object
   #   - get_images(connection)    => gets list of images from given infrastructure connection
   #   - get_flavors(connection)   => gets list of flavors from given infrastructure connection
-  #   - get_keypair(connection)   => gets list of keypairs from given infrastructure connection
   #
   # Adapter can be easily extended with new infrastructure providers (e.g. Cloudstack), and its own methods can be implemented.
   module Adapter
@@ -64,10 +62,6 @@ class Infrastructure < ApplicationRecord
         def get_flavors(connection)
           connection.list_flavors
         end
-
-        def get_keypairs(connection)
-          connection.keypairs
-        end
       end
     end
 =begin
@@ -82,10 +76,6 @@ class Infrastructure < ApplicationRecord
         end
 
         def get_flavors(connection)
-
-        end
-
-        def get_keypairs(connection)
 
         end
       end
@@ -103,10 +93,6 @@ class Infrastructure < ApplicationRecord
 
   def get_flavors(connection)
     self.adapter.get_flavors connection
-  end
-
-  def get_keypairs(connection)
-    self.adapter.get_keypairs connection
   end
 
   ##

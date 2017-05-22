@@ -26,7 +26,6 @@ class User < ApplicationRecord
   has_many :infrastructures, dependent: :destroy
   has_many :images,   through: :infrastructures
   has_many :flavors,  through: :infrastructures
-  has_many :keypairs, through: :infrastructures
   has_many :clusters, through: :infrastructures
   has_many :assignments
   has_many :groups, through: :assignments
@@ -68,6 +67,34 @@ class User < ApplicationRecord
   #
   # This module can be extended with new usertypes and underlying methods.
   module Usertype
+    module Admin
+      class << self
+        def sidebar?
+          true
+        end
+
+        def infrastructure_permissions?
+          true
+        end
+
+        def cluster_permissions?
+          true
+        end
+
+        def group_permissions?
+          true
+        end
+
+        def task_permissions?
+          true
+        end
+
+        def is_admin?
+          true
+        end
+      end
+    end
+
     module Professor
       class << self
         def sidebar?
@@ -88,6 +115,10 @@ class User < ApplicationRecord
 
         def task_permissions?
           true
+        end
+
+        def is_admin?
+          false
         end
       end
     end
@@ -113,6 +144,10 @@ class User < ApplicationRecord
         def task_permissions?
           false
         end
+      end
+
+      def is_admin?
+        false
       end
     end
   end
@@ -140,5 +175,9 @@ class User < ApplicationRecord
   # Returns the module corresponding to the user role
   def usertype
     User::Usertype.const_get(self.role.capitalize)
+  end
+
+  def is_admin?
+    self.usertype.is_admin?
   end
 end
