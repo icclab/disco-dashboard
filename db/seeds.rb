@@ -5,6 +5,17 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+password = (0...10).map { (33 + rand(93)).chr }.join
+
+User.create(email: ENV["admin_email"],
+            role:  "Admin",
+            password:              password,
+            password_confirmation: password)
+
+open('admincredentials.log', 'w') { |f|
+  f.puts "username: "+ENV["admin_email"]+"\npassword: "+password
+}
+
 Framework.create([
   {
     name:        'Spark',
