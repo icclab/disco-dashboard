@@ -23,7 +23,6 @@ class CreateClusters < ActiveRecord::Migration[5.0]
       t.string  :slave_image_name
       t.string  :openstack_clustername
       t.boolean :is_suspended, default: false
-      t.string  :status
 
       t.timestamps
     end

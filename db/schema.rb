@@ -53,7 +53,6 @@ ActiveRecord::Schema.define(version: 20161212102621) do
     t.string   "slave_image_name"
     t.string   "openstack_clustername"
     t.boolean  "is_suspended",                    default: false
-    t.string   "status"
     t.datetime "created_at",                                            null: false
     t.datetime "updated_at",                                            null: false
     t.integer  "group_id"
