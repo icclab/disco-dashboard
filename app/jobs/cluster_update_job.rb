@@ -54,6 +54,10 @@ class ClusterUpdateJob < ApplicationJob
             spk = res["attributes"]["ssh_private_key"]
             cluster.update_attribute(:ssh_private_key, spk)
           end
+
+          if res["attributes"].key?("stack_status_reason")
+            cluster.update_attribute(:status, res["attributes"]["stack_status_reason"])
+          end
         end
       end until state.downcase.include?('complete') || state.downcase.include?('fail')
 
