@@ -32,7 +32,7 @@ module ClusterHelper
     begin
       # uri.host is 0.0.0.0 as long as no other value has been delivered by DISCO
       if uri.host != "0.0.0.0"
-        Net::HTTP.start(uri.host, uri.port) { |http|
+        Net::HTTP.start(uri.host, uri.port, :read_timeout => ENV['read_timeout'].to_i, :open_timeout => ENV['open_timeout'].to_i) { |http|
           response = http.head(uri.path.size > 0 ? uri.path : "/")
         }
       else
@@ -59,15 +59,19 @@ module ClusterHelper
         url = "http://"+ip+":8084/progress.log"
         uri     = URI.parse(url)
         request = Net::HTTP::Get.new(uri)
+
         response = nil
         begin
-          response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+          response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https", :read_timeout => ENV['read_timeout'].to_i, :open_timeout => ENV['open_timeout'].to_i) do |http|
             http.request(request)
           end
 
         rescue Net::OpenTimeout
           state = 'CONNECTION_FAILED'
           Rails.logger.debug "Rescued from 'OpenTimeout'"
+        rescue Net::ReadTimeout
+          state = 'CONNECTION_FAILED'
+          Rails.logger.debug "Rescued from 'ReadTimeout'"
         rescue Errno::ECONNREFUSED
           state = 'CONNECTION_FAILED'
           Rails.logger.debug "Rescued from 'CONNECTION REFUSED'"
@@ -76,7 +80,7 @@ module ClusterHelper
           Rails.logger.debug "Rescued from 'EHOSTDOWN'"
         rescue
           state = 'CONNECTION_FAILED'
-          Rails.logger.debug "Rescied from other exception"
+          Rails.logger.debug "Rescued from other exception"
         end
 
         if response
