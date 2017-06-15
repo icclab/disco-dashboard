@@ -62,7 +62,10 @@ class ClustersController < ApplicationController
   # (This is not used currently)
   # Retrieves selected cluster from database
   def show
-    @cluster = Cluster.find(params[:cluster][:id])
+    @cluster = Cluster.where(:uuid => params[:uuid])[0]
+    @groups   = current_user.groups.all
+
+    puts(@cluster)
   end
 
   ##

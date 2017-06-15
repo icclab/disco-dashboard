@@ -40,6 +40,8 @@ module DiscoHelper
     keystoneuri = URI.parse(keystone+'/tokens')
     https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
     https.use_ssl = keystoneuri.instance_of? URI::HTTPS
+    https.open_timeout = ENV['open_timeout'].to_i
+    https.read_timeout = ENV['read_timeout'].to_i
     req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
     req.body = @toSend
     res = https.request(req)
@@ -105,7 +107,7 @@ module DiscoHelper
 
     Rails.logger.debug {"Cluster attributes: #{request["X-Occi-Attribute"].inspect}"}
 
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+    response = Net::HTTP.start(uri.hostname, uri.port, :read_timeout => ENV['read_timeout'].to_i, :open_timeout => ENV['open_timeout'].to_i) do |http|
       http.request(request)
     end
 
@@ -126,6 +128,8 @@ module DiscoHelper
     keystoneuri = URI.parse(keystone+'/tokens')
     https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
     https.use_ssl = keystoneuri.instance_of? URI::HTTPS
+    https.open_timeout = ENV['open_timeout'].to_i
+    https.read_timeout = ENV['read_timeout'].to_i
     req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
     req.body = @toSend
     res = https.request(req)
@@ -146,7 +150,7 @@ module DiscoHelper
 
     Rails.logger.debug {"Cluster attributes: #{request["X-Occi-Attribute"].inspect}"}
 
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+    response = Net::HTTP.start(uri.hostname, uri.port, :read_timeout => ENV['read_timeout'].to_i, :open_timeout => ENV['open_timeout'].to_i) do |http|
       http.request(request)
     end
 
@@ -167,6 +171,8 @@ module DiscoHelper
     keystoneuri = URI.parse(keystone+'/tokens')
     https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
     https.use_ssl = keystoneuri.instance_of? URI::HTTPS
+    https.open_timeout = ENV['open_timeout'].to_i
+    https.read_timeout = ENV['read_timeout'].to_i
     req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
     req.body = @toSend
     res = https.request(req)
@@ -188,7 +194,7 @@ module DiscoHelper
     request["X-Auth-Token"]  = token
 
     begin
-      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      response = Net::HTTP.start(uri.hostname, uri.port, :read_timeout => ENV['read_timeout'].to_i, :open_timeout => ENV['open_timeout'].to_i) do |http|
         http.request(request)
     end
     rescue => ex
@@ -220,6 +226,8 @@ module DiscoHelper
     keystoneuri = URI.parse(keystone+'/tokens')
     https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
     https.use_ssl = keystoneuri.instance_of? URI::HTTPS
+    https.open_timeout = ENV['open_timeout'].to_i
+    https.read_timeout = ENV['read_timeout'].to_i
     req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
     req.body = @toSend
     res = https.request(req)
@@ -235,7 +243,7 @@ module DiscoHelper
     request["X-Region-Name"] = infrastructure[:region]
     request["X-Auth-Token"]  = token
     request["Accept"]        = type == "json" ? "application/occi+json" : "text/occi"
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+    response = Net::HTTP.start(uri.hostname, uri.port, :read_timeout => ENV['read_timeout'].to_i, :open_timeout => ENV['open_timeout'].to_i) do |http|
         http.request(request)
     end
 

@@ -88,10 +88,6 @@ class User < ApplicationRecord
         def task_permissions?
           true
         end
-
-        def is_admin?
-          true
-        end
       end
     end
 
@@ -115,10 +111,6 @@ class User < ApplicationRecord
 
         def task_permissions?
           true
-        end
-
-        def is_admin?
-          false
         end
       end
     end
@@ -144,10 +136,6 @@ class User < ApplicationRecord
         def task_permissions?
           false
         end
-      end
-
-      def is_admin?
-        false
       end
     end
   end
@@ -178,6 +166,6 @@ class User < ApplicationRecord
   end
 
   def is_admin?
-    self.usertype.is_admin?
+    self.role=="Admin"
   end
 end
