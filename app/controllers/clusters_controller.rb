@@ -64,14 +64,12 @@ class ClustersController < ApplicationController
   def show
     @cluster = Cluster.where(:uuid => params[:uuid])[0]
     @groups   = current_user.groups.all
-
-    puts(@cluster)
   end
 
   ##
   # returns the SSH private key for the selected cluster for login to the master
   def sshprivatekey
-    @cluster = Cluster.find(params[:id])
+    @cluster = Cluster.where(:uuid => params[:uuid])[0]
     send_data(@cluster.ssh_private_key.gsub('\n',"\n").chomp("%"), :filename => @cluster.name+".id_rsa")
   end
 

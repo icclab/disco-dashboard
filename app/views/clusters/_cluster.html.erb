@@ -56,7 +56,7 @@
                <p class="text-info">
                      <strong><%= cluster.master_flavor_disk  %>GB</strong> HDD</p>
                <% if cluster.external_ip!=0 %>
-                 <p class="text-info"><a href="/clusters/<%= cluster.id %>/sshprivatekey"><strong>SSH private key</strong></a></p>
+                 <p class="text-info"><a href="/clusters/<%= cluster.uuid %>/sshprivatekey"><strong>SSH private key</strong></a></p>
                <p class="text-info">IP: <strong><%= ((cluster.external_ip/(256*256*256))%256).to_s %>.<%= ((cluster.external_ip/(256*256))%256).to_s %>.<%= ((cluster.external_ip/256)%256).to_s %>.<%= (cluster.external_ip%256).to_s %></strong></p>
              <% end %>
                <p class="text-info">Username: <strong>ubuntu</strong></p>
@@ -76,20 +76,16 @@
            </div>
            <div class="col-md-4 col-xs-12">
                 <h3 class="text-primary"><strong>Frameworks: </strong></h3>
-                <ul class="list-unstyled" id="framework-list">
+                  <% first_framework = 1 %>
+                  <p class="text-info">
                   <% cluster.frameworks.all.each do |framework| %>
-                    <% link = 'http://'+((cluster.external_ip/(256*256*256))%256).to_s+'.'+((cluster.external_ip/(256*256))%256).to_s+'.'+((cluster.external_ip/256)%256).to_s+'.'+(cluster.external_ip%256).to_s+framework.port %>
-                    <li><h4>
-                      <% if cluster.is_suspended? %>
-                          <div class="circle-danger circle-sm pull-left"></div>
-                      <% else %>
-                          <div class="circle-<%= check_link(link) %> circle-sm pull-left"></div>
+                      <% if first_framework == 1 %>
+                          <% first_framework = 0 %>
+                      <% else %>,
                       <% end %>
-                      <%= link_to framework.name.capitalize, link, target: "blank" %>
-                      <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="bottom" title="<%= framework.name %>" data-content="<%= framework.description %>"></span>
-                    </h4></li>
+                        <%= framework.name.capitalize %>
                   <% end %>
-                </ul>
+                  </p>
            </div>
         </div>
         <br>
