@@ -38,6 +38,7 @@ class UsersController < ApplicationController
   def new
     @user = User.new
     @usertypes = User::Usertype.constants
+    @usertypes.delete(:Admin)
   end
 
   def create
