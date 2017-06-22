@@ -36,18 +36,14 @@ module DiscoHelper
 
     @toSend = JSON.generate({ "auth" =>  { "passwordCredentials" => { "username" => infrastructure[:username], "password" => cluster[:password] }, "tenantName" => infrastructure[:tenant]}})
 
-    keystone = infrastructure[:auth_url] # 'https://keystone.cloud.switch.ch:5000/v2.0'
-    keystoneuri = URI.parse(keystone+'/tokens')
-    https = Net::HTTP.new(keystoneuri.host,keystoneuri.port)
-    https.use_ssl = keystoneuri.instance_of? URI::HTTPS
-    https.open_timeout = ENV['open_timeout'].to_i
-    https.read_timeout = ENV['read_timeout'].to_i
-    req = Net::HTTP::Post.new(keystoneuri.path, initheader = {'Content-Type' =>'application/json'})
-    req.body = @toSend
-    res = https.request(req)
-
-    obj = JSON.parse(res.body)
-    token = obj['access']['token']['id']
+    begin
+      res = RestClient::Request.execute(method: :post, payload: @toSend, url: infrastructure[:auth_url]+"/tokens", headers:{:'Content-Type'=>'application/json'}, read_timeout: ENV['read_timeout'].to_i, open_timeout: ENV['open_timeout'].to_i)
+      obj = JSON.parse(res.body)
+      token = obj['access']['token']['id']
+    rescue
+      flash[:danger] = "Error fetching Token from Openstack - wrong password given?"
+      return ""
+    end
 
     request.content_type         = "text/occi"
     request["Category"]          = 'disco; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
@@ -56,6 +52,14 @@ module DiscoHelper
     request["X-User-Name"]       = infrastructure[:username]
     request["X-Password"]        = cluster[:password]
     request["X-Auth-Token"]      = token
+
+    headers = {}
+    headers['Category'] = 'disco; scheme="http://schemas.cloudcomplab.ch/occi/sm#"; class="kind";'
+    headers['X-Tenant-Name'] = infrastructure[:tenant]
+    headers['X-Region-Name'] = infrastructure[:region]
+    headers['X-User-Name'] = infrastructure[:username]
+    headers['X-Password'] = cluster[:password]
+    headers['X-Auth-Token'] = token
 
     master_image = Image.find(cluster[:master_image])
     request["X-Occi-Attribute"]  = 'icclab.disco.components.heat.masterimage="'+master_image.img_id+'",'
@@ -70,10 +74,8 @@ module DiscoHelper
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.slavecount="'+cluster[:slave_num].to_s+'",'
 
     request["X-Occi-Attribute"] += 'icclab.disco.deployer.username="'+infrastructure[:username]+'",'
-#    request["X-Occi-Attribute"] += 'icclab.disco.deployer.tenantname="'+infrastructure[:tenant]+'",'
     request["X-Occi-Attribute"] += 'icclab.disco.deployer.region="'+infrastructure[:region]+'",'
     request["X-Occi-Attribute"] += 'icclab.disco.deployer.password="'+cluster[:password]+'",'
-#    request["X-Occi-Attribute"] += 'icclab.disco.deployer.designuri="'+keystone+'",'
 
 
     # from here on, there are only a few dummy data sets:
@@ -105,13 +107,18 @@ module DiscoHelper
     request["X-Occi-Attribute"] += '}"'
 
 
+    headers['X-Occi-Attribute'] = request['X-Occi-Attribute']
+
     Rails.logger.debug {"Cluster attributes: #{request["X-Occi-Attribute"].inspect}"}
 
-    response = Net::HTTP.start(uri.hostname, uri.port, :read_timeout => ENV['read_timeout'].to_i, :open_timeout => ENV['open_timeout'].to_i) do |http|
-      http.request(request)
+    response = 0
+    begin
+      res = RestClient::Request.execute(:method => :post, :url => ENV['disco_ip'], headers:{"X-Auth-Token" => token,"X-Tenant-Name" => infrastructure[:tenant],"X-User-Name"=>infrastructure[:username],"X-Region-Name"=>infrastructure[:region],"X-Password"=>cluster[:password],"X-Occi-Attribute"=>headers['X-Occi-Attribute'],:"Category"=>request["Category"],:accept=>"*/*",:"Content-Type"=>"text/occi"})
+    rescue Exception => e
+      res = e
     end
 
-    response
+    return res
   end
 
   def runstate_req(infrastructure, password, uuid, runstate)

@@ -13,7 +13,7 @@ User.create(email: ENV["admin_email"],
             password_confirmation: password)
 
 open('admincredentials.log', 'w') { |f|
-  f.puts "username: "+ENV["admin_email"]+"\npassword: "+password
+  f.puts "username: "+ENV["admin_email"]+"\npassword: "+password.to_s()
 }
 
 Framework.create([

@@ -113,32 +113,39 @@ class ClustersController < ApplicationController
     if cluster.save
       # Then we send request to the DISCO to create a new cluster
       response = create_req(params[:cluster], infrastructure)
-      if response.code == "201"
-        # If the request was accepted, continues to add chosen framework(s) to the new cluster entity
-        get_frameworks cluster
-        # Gets cluster uuid, so we can get detailed information from the DISCO of the current cluster
-        cluster.get_uuid response.header
+      begin
+        if response.code == 201
+          # If the request was accepted, continues to add chosen framework(s) to the new cluster entity
+          get_frameworks cluster
+          # Gets cluster uuid, so we can get detailed information from the DISCO of the current cluster
+          cluster.update_attribute(:uuid, response.headers[:location].rpartition("/").last)
 
 
-        # this is a hotfix for the case that cluster has been inserted into database but not "sent" to DISCO
-        if cluster.read_attribute('uuid') == "" or cluster.read_attribute('uuid') == nil
-          cluster.delete
+          # this is a hotfix for the case that cluster has been inserted into database but not "sent" to DISCO
+          if cluster.read_attribute('uuid') == "" or cluster.read_attribute('uuid') == nil
+            cluster.delete
+          else
+
+            # Starts a background job which will update state of the cluster as deployment proceeds
+            ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
+
+          end
+
+
+          sleep(1)
+          redirect_to clusters_path
+          return
         else
-
-          # Starts a background job which will update state of the cluster as deployment proceeds
-          ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
-
+          # In case of failed DISCO connection, new cluster is deleted from database
+          cluster.delete
+          flash[:danger] = "DISCO connection error"
+          Rails.logger.debug "DISCO connection error"
         end
-
-
-        sleep(1)
-        redirect_to clusters_path
-        return
-      else
-        # In case of failed DISCO connection, new cluster is deleted from database
-        cluster.delete
-        flash[:danger] = "DISCO connection error"
-        Rails.logger.debug "DISCO connection error"
+      rescue
+          cluster.delete
+          if flash[:danger] == nil
+            flash[:danger] = "DISCO connection error"
+          end
       end
     else
       flash[:warning] = "Cluster details were not filled correctly"
@@ -227,6 +234,11 @@ class ClustersController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  def checkstatus
+    url = params[:url]
+    render text: check_link(url)
   end
 
   private

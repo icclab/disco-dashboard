@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get    '/clusters',              to: 'clusters#index'
   get    '/clusters/new',          to: 'clusters#new'
   get    '/clusters/render_form/', to: 'clusters#render_form'
+  get    '/clusters/urlstatus',    to: 'clusters#checkstatus'
   get    '/clusters/:uuid',        to: 'clusters#show'
   get    '/clusters/:uuid/sshprivatekey', to: 'clusters#sshprivatekey'
   post   '/clusters/',             to: 'clusters#create'

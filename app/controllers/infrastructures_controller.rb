@@ -64,6 +64,7 @@ class InfrastructuresController < ApplicationController
         render 'new'
       end
     rescue Exception
+      @infrastructure.delete
       flash[:danger] = "Please, fill all fields with correct information"
       render 'new'
     end
