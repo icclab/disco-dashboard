@@ -84,6 +84,14 @@ class ClustersController < ApplicationController
   #   2) Incorrect password was typed or DISCO connection problem occured,
   #      in this case: "DISCO connection error" warning will show up.
   def create
+    # check if Jupyter is selected and whether passwords match
+    if params[:cluster][:Jupyter]=="1" && params[:cluster][:jupyterpwd]!=params[:cluster][:jupyterpwdconfirm]
+      flash[:danger] = "Jupyter passwords do not match!"
+      redirect_to clusters_new_path
+      return
+    end
+
+
     # Retrieves chosen infrastructure and creates new cluster entity which belongs to that infrastructure
     infrastructure = Infrastructure.find(params[:cluster][:infrastructure_id])
     cluster = infrastructure.clusters.build(cluster_params)
@@ -127,7 +135,9 @@ class ClustersController < ApplicationController
           else
 
             # Starts a background job which will update state of the cluster as deployment proceeds
-            ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
+            url = "http://127.0.0.1:5002/newcluster/"+infrastructure[:id].to_s+"/"+current_user[:id].to_s+"/"+cluster[:id].to_s
+            RestClient.get(url, {"password" => params[:cluster][:password], "disco_url" => ENV["disco_ip"]})
+            # ClusterUpdateJob.perform_later(infrastructure, current_user[:id], cluster[:id], params[:cluster][:password])
 
           end
 
@@ -236,9 +246,26 @@ class ClustersController < ApplicationController
     end
   end
 
+
+  ##
+  # checks whether an IP / Port combination is available
+  # as a security measure, it is checked beforehand whether the IP is
+  # within the local cluster database
   def checkstatus
-    url = params[:url]
-    render text: check_link(url)
+    begin
+      url = params[:url]
+      ip = url && url[/:\/\/(.*?)[:\/]/m, 1]
+      require("IPAddr")
+      ip_num = IPAddr.new(ip).to_i
+      cluster_in_db = Cluster.where(:external_ip => ip_num)
+      if not cluster_in_db.empty?
+        render text: check_link(url)
+      else
+        render text: "danger"
+      end
+    rescue
+      render text: "danger"
+    end
   end
 
   private

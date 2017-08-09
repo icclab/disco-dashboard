@@ -47,7 +47,14 @@
                 <% if !framework[:name].eql? 'HDFS' %>
                     <div class="checkbox">
                         <label><%= f.check_box(framework[:name]) %><%= framework[:name] %></label>
-                        <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="top" title="<%= framework.name %>" data-content="<%= framework.description %>"></span>
+                        <span class="has-popover fa fa-question-circle-o fa-fw" data-toggle="popover" data-placement="top" title="<%= framework.name %>" data-content="<%= framework.description %>">
+                        </span>
+                      <% if framework[:name].eql? 'Jupyter' %>
+
+                      <%= f.password_field(:jupyterpwd, placeholder: "Create password for Jupyter access", class: 'form-control') %>
+                      <%= f.password_field(:jupyterpwdconfirm, placeholder: "Confirm password for Jupyter access", class: 'form-control') %>
+                          <% end %>
+
                     </div>
                 <% end %>
             <% end %>

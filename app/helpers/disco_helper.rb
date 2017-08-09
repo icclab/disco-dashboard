@@ -84,6 +84,15 @@ module DiscoHelper
     request["X-Occi-Attribute"] += 'icclab.disco.components.heat.externalnetworkname="'+ENV['external_network']+'",'
     # until here
 
+    # check if Jupyter is to be installed - if so, add password to its access
+    begin
+      if params[:cluster][:Jupyter]=="1"
+        request["X-Occi-Attribute"] += 'icclab.disco.components.jupyter.password="'+params[:cluster][:jupyterpwd]+'",'
+      end
+    rescue
+    end
+
+
 
     request["X-Occi-Attribute"] += 'icclab.disco.dependencies.inject="{\''
     current_length = request["X-Occi-Attribute"].length
