@@ -91,7 +91,7 @@ class cluster_entry:
                     self.ssh_private_key = disco_entry['attributes']['ssh_private_key']
                     self.external_ip = disco_entry['attributes']['external_ip']
                     ip_split = self.external_ip.split('.')
-                    ip_num = ((int(ip_split[3])*256+int(ip_split[2]))*256+int(ip_split[1]))*256+int(ip_split[0])
+                    ip_num = ((int(ip_split[0])*256+int(ip_split[1]))*256+int(ip_split[2]))*256+int(ip_split[3])
                     # conn = db_connect.connect()
                     conn.execute("UPDATE clusters SET state='%s', external_ip='%d', ssh_private_key='%s' WHERE id='%s'" % (self.stack_status, ip_num, self.ssh_private_key, self.cluster_id))
                     self.finished = True
