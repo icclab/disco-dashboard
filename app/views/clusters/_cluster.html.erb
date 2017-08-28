@@ -83,7 +83,11 @@
                           <% first_framework = 0 %>
                       <% else %>,
                       <% end %>
+                        <% if cluster.external_ip != 0 %>
+                          <%= link_to framework.name.capitalize, "http://"+cluster.external_ip.to_s+framework.port, target: :_blank %>
+                            <% else %>
                         <%= framework.name.capitalize %>
+                            <% end %>
                   <% end %>
                   </p>
            </div>
