@@ -64,12 +64,6 @@ class AssignmentsController < ApplicationController
 
   private
 
-  # generate random string
-  def generate_code(number)
-    charset = Array('A'..'Z') + Array('a'..'z')
-    Array.new(number) { charset.sample }.join
-  end
-
   # associate user to group; at this point, no user existence checking done anymore
   def associate_user_to_group(user_email, group_id)
     user = User.find_by(email: user_email)
@@ -83,10 +77,24 @@ class AssignmentsController < ApplicationController
   def find_user_and_create_if_not_existing(email)
     user = User.find_by(email: email)
     if user==nil
-      #TODO: currently, email address is taken as password - has to be changed
-      user = User.new({"email" => email, "role" => "Student", "password" => email})
+      new_password = create_password(10)
+      mailtext = "An account has been automatically created for you \n"+\
+                 "The login details are as follows:\n"+\
+                 "Username: "+email+"\n"+\
+                 "Password: "+new_password
+
+      user = User.new({"email" => email, "role" => "Student", "password" => new_password})
       user.save
+
+      ApplicationMailer.send_mail(email,"Your new DISCO account has been created successfully", mailtext).deliver
     end
     return user
+  end
+
+  # create a password from ASCII characters a-z, A-Z and !-? (latter including numbers)
+  def create_password(length)
+    o = [('a'..'z'), ('A'..'Z'), ('!'..'?')].map(&:to_a).flatten
+    password = (0...length).map { o[rand(o.length)] }.join
+    return password
   end
 end
