@@ -6,6 +6,12 @@ Rails.application.routes.draw do
   get    '/debug', to: 'pages#debug'
 
   get    '/signup',  to: 'users#new'
+  get    '/forgottenpassword', to: 'users#forgottenpassword', controller: 'users'
+  post   '/forgottenpassword', to: 'users#sendpasswordemail', controller: 'users'
+  get    '/entercodepage',     to: 'users#entercodepage', controller: 'users'
+  post   '/newpassword',       to: 'users#newpassword', controller: 'users'
+  get    '/newpassword',       to: 'users#newpassword', controller: 'users'
+  post   '/savepassword',      to: 'users#savepassword', controller: 'users'
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
