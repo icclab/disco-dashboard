@@ -78,7 +78,7 @@ class AssignmentsController < ApplicationController
     user = User.find_by(email: email)
     if user==nil
       new_password = create_password(10)
-      mailtext = "An account has been automatically created for you \n"+\
+      mailtext = "An account on DISCO has been automatically created for you \n\n"+\
                  "The login details are as follows:\n"+\
                  "Username: "+email+"\n"+\
                  "Password: "+new_password

@@ -30,6 +30,7 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
       log_in user
+      delete_password_recovery(user)
       redirect_to root_path
     else
       flash.now[:danger] = 'Invalid username/password combination'
@@ -45,5 +46,11 @@ class SessionsController < ApplicationController
   private
     def redirect_to_root
       redirect_to root_url if logged_in?
+    end
+
+    def delete_password_recovery(user)
+      if user.password_reset
+        User.where(:id => user.id ).update_all(:password_reset=>NIL)
+      end
     end
 end
