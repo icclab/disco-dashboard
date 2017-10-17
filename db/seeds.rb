@@ -12,9 +12,10 @@ User.create(email: ENV["admin_email"],
             password:              password,
             password_confirmation: password)
 
-open('admincredentials.log', 'w') { |f|
-  f.puts "username: "+ENV["admin_email"]+"\npassword: "+password.to_s()
-}
+# With the password recovery function, no more saving required
+# open('admincredentials.log', 'w') { |f|
+#   f.puts "username: "+ENV["admin_email"]+"\npassword: "+password.to_s()
+# }
 
 Framework.create([
   {
