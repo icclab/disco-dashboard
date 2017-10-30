@@ -1,0 +1,18 @@
+FROM rails:5
+
+WORKDIR /home
+
+RUN apt-get update && apt-get install -y redis-server && git clone https://github.com/icclab/disco-dashboard.git && gem install bundler nokogiri redis
+
+WORKDIR /home/disco-dashboard
+RUN git checkout dev && bundle update && bundle install --without production && bundle exec figaro install && rails db:migrate && apt-get install -y nginx openssl && mkdir /home/key
+
+WORKDIR /home/key
+RUN openssl genrsa -des3 -passout pass:x -out server.pass.key 2048 && openssl rsa -passin pass:x -in server.pass.key -out server.key && rm server.pass.key && openssl req -new -key server.key -out server.csr -subj "/CN=localhost" && openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt && cp /home/disco-dashboard/nginx.conf /etc/nginx/ && sed -i 's#server_name.*#server_name localhost;#' /etc/nginx/nginx.conf && sed -i 's#ssl_certificate .*#ssl_certificate /home/key/server.crt;#' /etc/nginx/nginx.conf && sed -i 's#ssl_certificate_key.*#ssl_certificate_key /home/key/server.key;#' /etc/nginx/nginx.conf
+
+RUN sed -i 's#dbfile.*#dbfile=sqlite:////home/disco-dashboard/db/development.sqlite3#' /home/disco-dashboard/python/config.conf
+
+RUN echo '#!/bin/sh' > /home/rundbnginx.sh && echo '/etc/init.d/nginx start' >> /home/rundbnginx.sh && echo "echo 'development:' > /home/disco-dashboard/config/application.yml && echo '  open_timeout: \"60\"' >> /home/disco-dashboard/config/application.yml && echo '  read_timeout: \"60\"' >> /home/disco-dashboard/config/application.yml && echo '  smtp_enable_starttls_auto: \"true\"' >> /home/disco-dashboard/config/application.yml && echo \"  disco_ip: '\$disco_ip'\" >> /home/disco-dashboard/config/application.yml && echo \"  auth_url: '\$auth_url'\" >> /home/disco-dashboard/config/application.yml && echo \"  external_network: '\$external_network'\" >> /home/disco-dashboard/config/application.yml && echo \"  admin_email: '\$admin_email'\" >> /home/disco-dashboard/config/application.yml && echo \"  dashboard_title: '\$dashboard_title'\" >> /home/disco-dashboard/config/application.yml && echo \"  disco_recovery_url: '\$disco_recovery_url'\" >> /home/disco-dashboard/config/application.yml && echo \"  smtp_server: '\$smtp_server'\" >> /home/disco-dashboard/config/application.yml && echo \"  smtp_port: '\$smtp_port'\" >> /home/disco-dashboard/config/application.yml && echo \"  smtp_authentication: '\$smtp_authentication'\" >> /home/disco-dashboard/config/application.yml && echo \"  smtp_domain: '\$smtp_domain'\" >> /home/disco-dashboard/config/application.yml && echo \"  smtp_username: '\$smtp_username'\" >> /home/disco-dashboard/config/application.yml && echo \"  smtp_password: '\$smtp_password'\" >> /home/disco-dashboard/config/application.yml" >> /home/rundbnginx.sh && echo 'cd /home/disco-dashboard/' >> /home/rundbnginx.sh && echo 'rails server -b 0.0.0.0 -e development -p 3000' >> /home/rundbnginx.sh && chmod a+x /home/rundbnginx.sh
+
+CMD /home/rundbnginx.sh
+
